@@ -1,0 +1,28 @@
+version: "3"
+services:
+  database:
+    build: nasdb
+##    environment:
+##      POSTGRES_PASSWORD: postgres
+    ports:
+      - "6543:5432"
+  nasgui:
+    build: nasgui
+    ports:
+      - "8078:8078"
+    links:
+      - database
+    depends_on:
+      - database
+      - mq
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/start.sh"]
+  nasar:
+    build: nasar
+    depends_on:
+         - database
+         - mq
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/start.sh"]
+  mq:
+    image: seges/openmq
+    ports:
+      - 7676
