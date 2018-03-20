@@ -1,0 +1,6 @@
+---
+apps:
+  [
+  {"app_name":"HarvestControllerApplication", "app_id": "sbhigh_h3", "channel":"HIGHPRIORITY"},
+  {"app_name":"HarvestControllerApplication", "app_id": "sblow_h3", "channel":"LOWPRIORITY"}
+  ]

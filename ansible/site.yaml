@@ -1,0 +1,26 @@
+---
+
+- name: Deploy of JMS broker
+  hosts: mq
+  tasks:
+    - docker:
+        image: seges/openmq
+        ports:
+          - 7676
+
+#- name: postgres
+#  hosts: postgres
+#  build: ../nasdb
+#  ports:
+#    - "6543:5432"
+
+#- name: Deploy of basic NAS system
+#  hosts: all
+#  roles:
+#     - nas
+#
+#- name: Deploy of harvester
+#  hosts: harvesters
+#  roles:
+#     - harvester
+

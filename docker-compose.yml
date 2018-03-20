@@ -2,12 +2,26 @@ version: "3"
 services:
   database:
     build: nasdb
-##    environment:
-##      POSTGRES_PASSWORD: postgres
     ports:
       - "6543:5432"
+  nasar:
+    build: nasapp
+    links:
+      - database
+      - ftp
+    depends_on:
+      - database
+      - mq
+      - ftp
+    environment:
+      - APP_LABEL=ArcRepository
+      - APP_CLASS=dk.netarkivet.archive.arcrepository.ArcRepositoryApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=SB
+      - LOCATION=S
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasgui:
-    build: nasgui
+    build: nasapp
     ports:
       - "8078:8078"
     links:
@@ -15,14 +29,154 @@ services:
     depends_on:
       - database
       - mq
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/start.sh"]
-  nasar:
-    build: nasar
-    depends_on:
-         - database
+    environment:
+      - APP_LABEL=GUIApplication
+      - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nassbbitapp:
+    build: nasapp
+    links:
+      - mq
+      - ftp
+    environment:
+      - APP_LABEL=BitarchiveApplication
+      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=SB
+      - LOCATION=S
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  naskbbitapp:
+      build: nasapp
+      links:
+        - mq
+        - ftp
+      environment:
+        - APP_LABEL=BitarchiveApplication
+        - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
+        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+        - REPLICA=KB
+        - LOCATION=K
+      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  naskbbamon:
+    build: nasapp
+    links:
+     - mq
+     - ftp
+    environment:
+      - APP_LABEL=BitarchiveMonitorApplication_KB
+      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=KB
+      - LOCATION=K
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nassbbamon:
+    build: nasapp
+    links:
+     - mq
+     - ftp
+    environment:
+      - APP_LABEL=BitarchiveMonitorApplication_SB
+      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=SB
+      - LOCATION=S
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nashjm:
+      build: nasapp
+      links:
+       - mq
+       - database
+      environment:
+        - APP_LABEL=HarvestJobManagerApplication
+        - APP_CLASS=dk.netarkivet.harvester.scheduler.HarvestJobManagerApplication
+        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar
+        - REPLICA=KB
+        - LOCATION=K
+      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasharfocus:
+      build: nasapp
+      links:
          - mq
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/start.sh"]
+         - ftp
+      environment:
+          - APP_LABEL=HarvestController_Focused
+          - APP_CLASS=dk.netarkivet.harvester.heritrix3.HarvestControllerApplication
+          - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-heritrix3-controller.jar
+          - REPLICA=KB
+          - LOCATION=K
+          - H3_CHANNEL=FOCUSED
+      ports:
+        - 8443
+      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasharsnap:
+      build: nasapp
+      links:
+         - mq
+         - ftp
+      environment:
+          - APP_LABEL=HarvestController_Snapshot
+          - APP_CLASS=dk.netarkivet.harvester.heritrix3.HarvestControllerApplication
+          - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-heritrix3-controller.jar
+          - REPLICA=KB
+          - LOCATION=K
+          - H3_CHANNEL=SNAPSHOT
+      ports:
+        - 8443
+      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasidx:
+        build: nasapp
+        links:
+           - mq
+           - ftp
+        environment:
+            - APP_LABEL=IndexServer
+            - APP_CLASS=dk.netarkivet.harvester.indexserver.IndexServerApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
+            - REPLICA=KB
+            - LOCATION=K
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nascs:
+        build: nasapp
+        links:
+           - mq
+           - ftp
+        environment:
+            - APP_LABEL=ChecksumFileApplication
+            - APP_CLASS=dk.netarkivet.archive.checksum.ChecksumFileApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+            - REPLICA=CS
+            - LOCATION=K
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasvp:
+        build: nasapp
+        links:
+           - mq
+           - ftp
+        environment:
+            - APP_LABEL=ViewerProxyApplication
+            - APP_CLASS=dk.netarkivet.viewerproxy.ViewerProxyApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
+            - REPLICA=KB
+            - LOCATION=K
+        ports:
+          - 8878:8078
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   mq:
     image: seges/openmq
     ports:
       - 7676
+  ftp:
+   ## image: fauria/vsftpd
+    image: andrewvos/docker-proftpd
+    ports:
+      - 20
+      - "21:21"
+      - "21100-21110:21100-21110"
+    environment:
+      - FTP_USER=jms
+      - FTP_PASS=jms*ftp
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+      - USERNAME=jms
+      - PASSWORD=jms*ftp

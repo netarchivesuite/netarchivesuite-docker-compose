@@ -1,0 +1,16 @@
+---
+# task file that deploys basic nas
+  - name: Create deployment dir
+    file:
+      path: /home/{{ansible_ssh_user}}/{{nas_env}}
+      state: directory
+      mode: 0755
+
+  - name: Install basic NAS
+    unarchive:
+       src: "{{nas_zip}}"
+       dest: /home/{{ansible_ssh_user}}/{{nas_env}}
+
+
+
+

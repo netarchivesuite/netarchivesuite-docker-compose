@@ -1,0 +1,3 @@
+---
+  nas_env: AnsibleTest
+  nas_zip: /home/devel/nas_versions/NetarchiveSuite-SystemTest.zip
