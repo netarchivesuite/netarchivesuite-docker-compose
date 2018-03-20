@@ -167,16 +167,11 @@ services:
     ports:
       - 7676
   ftp:
-   ## image: fauria/vsftpd
     image: andrewvos/docker-proftpd
     ports:
       - 20
       - "21:21"
       - "21100-21110:21100-21110"
     environment:
-      - FTP_USER=jms
-      - FTP_PASS=jms*ftp
-      - PASV_MIN_PORT=21100
-      - PASV_MAX_PORT=21110
       - USERNAME=jms
       - PASSWORD=jms*ftp

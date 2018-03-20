@@ -1,5 +1,0 @@
----
-
- - name: Include generic deploy of single app
-   include: ../../nas/tasks/deploy_apps.yml
-
