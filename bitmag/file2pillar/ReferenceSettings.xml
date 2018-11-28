@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  Bitrepository Integration
+  %%
+  Copyright (C) 2010 - 2012 The State and University Library, The Royal Library and The State Archives, Denmark
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as 
+  published by the Free Software Foundation, either version 2.1 of the 
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public 
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  #L%
+  -->
+
+<ReferenceSettings xmlns="http://bitrepository.org/settings/ReferenceSettings.xsd">
+  <GeneralSettings>
+    <ReceiverDestinationIDFactoryClass>org.bitrepository.protocol.messagebus.destination.DefaultReceiverDestinationIDFactory</ReceiverDestinationIDFactoryClass>
+  </GeneralSettings>
+
+  <ClientSettings>
+    <MediatorCleanupInterval>1000</MediatorCleanupInterval>
+    <ConversationTimeout>3600000</ConversationTimeout>
+  </ClientSettings>
+
+  <PillarSettings> 
+    <PillarID>file2-pillar</PillarID>
+    <PillarType>FILE</PillarType>
+    <CollectionDirs>
+      <CollectionID>netarkivet</CollectionID>
+      <FileDirs><!--foobarpattern-->var/file2pillar/files</FileDirs>
+    </CollectionDirs>
+    <MinimumSizeLeft>1000000000</MinimumSizeLeft>
+    <TimeToStartDeliver>1000</TimeToStartDeliver>
+    <MaxAgeForChecksums>3600000</MaxAgeForChecksums>
+    <AuditTrailContributerDatabase>
+      <DriverClass>org.apache.derby.jdbc.EmbeddedDriver</DriverClass>
+      <DatabaseURL>jdbc:derby:<!--foobarpattern-->var/file2pillar/auditcontributerdb</DatabaseURL>
+    </AuditTrailContributerDatabase>
+    <ChecksumDatabase>
+      <DriverClass>org.apache.derby.jdbc.EmbeddedDriver</DriverClass>
+      <DatabaseURL>jdbc:derby:<!--foobarpattern-->var/file2pillar/checksumdb</DatabaseURL>
+    </ChecksumDatabase>
+    <AlarmLevel>ERROR</AlarmLevel>
+  </PillarSettings>
+</ReferenceSettings>

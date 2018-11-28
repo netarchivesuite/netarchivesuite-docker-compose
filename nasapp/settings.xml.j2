@@ -2,6 +2,23 @@
     <common>
         <environmentName>{{NAS_ENV | default('nasdocker')}}</environmentName>
         <applicationInstanceId/>
+        <arcrepositoryClient>
+            <class>dk.netarkivet.archive.arcrepository.distribute.JMSBitmagArcRepositoryClient</class>
+            <bitrepository>
+                <!-- if not set, use of certificates is disabled. If the keyfilename does not exist
+                    use of certificates is disabled as well.
+                 -->
+                <keyfilename></keyfilename>
+                <storeMaxPillarFailures>1</storeMaxPillarFailures>
+                <tempdir>arcrepositoryTemp</tempdir>
+                <collectionID>netarkivet</collectionID>
+                <usepillar></usepillar>
+                <!-- Set to 5 minutes to make it possible to retrieve large records
+                         using FTP -->
+                <getTimeout>300000</getTimeout>
+                <settingsDir>/nas/nasclientconfig</settingsDir>
+            </bitrepository>
+        </arcrepositoryClient>
         <remoteFile>
             <class>
                 dk.netarkivet.common.distribute.FTPRemoteFile
@@ -123,6 +140,9 @@
                 <inactivityTimeout>1800</inactivityTimeout>
                 <noresponseTimeout>1800</noresponseTimeout>
                 <crawlLoopWaitTime>60</crawlLoopWaitTime>
+                <archiveNaming>
+                    <collectionName>dkcollection</collectionName>
+                </archiveNaming>
             </heritrix>
             <frontier>
                 <!-- 1 minute -->
@@ -139,6 +159,7 @@
                 <heritrixFilePattern>.*(\.journal|\.xml|\.txt|\.log|\.out|\.cxml)</heritrixFilePattern>
                 <reportFilePattern>.*-report.txt</reportFilePattern>
                 <logFilePattern>.*(\.log|\.out|\.gz)</logFilePattern>
+                <metadataFileNameFormat>prefix</metadataFileNameFormat>
             </metadata>
             <channel>{{H3_CHANNEL|default("LOWPRIORITY")}}</channel>
             <heritrix3>
@@ -146,6 +167,10 @@
                 <certificate>/h3server.jks</certificate>
             </heritrix3>
             <serverDir>harvester_low</serverDir>
+            <harvestReport>
+                <class>dk.netarkivet.harvester.harvesting.report.BnfHarvestReport</class>
+                <disregardSeedURLInfo>false</disregardSeedURLInfo>
+            </harvestReport>
         </harvesting>
         <scheduler>
             <jobGen>
@@ -155,6 +180,7 @@
                     <!-- Used by FixedDomainConfigurationCountJobGenerator and as an absolute limit in DefaultJobGenerator -->
                     <fixedDomainCountSnapshot>7500</fixedDomainCountSnapshot>
                 </config>
+                <objectLimitIsSetByQuotaEnforcer>false</objectLimitIsSetByQuotaEnforcer> <!--default true -->
             </jobGen>
         </scheduler>
         <datamodel>
