@@ -20,6 +20,7 @@
   <http://www.gnu.org/licenses/lgpl-2.1.html>.
   #L%
   -->
+<!--file1pillar is the pillar shared/overlayed with the netarchivesuite bitapp -->
 
 <ReferenceSettings xmlns="http://bitrepository.org/settings/ReferenceSettings.xsd">
   <GeneralSettings>
@@ -36,7 +37,7 @@
     <PillarType>FILE</PillarType>
     <CollectionDirs>
       <CollectionID>netarkivet</CollectionID>
-      <FileDirs><!--foobarpattern-->var/file1pillar/files</FileDirs>
+      <FileDirs>/home/test/QUICKSTART/bitarkiv/filedir</FileDirs>
     </CollectionDirs>
     <MinimumSizeLeft>1000000000</MinimumSizeLeft>
     <TimeToStartDeliver>1000</TimeToStartDeliver>
