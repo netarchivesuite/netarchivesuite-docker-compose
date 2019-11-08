@@ -1,5 +1,10 @@
 version: "3"
 services:
+  dockerhost:
+        image: qoomon/docker-host
+        cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+        #mem_limit: 4M
+        restart: on-failure
   database:
     build: nasdb
     ports:
@@ -45,6 +50,8 @@ services:
       - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
       - REPLICA=SB
       - LOCATION=S
+    volumes:
+      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file1pillar/nasdocker:/nas/bitarchive
     command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   naskbbitapp:
       build: nasapp
@@ -57,6 +64,8 @@ services:
         - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
         - REPLICA=KB
         - LOCATION=K
+      volumes:
+        - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file2pillar/nasdocker:/nas/bitarchive
       command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   naskbbamon:
     build: nasapp
@@ -108,6 +117,8 @@ services:
           - H3_CHANNEL=FOCUSED
       ports:
         - 8443
+        - 5005:5005
+      hostname: nasharfocus
       command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasharsnap:
       build: nasapp
