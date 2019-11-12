@@ -3,8 +3,11 @@ FROM rightmesh/ubuntu-openjdk:16.04
 
 ##FROM mlaccetti/docker-oracle-java8-ubuntu-16.04
 
-ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/5.2.2/distribution-5.2.2.zip  nas.zip
-ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/heritrix3-bundler/5.2.2/heritrix3-bundler-5.2.2.zip  h3bundler.zip
+##ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/5.2.2/distribution-5.2.2.zip  nas.zip
+##ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/heritrix3-bundler/5.2.2/heritrix3-bundler-5.2.2.zip  h3bundler.zip
+ADD nas.zip nas.zip
+ADD h3bundler.zip h3bundler.zip
+
 RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools && easy_install j2cli
 
 RUN unzip nas.zip -d nas
