@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client
 
 RUN unzip nas.zip -d nas
 ##RUN unzip h3bundler.zip
-RUN cp  h3bundler.zip temp_h3bundler.zip
+RUN cp  /h3bundler.zip temp_h3bundler.zip
 RUN unzip temp_h3bundler.zip
 RUN mv heritrix-3* bundler
 RUN mv bundler/lib/* /nas/lib
