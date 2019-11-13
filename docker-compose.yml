@@ -117,7 +117,7 @@ services:
           - H3_CHANNEL=FOCUSED
           - HERITRIX_JAVA_OPTS=-Xdebug\ -Xrunjdwp:server=y,transport=dt_socket,address=8500,suspend=n
       volumes:
-          - ./nasapp/h3bundler.zip:h3bundler.zip
+          - ./nasapp/h3bundler.zip:/h3bundler.zip
       ports:
         - 8443
         - 8500:8500
