@@ -116,8 +116,6 @@ services:
           - LOCATION=K
           - H3_CHANNEL=FOCUSED
           - HERITRIX_JAVA_OPTS=-Xdebug\ -Xrunjdwp:server=y,transport=dt_socket,address=8500,suspend=n
-      volumes:
-          - ./nasapp/h3bundler.zip:/h3bundler.zip
       ports:
         - 8443
         - 8500:8500
@@ -184,7 +182,7 @@ services:
     ports:
       - 7676
   ftp:
-    image: andrewvos/docker-proftpd
+    build: docker-proftpd
     ports:
       - 20
       - "21:21"
