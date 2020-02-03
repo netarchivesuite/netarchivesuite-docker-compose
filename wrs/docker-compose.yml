@@ -6,3 +6,4 @@ services:
       - "8883:80"
     volumes:
       - ./wrs/cgi-bin:/production/www/cgi-bin
+      - ./wrs/testdata:/data

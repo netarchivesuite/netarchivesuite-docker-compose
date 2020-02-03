@@ -1,10 +1,22 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python2.7
+import zlib, cgitb, os
 
-import hoge
+## The following is purely to help with debugging
+cgitb.enable()
 
-print("Content-type: text/html")
+def resolveFile(filename):
+      return '/data/' + filename
+
+print("Content-type: application/warc")
 print("\n")
-print("<html>")
-print(hoge.hoge())
-print('This cgi script written by python.')
-print("</html>")
+obj = zlib.decompressobj(16 + zlib.MAX_WBITS)
+filename = os.environ['REQUEST_URI'].split('/')[-1]
+offset = int(os.environ['HTTP_RANGE'].split('-')[0])
+with open(resolveFile(filename)) as fin:
+    fin.seek(offset)
+    while True:
+        data = fin.read(1024 * 1024)
+        if data == '':
+            break
+        print(obj.decompress(data))
+
