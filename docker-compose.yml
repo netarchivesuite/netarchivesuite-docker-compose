@@ -174,8 +174,10 @@ services:
             - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
             - REPLICA=KB
             - LOCATION=K
+            - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5052
         ports:
           - 8878:8078
+          - 5052:5052
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   mq:
     image: seges/openmq
