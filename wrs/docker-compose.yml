@@ -1,0 +1,9 @@
+version: "3"
+services:
+  wrs:
+    build: https://github.com/pyohei/docker-cgi-python.git
+    ports:
+      - "8883:80"
+    volumes:
+      - ./wrs/cgi-bin:/production/www/cgi-bin
+      - ./wrs/testdata:/data
