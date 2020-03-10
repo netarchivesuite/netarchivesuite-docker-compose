@@ -8,7 +8,7 @@ FROM rightmesh/ubuntu-openjdk:16.04
 COPY nas.zip nas.zip
 COPY h3bundler.zip h3bundler.zip
 
-RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools && easy_install j2cli
+RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools python3-pip && pip3 install j2cli
 
 RUN unzip nas.zip -d nas
 RUN unzip h3bundler.zip
