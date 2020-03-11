@@ -1,0 +1,33 @@
+# Run with U_ID=$(id -u) G_ID=$(id -g) docker-compose -f docker-compose-bitmag.yml up
+version: "3"
+services:
+  bus:
+    image: webcenter/activemq:5.12.0
+    ports:
+      - 61616
+    environment:
+      - ACTIVEMQ_MIN_MEMORY=512
+      - ACTIVEMQ_MAX_MEMORY=2048
+    command: ["/opt/activemq/bin/activemq", "console"]
+  dav:
+    image: blekinge/apache_webdav
+    ports:
+      - 80
+    userns_mode: "host"
+    environment:
+      - uid=$U_ID
+      - gid=$G_ID
+    volumes:
+    - $HOME/dav:/site/dav
+  tomcat:
+    image: tomcat:8
+    volumes:
+      - ./bitmag-conf/contexts:/usr/local/tomcat/conf/Catalina/localhost
+      - ./bitmag-conf/wars:/wars
+      - ./tomcat_logs:/usr/local/tomcat/logs
+      - ./bitmag-conf/service-conf/:/service-conf
+    ports:
+      - 8180:8080
+    depends_on:
+      - bus
+      - dav

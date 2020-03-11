@@ -1,8 +1,0 @@
- CDX N b a m s k r M V g
-dns:www.kb.dk 20161218234342 dns:www.kb.dk text/dns - - - - 740 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/robots.txt 20161218234343 http://www.kb.dk/robots.txt text/plain 302 - - - 982 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/ 20161218234345 http://www.kb.dk/ text/html 200 - - - 2139 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/export/sites/kb_dk/robots.txt 20161218234345 http://www.kb.dk/export/sites/kb_dk/robots.txt text/plain 200 - - - 3442 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/da/index.html 20161218234346 http://www.kb.dk/da/index.html text/html 200 - - - 4784 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/favicon.ico 20161218234347 http://www.kb.dk/favicon.ico image/x-icon 200 - - - 21498 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz
-kb.dk/export/system/modules/dk.kb.responsive.local/resources/css/style.css 20161218234348 http://www.kb.dk/export/system/modules/dk.kb.responsive.local/resources/css/style.css text/css 200 - - - 22858 10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz

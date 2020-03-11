@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  Bitrepository Integration
+  %%
+  Copyright (C) 2010 - 2012 The State and University Library, The Royal Library and The State Archives, Denmark
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as 
+  published by the Free Software Foundation, either version 2.1 of the 
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Lesser Public License for more details.
+  
+  You should have received a copy of the GNU General Lesser Public 
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  #L%
+  -->
+
+<ReferenceSettings xmlns="http://bitrepository.org/settings/ReferenceSettings.xsd">
+  <GeneralSettings>
+    <ReceiverDestinationIDFactoryClass>org.bitrepository.protocol.messagebus.destination.DefaultReceiverDestinationIDFactory</ReceiverDestinationIDFactoryClass>
+  </GeneralSettings>
+
+  <ClientSettings>
+    <MediatorCleanupInterval>1000</MediatorCleanupInterval>
+    <ConversationTimeout>3600000</ConversationTimeout>
+  </ClientSettings>
+
+  <IntegrityServiceSettings>
+    <ID>integrity-service</ID>
+    <Workflows>
+      <Workflow>
+        <WorkflowClass>CompleteIntegrityCheck</WorkflowClass>
+        <Schedules>
+          <Schedule>
+            <WorkflowInterval>86400000</WorkflowInterval>  
+            <Collections>
+              <CollectionID>netarkivet</CollectionID>
+            </Collections>
+          </Schedule>
+        </Schedules>
+      </Workflow>      
+      <Workflow>
+        <WorkflowClass>IncrementalIntegrityCheck</WorkflowClass>
+        <Schedules>
+          <Schedule>
+            <WorkflowInterval>3600000</WorkflowInterval>  
+            <Collections>
+              <CollectionID>netarkivet</CollectionID>
+            </Collections>
+          </Schedule>
+        </Schedules>
+      </Workflow>
+      <Workflow>
+        <WorkflowClass>RepairMissingFilesWorkflow</WorkflowClass>
+        <Schedules>
+          <Schedule>
+            <!-- Only run manually -->  
+            <WorkflowInterval>-1</WorkflowInterval>
+            <Collections>
+              <CollectionID>netarkivet</CollectionID>
+            </Collections>
+          </Schedule>
+        </Schedules>
+      </Workflow>
+      <Workflow>
+        <WorkflowClass>SaltedChecksumWorkflow</WorkflowClass>
+        <Schedules>
+          <Schedule>
+            <!-- Only run manually -->  
+            <WorkflowInterval>-1</WorkflowInterval>
+            <Collections>
+              <CollectionID>netarkivet</CollectionID>
+            </Collections>
+          </Schedule>
+        </Schedules>
+      </Workflow>
+    </Workflows>
+    <IntegrityDatabase>
+      <DriverClass>org.apache.derby.jdbc.EmbeddedDriver</DriverClass>
+      <DatabaseURL>jdbc:derby:/service-conf/integrityservice/integritydb</DatabaseURL>
+    </IntegrityDatabase>
+    <TimeBeforeMissingFileCheck>3600000</TimeBeforeMissingFileCheck> 
+    <AuditTrailContributerDatabase>
+      <DriverClass>org.apache.derby.jdbc.EmbeddedDriver</DriverClass>
+      <DatabaseURL>jdbc:derby:/service-conf/integrityservice/auditcontributerdb</DatabaseURL>
+    </AuditTrailContributerDatabase>
+    <IntegrityReportsDir>/service-conf/integrityservice/reportdir</IntegrityReportsDir>
+  </IntegrityServiceSettings>
+</ReferenceSettings>
