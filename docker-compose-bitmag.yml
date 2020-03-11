@@ -14,11 +14,11 @@ services:
     ports:
       - 80
     userns_mode: "host"
-    environment:
-      - uid=$U_ID
-      - gid=$G_ID
-    volumes:
-    - $HOME/dav:/site/dav
+  #  environment:
+  #    - uid=$U_ID
+  #    - gid=$G_ID
+  #  volumes:
+  #    - /home/csr/dav:/site/dav
   tomcat:
     image: tomcat:8
     volumes:
@@ -31,3 +31,9 @@ services:
     depends_on:
       - bus
       - dav
+  file1pillar:
+    build: filepillar
+    depends_on:
+      - bus
+      - dav
+    #command: ["tail", "-f", "/bitrepository-reference-pillar-1.9.0.1/bin/pillar.sh"]

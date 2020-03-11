@@ -50,7 +50,7 @@
     <AlarmDestination>topic://quick-start.alarms</AlarmDestination>
     <MessageBusConfiguration>
       <Name>Local ActiveMQ</Name>
-      <URL>failover:(tcp://dockerhost:61616?keepAlive=true)</URL>
+      <URL>failover:(tcp://bus:61616?keepAlive=true)</URL>
     </MessageBusConfiguration>
   </ProtocolSettings>
   <ClientSettings>

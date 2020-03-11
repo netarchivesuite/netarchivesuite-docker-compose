@@ -16,7 +16,7 @@
   </ClientSettings>
   <FileExchangeSettings>
     <ProtocolType>HTTP</ProtocolType>
-    <ServerName>dockerhost</ServerName>
+    <ServerName>dav</ServerName>
     <Port>80</Port>
     <Path>/dav</Path>
   </FileExchangeSettings>
