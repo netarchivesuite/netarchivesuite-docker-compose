@@ -10,6 +10,7 @@ services:
       - ACTIVEMQ_MAX_MEMORY=2048
     command: ["/opt/activemq/bin/activemq", "console"]
   dav:
+    #build: webdav
     image: blekinge/apache_webdav
     ports:
       - 80
