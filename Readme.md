@@ -1,4 +1,15 @@
-## Running 
+## Running
+ 
+First build NetarchiveSuite from the bitmag branch:
+```
+csr@oates:~/projects/netarchivesuite$ mvn -DskipTests clean package
+```
+Then copy the two distribution zips from Netarchivesuite to the docker project
+```
+cp ./deploy/distribution/target/NetarchiveSuite-5.7-IIPCH3-SNAPSHOT.zip ../netarchivesuite-docker-compose/nasapp/nas.zip
+cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bundler-5.7-IIPCH3-SNAPSHOT.zip ../netarchivesuite-docker-compose/nasapp/h3bundler.zip
+```
+
 
 ```
 setup.sh
