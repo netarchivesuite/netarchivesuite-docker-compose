@@ -27,9 +27,7 @@
       <ID>netarkivet</ID>
       <Name>The web collection</Name>
       <PillarIDs>
-        <PillarID>checksum-pillar</PillarID>
         <PillarID>file1-pillar</PillarID>
-        <PillarID>file2-pillar</PillarID>
       </PillarIDs>
     </Collection>
   </Collections>
