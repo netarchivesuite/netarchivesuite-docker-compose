@@ -13,8 +13,8 @@ cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bund
 
 ```
 setup.sh
-docker-compose -f docker-compose.yml -f docker-compose-bitmag-yml build
-docker-compose -f docker-compose.yml -f docker-compose-bitmag-yml up
+docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml build
+docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml up
 ```
 
 will create a complete dockerised NetarchiveSuite + Bitmagasin
