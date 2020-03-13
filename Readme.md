@@ -1,8 +1,16 @@
-Running 
+## Running 
 
-docker-compose build
-docker-compose up
+```
+setup.sh
+docker-compose -f docker-compose.yml -f docker-compose-bitmag-yml build
+docker-compose -f docker-compose.yml -f docker-compose-bitmag-yml up
+```
 
-will create a complete dockerised NetarchiveSuite with GUI on localhost:8078 and viewerproxy on localhost:8878
+will create a complete dockerised NetarchiveSuite + Bitmagasin
 
-In addition, a java debugger can be attached to the heritrix processes on port 8500 (Focused) or 8501 (Snapshot).
+* NetarchiveSuite GUI: http://localhost:8078
+* Bitmagasin GUI: http://localhost:8180/bitrepository-webclient/status-service.html
+* NetarchiveSuite ViewerProxy: localhost port 8878
+* Java debugger for Heritrix (Focused): localhost port 8500
+* Java debugger for Heritrix (Snapshot): localhost port 8501
+ 
