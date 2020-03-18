@@ -34,6 +34,8 @@ services:
       - dav
   file1pillar:
     build: filepillar
+    volumes:
+      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/pillar:/filedir
     depends_on:
       - bus
       - dav
