@@ -39,58 +39,58 @@ services:
       - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
       - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
     command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  nassbbitapp:
-    build: nasapp
-    links:
-      - mq
-      - ftp
-    environment:
-      - APP_LABEL=BitarchiveApplication
-      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
-      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-      - REPLICA=SB
-      - LOCATION=S
-    volumes:
-      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file1pillar/nasdocker:/nas/bitarchive
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  naskbbitapp:
-      build: nasapp
-      links:
-        - mq
-        - ftp
-      environment:
-        - APP_LABEL=BitarchiveApplication
-        - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
-        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-        - REPLICA=KB
-        - LOCATION=K
-      volumes:
-        - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file2pillar/nasdocker:/nas/bitarchive
-      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  naskbbamon:
-    build: nasapp
-    links:
-     - mq
-     - ftp
-    environment:
-      - APP_LABEL=BitarchiveMonitorApplication_KB
-      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
-      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-      - REPLICA=KB
-      - LOCATION=K
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  nassbbamon:
-    build: nasapp
-    links:
-     - mq
-     - ftp
-    environment:
-      - APP_LABEL=BitarchiveMonitorApplication_SB
-      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
-      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-      - REPLICA=SB
-      - LOCATION=S
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+#  nassbbitapp:
+#    build: nasapp
+#    links:
+#      - mq
+#      - ftp
+#    environment:
+#      - APP_LABEL=BitarchiveApplication
+#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
+#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+#      - REPLICA=SB
+#      - LOCATION=S
+#    volumes:
+#      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file1pillar/nasdocker:/nas/bitarchive
+#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+#  naskbbitapp:
+#      build: nasapp
+#      links:
+#        - mq
+#        - ftp
+#      environment:
+#        - APP_LABEL=BitarchiveApplication
+#        - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
+#        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+#        - REPLICA=KB
+#        - LOCATION=K
+#      volumes:
+#        - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file2pillar/nasdocker:/nas/bitarchive
+#      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+#  naskbbamon:
+#    build: nasapp
+#    links:
+#     - mq
+#     - ftp
+#    environment:
+#      - APP_LABEL=BitarchiveMonitorApplication_KB
+#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
+#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+#      - REPLICA=KB
+#      - LOCATION=K
+#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+#  nassbbamon:
+#    build: nasapp
+#    links:
+#     - mq
+#     - ftp
+#    environment:
+#      - APP_LABEL=BitarchiveMonitorApplication_SB
+#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
+#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+#      - REPLICA=SB
+#      - LOCATION=S
+#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nashjm:
       build: nasapp
       links:
@@ -147,16 +147,15 @@ services:
             - REPLICA=KB
             - LOCATION=K
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  nascs:
+  naswbindexer:
         build: nasapp
         links:
-           - mq
-           - ftp
+           - database
         environment:
-            - APP_LABEL=ChecksumFileApplication
-            - APP_CLASS=dk.netarkivet.archive.checksum.ChecksumFileApplication
-            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-            - REPLICA=CS
+            - APP_LABEL=WaybackIndexerApplication
+            - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar:/nas/lib/netarchivesuite-wayback-indexer.jar
+            - REPLICA=KB
             - LOCATION=K
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasvp:

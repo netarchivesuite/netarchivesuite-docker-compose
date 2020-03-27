@@ -23,6 +23,13 @@ TEMPLATE=template0
 ENCODING='SQL_ASCII'
 OWNER="devel";
 
+\echo Creating db wayback_indexer_dbchivesuite
+CREATE DATABASE "wayback_indexer_db"
+WITH
+TEMPLATE=template0
+ENCODING='SQL_ASCII'
+OWNER="devel";
+
 \echo Creating role netarchivesuite
 CREATE ROLE "netarchivesuite" LOGIN PASSWORD 'netarchivesuitepass'
 NOINHERIT CREATEDB

@@ -67,22 +67,31 @@
         <tempDir>tmpdircommon</tempDir>
         <mail>
             <server>post.kb.dk</server>
-        </mail><notifications>
-        <class>dk.netarkivet.common.utils.EMailNotifications</class>
-        <!-- T: receiver to be modified by test -->
-        <receiver>csr@kb.dk</receiver>
-        <sender>devel@kb-prod-udv-001.kb.dk</sender>
-    </notifications><useReplicaId>{{REPLICA | default('KB')}}</useReplicaId><thisPhysicalLocation>{{LOCATION  | default('K')}}</thisPhysicalLocation><database>
-        <class>dk.netarkivet.harvester.datamodel.PostgreSQLSpecifics</class>
-        <baseUrl>jdbc:postgresql</baseUrl>
-        <machine>database</machine>
-        <port>5432</port>
-        <dir>harvestdb</dir>
-        <username>netarchivesuite</username>
-        <password>netarchivesuitepass</password>
-    </database><http>
-        <port>8078</port>
-    </http><applicationName>{{APP_CLASS}}</applicationName></common>
+        </mail>
+        <notifications>
+            <class>dk.netarkivet.common.utils.EMailNotifications</class>
+            <!-- T: receiver to be modified by test -->
+            <receiver>csr@kb.dk</receiver>
+            <sender>devel@kb-prod-udv-001.kb.dk</sender>
+        </notifications>
+        <useReplicaId>{{REPLICA | default('KB')}}</useReplicaId>
+        <thisPhysicalLocation>{{LOCATION  | default('K')}}</thisPhysicalLocation>
+        <database>
+            <class>dk.netarkivet.harvester.datamodel.PostgreSQLSpecifics</class>
+            <baseUrl>jdbc:postgresql</baseUrl>
+            <machine>database</machine>
+            <port>5432</port>
+            <dir>harvestdb</dir>
+            <username>netarchivesuite</username>
+            <password>netarchivesuitepass</password>
+        </database>
+        <http>
+            <port>8078</port>
+        </http>
+        <applicationName>{{APP_CLASS}}</applicationName>
+
+
+    </common>
 
     <monitor>
         <jmxUsername>monitorRole</jmxUsername>
@@ -195,4 +204,46 @@
             <baseDir>viewerproxy</baseDir>
         </viewerproxy>
     </harvester>
+    <wayback>
+        <hibernate>
+            <c3p0>
+                <acquireIncrement>1</acquireIncrement>
+                <idleTestPeriod>100</idleTestPeriod>
+                <maxSize>100</maxSize>
+                <maxStatements>100</maxStatements>
+                <minSize>10</minSize>
+                <timeout>100</timeout>
+            </c3p0>
+            <connectionUrl>jdbc:postgresql://database/wayback_indexer_db</connectionUrl>
+            <dbDriverClass>org.postgresql.Driver</dbDriverClass>
+            <useReflectionOptimizer>false</useReflectionOptimizer>
+            <transactionFactory>org.hibernate.transaction.JDBCTransactionFactory</transactionFactory>
+            <dialect>org.hibernate.dialect.PostgreSQLDialect</dialect>
+            <showSql>false</showSql>
+            <formatSql>true</formatSql>
+            <hbm2ddlAuto>create</hbm2ddlAuto>
+            <user>netarchivesuite</user>
+            <password>netarchivesuitepass</password>
+        </hibernate>
+        <indexer>
+            <replicaId>KB</replicaId>
+            <finalBatchOutputDir>batchOutputDir</finalBatchOutputDir>
+            <tempBatchOutputDir>tempBatchOutputDir</tempBatchOutputDir>
+            <maxFailedAttempts>3</maxFailedAttempts>
+            <!--
+            There is a double-strategy for fetching filenames to queue for harvesting
+            i) Fetch all newer files on a short delay
+            ii) Fill any gaps by fetching the complete file list occasionally
+            e.g. Fetch all files from the last day once every half-hour and then fetch the complete file-list
+            daily.
+            In test, fetch all files from last 30 minutes every 5 minutes.
+            -->
+            <recentProducerSince>1800000</recentProducerSince>
+            <recentProducerInterval>300000</recentProducerInterval>
+            <producerDelay>0</producerDelay>
+            <producerInterval>86400000</producerInterval>
+            <consumerThreads>5</consumerThreads>
+            <initialFiles></initialFiles>
+        </indexer>
+    </wayback>
 </settings>
