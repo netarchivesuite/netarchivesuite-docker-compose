@@ -235,6 +235,8 @@ for user in $users; do
 done
 
 #3.3  Human Users
+
+
 #3.3.1  abrsadm
 
 
@@ -244,7 +246,7 @@ USERNAME=abrsadm
 ipa user-add $USERNAME \
     --first='Asger Askov' \
     --last='Blekinge' \
-    --homedir=/home/$USERNAME \
+    --homedir=/autohome/$USERNAME \
     --uid=$((subadminsGroup+1)) \
     --shell=/bin/bash \
     --gidnumber=$((subadminsGroup+1)) \
@@ -259,6 +261,22 @@ sudo mkdir -p $AUTOHOME_DIR/$USERNAME
 sudo chown $USERNAME:$USERNAME $AUTOHOME_DIR/$USERNAME -R
 
 
+USERNAME=vagrant
+
+
+ipa user-add $USERNAME \
+    --first='Vagrant' \
+    --last='User' \
+    --homedir=/home/$USERNAME \
+    --uid=1000 \
+    --shell=/bin/bash \
+    --gidnumber=1000 \
+    --class=SubAdmin \
+    --email="vagrant@kb.dk"
+ipa group-add-member subadmins --user $USERNAME
+ipa group-add-member kacusers --user $USERNAME
+
+
 #3.3.2  abr
 
 USERNAME=abr
@@ -267,7 +285,7 @@ USERNAME=abr
 ipa user-add $USERNAME \
     --first='Asger Askov' \
     --last='Blekinge' \
-    --homedir=/home/$USERNAME \
+    --homedir=/autohome/$USERNAME \
     --uid=$((p000Group+1)) \
     --shell=/bin/bash \
     --gidnumber=$((p000Group+1)) \
@@ -288,22 +306,22 @@ cat > setUserPassword.exp <<EOC
 # https://community.hortonworks.com/articles/74332/how-to-automate-ldap-sync-for-ambari-1.html
 
 set timeout 200
-set user [lindex \\$argv 0]
-set pass [lindex \\$argv 1]
-puts \\$pass
+set user [lindex \$argv 0]
+set pass [lindex \$argv 1]
+puts \$pass
 
-spawn ipa user-mod \\${user} --password
-expect "Password: " { send "\\$pass\n" }
-expect "Enter Password again to verify: " { send "\\$pass\n" }
+spawn ipa user-mod \${user} --password
+expect "Password: " { send "\$pass\n" }
+expect "Enter Password again to verify: " { send "\$pass\n" }
 expect eof
 
-spawn kinit \\${user} -c /tmp/null
-expect "Password for \\${user}@*:" { send "\\$pass\n" }
-expect "Enter new password: " { send "\\$pass\n" }
-expect "Enter it again: " { send "\\$pass\n" }
+spawn kinit \${user} -c /tmp/null
+expect "Password for \${user}@*:" { send "\$pass\n" }
+expect "Enter new password: " { send "\$pass\n" }
+expect "Enter it again: " { send "\$pass\n" }
 
-spawn kinit \\${user} -c /tmp/null
-expect "Password for \\${user}@*:" { send "\\$pass\n" }
+spawn kinit \${user} -c /tmp/null
+expect "Password for \${user}@*:" { send "\$pass\n" }
 
 interact
 
@@ -312,9 +330,11 @@ EOC
 
 sudo yum install -y expect
 
+set_password vagrant vagrant123
+
 #Users to set password for
 #password_users="ldapbind,amad";
-password_users="abrsadm,abr,ldapbind";
+password_users="abrsadm,abr,ldapbind,vagrant";
 
 OLDIFS=$IFS
 IFS=',';

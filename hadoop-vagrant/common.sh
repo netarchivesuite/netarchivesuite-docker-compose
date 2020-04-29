@@ -47,6 +47,24 @@ function get_password {
 }
 export get_password
 
+function set_password {
+    local PASSFILE="$1"
+
+    if [[ "$PASSFILE" != /* ]]; then #Relative path
+        PASSFILE=$passwordDir/$PASSFILE
+    fi
+
+    if [ -e "$PASSFILE" ]; then
+        cat "$PASSFILE"
+    else
+        mkdir -p "$passwordDir"
+        local PASSWD="$2"
+        echo $PASSWD > "$PASSFILE"
+        echo $PASSWD
+    fi
+}
+
+
 function kinit_admin {
     klist -s  || (get_password admin | kinit "admin@$REALM_NAME")
 }

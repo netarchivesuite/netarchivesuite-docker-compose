@@ -43,7 +43,7 @@ ipa service-add --force "nfs/$KAC_ADM"
 ipa automountmap-add default auto.home
 
 #And add the auto.home map to auto.master
-ipa automountkey-add default --key "/home" --info auto.home auto.master
+ipa automountkey-add default --key "/autohome" --info auto.home auto.master
 
 #Finally add the key to the auto.home map
 ipa automountkey-add default \

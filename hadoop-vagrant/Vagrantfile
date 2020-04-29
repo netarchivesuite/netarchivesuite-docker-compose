@@ -26,6 +26,10 @@ Vagrant.configure("2") do |config|
                          inline: "yum update -y",
                          name: "yum update"
 
+  config.vm.provision :shell,
+                      inline: "echo -e 'vagrant123\nvagrant123'|  passwd vagrant",
+                      name: "vagrant password set"
+
   #Vagrant places hostname in /etc/hosts. This cause our scripts to get the wrong IP address. Remove it
   config.vm.provision "shell", inline: "cp /etc/hosts /etc/hosts.orig", name: "backing up /etc/hosts"
   config.vm.provision "shell", inline: "grep localhost /etc/hosts.orig > /etc/hosts", name: "Removing hostname from hosts", run: "always"
