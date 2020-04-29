@@ -63,7 +63,6 @@ ipa user-mod admin    --uid ${adminsGroup} --gid ${adminsGroup}
 
 ipa user-show admin
 
-#TODO set resolv.conf to only use 10.0.0.9
 #Reverse DNS
 #Add the reverse zones for subnet1 and subnet2.
 

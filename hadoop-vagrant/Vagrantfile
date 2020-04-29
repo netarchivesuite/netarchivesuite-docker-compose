@@ -62,7 +62,10 @@ Vagrant.configure("2") do |config|
       v.cpus = 1
     end
 
-    subconfig.vm.provision :shell, path: "Install_IPA.sh", name: 'Install IPA'
+    subconfig.vm.provision :shell, path: "nah-adm/Install_IPA.sh", name: 'Install IPA'
+    subconfig.vm.provision :shell, path: "nah-adm/home_server", name: 'Automounts server'
+    subconfig.vm.provision :shell, path: "nah-adm/setup_users", name: 'Setup users'
+
 
   end
 
@@ -78,6 +81,10 @@ Vagrant.configure("2") do |config|
     end
 
     subconfig.vm.network "forwarded_port", guest: 8080, host: 8080 # Ambari
+
+    subconfig.vm.provision :shell, path: "nah-abri/postgres.sh", name: 'Postgres database'
+    subconfig.vm.provision :shell, path: "nah-abri/client.sh", name: 'IPA client'
+    subconfig.vm.provision :shell, path: "nah-abri/ambari.sh", name: 'Ambari Server'
 
     # Ambari must own this folder, and it does not do so by default.
     subconfig.vm.provision :shell,
@@ -122,31 +129,10 @@ Vagrant.configure("2") do |config|
   end
 
 
-  config.vm.define "nah-hdfs-001" do |subconfig|
+  config.vm.define "nah-master" do |subconfig|
     subconfig.vm.box = BOX_IMAGE
     subconfig.vm.hostname = "nah-hdfs-001." + HADOOP_NETWORK
     subconfig.vm.network :private_network, ip: HADOOP_NET + ".101"
-  end
-
-
-  config.vm.define "nah-zkpr-001" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-zpkr-001." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".104"
-  end
-
-
-  config.vm.define "nah-yarn-001" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-yarn-001." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".114"
-  end
-
-
-  config.vm.define "nah-hist" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-hist." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".116"
   end
 
 
