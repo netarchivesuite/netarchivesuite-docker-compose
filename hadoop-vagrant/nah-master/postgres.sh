@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-cd /vagrant/nah-abri
+cd /vagrant/nah-master
 source ../common.sh
 source ../machines.sh
 

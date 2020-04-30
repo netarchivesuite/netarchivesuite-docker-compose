@@ -1,0 +1,17 @@
+#!/usr/bin/expect
+# https://community.hortonworks.com/articles/74332/how-to-automate-ldap-sync-for-ambari-1.html
+
+#Ambari can be slow on the first boot
+set timeout -1
+
+set user [lindex $argv 0]
+set pass [lindex $argv 1]
+set syncParam [lindex $argv 2]
+puts $pass
+
+spawn /usr/sbin/ambari-server sync-ldap $syncParam
+expect "Enter Ambari Admin login:" { send -- "$user\n" }
+expect "Enter Ambari Admin password:" { send -- "$pass\n" }
+send -- "\n"
+
+expect eof

@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-#Export syshome dir via NFS.
-SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 
-cd /vagrant/nah-adm
+SCRIPT_DIR=/vagrant/nah-adm
+
+cd $SCRIPT_DIR
 source ../common.sh
 source ../machines.sh
 
-
-set -x
 
 #3.1  Groups
 #Create the groups
@@ -301,33 +299,6 @@ sudo chown $USERNAME:$USERNAME $AUTOHOME_DIR/$USERNAME -R
 #3.4  Passwords
 
 
-cat > setUserPassword.exp <<EOC
-#!/usr/bin/expect
-# https://community.hortonworks.com/articles/74332/how-to-automate-ldap-sync-for-ambari-1.html
-
-set timeout 200
-set user [lindex \$argv 0]
-set pass [lindex \$argv 1]
-puts \$pass
-
-spawn ipa user-mod \${user} --password
-expect "Password: " { send "\$pass\n" }
-expect "Enter Password again to verify: " { send "\$pass\n" }
-expect eof
-
-spawn kinit \${user} -c /tmp/null
-expect "Password for \${user}@*:" { send "\$pass\n" }
-expect "Enter new password: " { send "\$pass\n" }
-expect "Enter it again: " { send "\$pass\n" }
-
-spawn kinit \${user} -c /tmp/null
-expect "Password for \${user}@*:" { send "\$pass\n" }
-
-interact
-
-EOC
-
-
 sudo yum install -y expect
 
 set_password vagrant vagrant123
@@ -341,7 +312,7 @@ IFS=',';
 for user in ${password_users}; do
     echo -e "\n\n$user";
     password=$(get_password "${user}")
-    expect $PWD/setUserPassword.exp "$user" "$password"
+    expect $SCRIPT_DIR/setUserPassword.exp "$user" "$password"
 done
 
 #3.5  Sudo rules

@@ -1,0 +1,28 @@
+{
+  "blueprint" : "NAH",
+  "default_password" : "admin",
+  "host_groups" :[
+    {
+      "name" : "master",
+      "hosts" : [
+        {
+          "fqdn" : "nah-master.nah.hadoop"
+        }
+      ]
+    },
+    {
+      "name" : "datanodes",
+      "hosts" : [
+        {
+          "fqdn" : "nah-data-001.nah.hadoop"
+        },
+        {
+          "fqdn" : "nah-data-002.nah.hadoop"
+        },
+        {
+          "fqdn" : "nah-data-003.nah.hadoop"
+        }
+      ]
+    }
+  ]
+}

@@ -82,16 +82,6 @@ function createDB(){
     echo "GRANT ALL PRIVILEGES ON DATABASE $DATABASE TO $DBUSER;" | sudo -u postgres psql
 }
 
-#Exit if you are on a particular hostname. Used to NOT install client
-# libraries on servers
-function notOnServer(){
-    local SERVER="$1"
-    if [ "$HOST_NAME" == "$SERVER" ]; then
-        echo "Not running this script on $SERVER"
-        exit
-    fi
-}
-
 
 function ip1(){
     ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1 | sed -s 's/\s//g'

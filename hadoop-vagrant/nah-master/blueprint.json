@@ -1,0 +1,191 @@
+{
+  "configurations": [
+    {
+      "mapred-site": {
+        "properties_attributes": {},
+        "properties": {
+          "mapreduce.jobhistory.address": "%HOSTGROUP::master%:10020",
+          "mapreduce.jobhistory.webapp.address": "%HOSTGROUP::master%:19888"
+        }
+      }
+    },
+    {
+      "core-site": {
+        "properties_attributes": {
+          "final": {
+            "fs.defaultFS": "true"
+          }
+        },
+        "properties": {
+          "fs.defaultFS": "hdfs://%HOSTGROUP::master%:8020",
+          "hadoop.proxyuser.ambari.hosts": "%HOSTGROUP::master%",
+          "hadoop.proxyuser.hdfs.hosts": "*",
+          "hadoop.proxyuser.ambari.groups": "*"
+        }
+      }
+    },
+    {
+      "hdfs-site": {
+        "properties": {
+          "dfs.namenode.rpc-address": "%HOSTGROUP::master%:8020",
+          "dfs.namenode.https-address": "%HOSTGROUP::master%:50470",
+          "dfs.namenode.http-address": "%HOSTGROUP::master%:50070",
+          "dfs.datanode.data.dir": "/hdfs/datanode",
+          "dfs.namenode.name.dir": "/hdfs/namenode",
+          "dfs.namenode.checkpoint.dir" : "/hdfs/namesecondary",
+          "dfs.namenode.secondary.http-address": "%HOSTGROUP::master%:50090",
+          "dfs.namenode.http-bind-host" : "0.0.0.0",
+          "dfs.namenode.https-bind-host" : "0.0.0.0"
+
+        }
+      }
+    },
+    {
+      "yarn-site": {
+        "properties_attributes": {},
+        "properties": {
+          "yarn.resourcemanager.zk-address": "%HOSTGROUP::master%:2181",
+          "yarn.log.server.web-service.url": "http://%HOSTGROUP::master%:8188/ws/v1/applicationhistory",
+          "yarn.resourcemanager.webapp.address": "%HOSTGROUP::master%:8088",
+          "yarn.timeline-service.address": "%HOSTGROUP::master%:10200",
+          "yarn.resourcemanager.admin.address": "%HOSTGROUP::master%:8141",
+          "yarn.resourcemanager.resource-tracker.address": "%HOSTGROUP::master%:8025",
+          "yarn.resourcemanager.scheduler.address": "%HOSTGROUP::master%:8030",
+          "yarn.log.server.url": "http://%HOSTGROUP::master%:19888/jobhistory/logs",
+          "yarn.resourcemanager.address": "%HOSTGROUP::master%:8050",
+          "hadoop.registry.zk.quorum": "%HOSTGROUP::master%:2181",
+          "yarn.resourcemanager.hostname": "%HOSTGROUP::master%",
+          "yarn.timeline-service.webapp.address": "%HOSTGROUP::master%:8188",
+          "yarn.resourcemanager.webapp.https.address": "%HOSTGROUP::master%:8090",
+          "yarn.timeline-service.webapp.https.address": "%HOSTGROUP::master%:8190"
+        }
+      }
+    },
+    {
+      "cluster-env": {
+        "properties_attributes": {},
+        "properties": {
+          "sysprep_skip_create_users_and_groups": "true",
+          "ignore_groupsusers_create": "true"
+        }
+      }
+    },
+    {
+      "kerberos-env": {
+        "properties_attributes": {},
+        "properties": {
+          "realm": "NAH.HADOOP",
+          "kdc_type": "none",
+          "kdc_host": "nah-adm.nah.hadoop",
+          "manage_identities": "false",
+          "install_packages": "false"
+        }
+      }
+    },
+    {
+      "krb5-conf": {
+        "properties_attributes": {},
+        "properties": {
+          "domains": "",
+          "manage_krb5_conf": "false"
+        }
+      }
+    }
+  ],
+  "host_groups": [
+    {
+      "components": [
+        {
+          "name": "NODEMANAGER"
+        },
+        {
+          "name": "DATANODE"
+        },
+        {
+          "name": "METRICS_MONITOR"
+        }
+      ],
+      "configurations": [],
+      "name": "datanodes",
+      "cardinality": "3"
+    },
+    {
+      "components": [
+        {
+          "name": "MAPREDUCE2_CLIENT"
+        },
+        {
+          "name": "YARN_CLIENT"
+        },
+        {
+          "name": "HDFS_CLIENT"
+        },
+        {
+          "name": "AMBARI_SERVER"
+        },
+        {
+          "name": "METRICS_MONITOR"
+        },
+        {
+          "name": "ZOOKEEPER_CLIENT"
+        },
+        {
+          "name": "METRICS_COLLECTOR"
+        },
+        {
+          "name": "METRICS_GRAFANA"
+        },
+        {
+          "name": "HISTORYSERVER"
+        },
+        {
+          "name": "RESOURCEMANAGER"
+        },
+        {
+          "name": "APP_TIMELINE_SERVER"
+        },
+        {
+          "name": "SECONDARY_NAMENODE"
+        },
+        {
+          "name": "NAMENODE"
+        },
+        {
+          "name": "ZOOKEEPER_SERVER"
+        }
+      ],
+      "configurations": [],
+      "name": "master",
+      "cardinality": "1"
+    }
+  ],
+  "settings": [
+    {
+      "recovery_settings": [
+        {
+          "recovery_enabled": "true"
+        }
+      ]
+    },
+    {
+      "service_settings": [
+        {
+          "recovery_enabled": "true",
+          "name": "AMBARI_METRICS"
+        }
+      ]
+    },
+    {
+      "component_settings": [
+        {
+          "recovery_enabled": "true",
+          "name": "METRICS_COLLECTOR"
+        }
+      ]
+    }
+  ],
+  "Blueprints": {
+    "stack_name": "HDP",
+    "stack_version": "2.6"
+  }
+}

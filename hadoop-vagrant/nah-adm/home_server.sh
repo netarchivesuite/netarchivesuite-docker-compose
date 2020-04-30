@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 #Export syshome dir via NFS.
-SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+SCRIPT_DIR=/vagrant/nah-adm
 
 cd /vagrant/nah-adm
 source ../common.sh
 source ../machines.sh
-
-
-set -x
-
 
 mkdir -p $SYSHOME_DIR
 #NFS exports this folder
@@ -37,7 +33,7 @@ kinit_admin
 #This require the ipa admintools to be installed and the host to be an ipa client
 
 #Add the NFS service principal for the server and client to Kerberos.
-ipa service-add --force "nfs/$KAC_ADM"
+ipa service-add --force "nfs/$IPA_SERVER"
 
 #Add the auto.home map
 ipa automountmap-add default auto.home
@@ -48,7 +44,7 @@ ipa automountkey-add default --key "/autohome" --info auto.home auto.master
 #Finally add the key to the auto.home map
 ipa automountkey-add default \
     --key "*" \
-    --info "-fstype=nfs4,rw,sec=krb5,intr,hard $KAC_ADM:$AUTOHOME_DIR/&" \
+    --info "-fstype=nfs4,rw,sec=krb5,intr,hard $IPA_SERVER:$AUTOHOME_DIR/&" \
     auto.home
 
 
@@ -56,7 +52,7 @@ ipa automountkey-add default \
 kinit_admin
 
 #Get the keytab for the nfs process
-ipa-getkeytab --server $KAC_ADM -p "nfs/$KAC_ADM" -k /etc/krb5.keytab
+ipa-getkeytab --server $IPA_SERVER -p "nfs/$IPA_SERVER" -k /etc/krb5.keytab
 
 #Tell your NFS service to use NFSv4
 perl -npe 's/#SECURE_NFS="yes"/SECURE_NFS=\"yes\"/g' -i /etc/sysconfig/nfs

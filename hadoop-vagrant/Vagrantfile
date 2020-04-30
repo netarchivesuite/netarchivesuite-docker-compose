@@ -1,11 +1,9 @@
 BOX_IMAGE = 'centos/7'
 
 
-
-
 HADOOP_NET = "10.0.0"
 HADOOP_NETWORK = "nah.hadoop"
-IPA_ADM_IP= HADOOP_NET + ".9"
+IPA_ADM_IP = HADOOP_NET + ".9"
 
 
 Vagrant.configure("2") do |config|
@@ -15,16 +13,19 @@ Vagrant.configure("2") do |config|
     # v.gui = true
     #This speeds up recreating containers
     v.linked_clone = true
+
+    v.memory = 1028
+    v.cpus = 1
   end
 
-  #Require vagrant plugin install vagrant-vbguest
   #Require vagrant plugin install vagrant-sshfs
   config.vm.synced_folder ".", "/vagrant", type: "sshfs"
 
-  
+
   config.vm.provision :shell,
-                         inline: "yum update -y",
-                         name: "yum update"
+                      inline: "yum update -y",
+                      name: "yum update"
+
 
   config.vm.provision :shell,
                       inline: "echo -e 'vagrant123\nvagrant123'|  passwd vagrant",
@@ -39,12 +40,12 @@ Vagrant.configure("2") do |config|
                       inline: "[ -f /etc/resolv.conf.orig ] || cp /etc/resolv.conf /etc/resolv.conf.orig", run: "always"
 
   config.vm.provision "shell",
-                      name: "Appending search domain "+HADOOP_NETWORK+" to /etc/resolv.conf",
-                      inline: "grep '^search .*"+HADOOP_NETWORK+".*$' /etc/resolv.conf || sed -i -E 's/^(search .*)$/\1 "+HADOOP_NETWORK+"/' /etc/resolv.conf", run: "always"
+                      name: "Appending search domain " + HADOOP_NETWORK + " to /etc/resolv.conf",
+                      inline: "grep '^search .*" + HADOOP_NETWORK + ".*$' /etc/resolv.conf || sed -j -E 's/^(search .*)$/\1 " + HADOOP_NETWORK + "/' /etc/resolv.conf", run: "always"
 
   config.vm.provision "shell",
-                      name: "Appending ipa-adm DNS server "+IPA_ADM_IP+" to /etc/resolv.conf",
-                      inline: "grep "+IPA_ADM_IP+" /etc/resolv.conf || echo 'nameserver "+IPA_ADM_IP+"' >>/etc/resolv.conf", run: "always"
+                      name: "Appending ipa-adm DNS server " + IPA_ADM_IP + " to /etc/resolv.conf",
+                      inline: "grep '^nameserver " + IPA_ADM_IP + "$' /etc/resolv.conf || echo 'nameserver " + IPA_ADM_IP + "' >>/etc/resolv.conf", run: "always"
 
 
   # They should all run the global bootstrap
@@ -57,34 +58,59 @@ Vagrant.configure("2") do |config|
     subconfig.vm.hostname = "nah-adm." + HADOOP_NETWORK
     subconfig.vm.network :private_network, ip: IPA_ADM_IP
 
-    subconfig.vm.provider "virtualbox" do |v|
-      v.memory = 2048
-      v.cpus = 1
-    end
+    subconfig.vm.network "forwarded_port", guest: 443, host: 443 # FreIPA webUI
 
     subconfig.vm.provision :shell, path: "nah-adm/Install_IPA.sh", name: 'Install IPA'
-    subconfig.vm.provision :shell, path: "nah-adm/home_server", name: 'Automounts server'
-    subconfig.vm.provision :shell, path: "nah-adm/setup_users", name: 'Setup users'
+    subconfig.vm.provision :shell, path: "nah-adm/home_server.sh", name: 'Automounts server'
+    subconfig.vm.provision :shell, path: "nah-adm/setup_users.sh", name: 'Setup users'
 
 
   end
 
+  # DataNodes
+  #
+
+  (1..3).each { |j|
+    config.vm.define "nah-data-00#{j}" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.hostname = "nah-data-00#{j}.#{HADOOP_NETWORK}"
+      subconfig.vm.network :private_network, ip: "#{HADOOP_NET}.1#{j}"
+
+      subconfig.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+        v.cpus = 2
+      end
+      subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
+      subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
+
+    end
+  }
+
+
   # Ambari Server
-  config.vm.define "nah-abri" do |subconfig|
+  config.vm.define "nah-master" do |subconfig|
     subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-abri." + HADOOP_NETWORK
+    subconfig.vm.hostname = "nah-master." + HADOOP_NETWORK
     subconfig.vm.network :private_network, ip: HADOOP_NET + ".113"
+
+    subconfig.vm.network "forwarded_port", guest: 8080, host: 8080 # Ambari
+    subconfig.vm.network "forwarded_port", guest: 50070, host: 50070 # HDFS
+    subconfig.vm.network "forwarded_port", guest: 8088, host: 8088 # YARN
+
 
     subconfig.vm.provider "virtualbox" do |v|
       v.memory = 4096
-      v.cpus = 2
+      v.cpus = 4
     end
 
-    subconfig.vm.network "forwarded_port", guest: 8080, host: 8080 # Ambari
+    subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
+    subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
 
-    subconfig.vm.provision :shell, path: "nah-abri/postgres.sh", name: 'Postgres database'
-    subconfig.vm.provision :shell, path: "nah-abri/client.sh", name: 'IPA client'
-    subconfig.vm.provision :shell, path: "nah-abri/ambari.sh", name: 'Ambari Server'
+    subconfig.vm.provision :shell, path: "nah-master/postgres.sh", name: 'Postgres database'
+
+    subconfig.vm.provision :shell, path: "nah-master/ambari.sh", name: 'Ambari Server'
+
+    subconfig.vm.provision :shell, path: "nah-master/blueprint.sh", name: 'Blueprints'
 
     # Ambari must own this folder, and it does not do so by default.
     subconfig.vm.provision :shell,
@@ -93,54 +119,6 @@ Vagrant.configure("2") do |config|
                            run: "always"
   end
 
-
-  # DataNodes
-  config.vm.define "nah-data-001" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-data-001." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".11"
-  end
-
-
-  config.vm.define "nah-data-002" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-data-002." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".12"
-
-
-    subconfig.vm.provider "virtualbox" do |v|
-      v.memory = 4096
-      v.cpus = 2
-    end
-
-  end
-
-
-  config.vm.define "nah-data-003" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-data-003." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".13"
-
-    subconfig.vm.provider "virtualbox" do |v|
-      v.memory = 4096
-      v.cpus = 2
-    end
-
-  end
-
-
-  config.vm.define "nah-master" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-hdfs-001." + HADOOP_NETWORK
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".101"
-  end
-
-
-  config.vm.define "nah-proj-000" do |subconfig|
-    subconfig.vm.box = BOX_IMAGE
-    subconfig.vm.hostname = "nah-proj-000.kach.network"
-    subconfig.vm.network :private_network, ip: HADOOP_NET + ".60"
-  end
 
 
 end

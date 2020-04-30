@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+SCRIPT_DIR=/vagrant/nah-adm
 
 cd /vagrant/nah-adm
 source ../common.sh
@@ -8,7 +8,6 @@ source ../machines.sh
 
 setenforce 0
 
-set -x
 #Install IPA server
 #First install haveged for entropy, as this speeds up the install A LOT
 #https://blog-ftweedal.rhcloud.com/2014/05/more-entropy-with-haveged/
@@ -27,7 +26,7 @@ yum install -y ipa-server ipa-server-dns ipa-server-trust-ad
 
 
 #Reset resolv.conf so that dns works.
-sed -i "s/nameserver $KAC_ADM_IP1//" /etc/resolv.conf
+sed -i "s/nameserver $IPA_IP1//" /etc/resolv.conf
 
 ipa-server-install \
     --unattended \
@@ -35,8 +34,8 @@ ipa-server-install \
     --domain="${DOMAIN_NAME1}" \
     --ds-password="$(get_password dm)" \
     --admin-password="$(get_password admin)" \
-    --hostname="$KAC_ADM" \
-    --ip-address="$KAC_ADM_IP1" \
+    --hostname="$IPA_SERVER" \
+    --ip-address="$IPA_IP1" \
     --idstart="${usersGroup}" \
     --setup-dns \
     --auto-forwarders \
@@ -66,32 +65,30 @@ ipa user-show admin
 #Reverse DNS
 #Add the reverse zones for subnet1 and subnet2.
 
+
 kinit_admin
 
+#https://docs.pagure.org/bind-dyndb-ldap/BIND9/SyncPTR.html
+ipa dnszone-mod $(hostname -d). --dynamic-update=TRUE
+ipa dnszone-mod $(hostname -d). --update-policy="grant $(hostname -d). krb5-self * A; grant $(hostname -d). krb5-self * AAAA; grant $(hostname -d). krb5-self * SSHFP;"
+ipa dnszone-mod $(hostname -d). --allow-sync-ptr=TRUE
+
 #Assumes that the subnets are /24
-REVERSE_ZONE1="$(echo "$SUBNET1" | awk -F. '{print $3"." $2"."$1}').in-addr.arpa"
+REVERSE_ZONE1="$(echo "$SUBNET1" | awk -F. '{print $3"." $2"."$1}').in-addr.arpa."
 
-ipa dnszone-add $REVERSE_ZONE1 --dynamic-update=true
+ipa dnszone-add $REVERSE_ZONE1 --dynamic-update=TRUE
 
+#First, get the IPs of this host
+#host have been added to the DNS server during FreeIPA install, but not to the Reverse zone1, so the command ipa dnsrecord-add ${DOMAIN_NAME1} $(hostname -s) --a-rec=$(ip1) --a-create-reverse might fail, and the reverse entry not set up. So set this up.
+set +e
+ipa dnsrecord-add $(hostname -d). $(hostname -s) --a-rec=$(ip1) --a-create-reverse
 
-#First, get the IPs of kac-adm.
-#
-#Create the dnszone for DOMAIN_NAME2 (kach), which was NOT created during install.
-#Create the DNS entry for kac-adm in both Domain1 and Domain2, if not already present. Create the reverse lookup if not already present.
-#kac-adm have been added to the DNS server during FreeIPA install, but not to the Reverse zone1, so the command ipa dnsrecord-add $\{DOMAIN\_NAME1\} kac\-adm \-\-a\-rec=$(ip1) --a-create-reverse might fail, and the reverse entry not set up. So set this up.
-
-
-ipa dnsrecord-add ${DOMAIN_NAME1} kac-adm --a-rec=$(ip1) --a-create-reverse
-
-
-#kac_adm_ip1 is "10.0.0.9". This gets the 9. part
-fourthPartOfIP=$(echo "$KAC_ADM_IP1" | cut -d'.' -f4)
-
-ipa dnsrecord-add "$REVERSE_ZONE1" "$fourthPartOfIP" --ptr-rec="nah-adm.$DOMAIN_NAME1."
-
+#IP is like "10.0.0.9". This gets the 9. part
+fourthPartOfIP=$(ip1 | cut -d'.' -f4)
+ipa dnsrecord-add "${REVERSE_ZONE1}" "${fourthPartOfIP}" --ptr-rec="$(hostname -f)."
+set -e
 #Verify that the DNS server replies correctly for both direct and reverse lookups
+host $(ip1) | grep -F $(hostname -f)
+host "$(hostname -f)" | grep -F $(ip1)
 
-
-host "$KAC_ADM_IP1"
-host "$(hostname)"
 

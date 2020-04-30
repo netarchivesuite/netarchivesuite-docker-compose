@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-cd /vagrant/nah-abri
+cd /vagrant/nah-master
 source ../common.sh
 source ../machines.sh
 
@@ -44,22 +44,22 @@ ambari-server setup \
 
 #Create the schema
 set +e
-PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
-    --host=${AMBARI_DATABASE_HOST} \
-    --port=${AMBARI_DATABASE_PORT} \
-    --username=${AMBARI_DATABASE_USER} \
-    ambari \
-    -c \
-    "CREATE SCHEMA ${AMBARI_DATABASE_NAME} AUTHORIZATION $AMBARI_DATABASE_USER; \
-    ALTER SCHEMA ${AMBARI_DATABASE_NAME} OWNER TO $AMBARI_DATABASE_USER; \
-    ALTER ROLE $AMBARI_DATABASE_USER SET search_path to '${AMBARI_DATABASE_NAME}', 'public';"
+	PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
+	    --host=${AMBARI_DATABASE_HOST} \
+	    --port=${AMBARI_DATABASE_PORT} \
+	    --username=${AMBARI_DATABASE_USER} \
+	    ambari \
+	    -c \
+	    "CREATE SCHEMA ${AMBARI_DATABASE_NAME} AUTHORIZATION $AMBARI_DATABASE_USER; \
+	    ALTER SCHEMA ${AMBARI_DATABASE_NAME} OWNER TO $AMBARI_DATABASE_USER; \
+	    ALTER ROLE $AMBARI_DATABASE_USER SET search_path to '${AMBARI_DATABASE_NAME}', 'public';"
 
-#Create the tables
-PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
-    --host=${AMBARI_DATABASE_HOST} \
-    --port=${AMBARI_DATABASE_PORT} \
-    --username=${AMBARI_DATABASE_USER} ambari \
-    --file=/var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
+	#Create the tables
+	PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
+	    --host=${AMBARI_DATABASE_HOST} \
+	    --port=${AMBARI_DATABASE_PORT} \
+	    --username=${AMBARI_DATABASE_USER} ambari \
+	    --file=/var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
 
 set -e
 #We need these for inescapable ambari services
@@ -68,8 +68,6 @@ get_password smartsense > /dev/null
 
 #7.3.2  Setup ambari
 
-
-set -o verbose #Print lines as they are executed
 
 # Setup LDAP sync
 append /etc/ambari-server/conf/ambari.properties "ldap.sync.username.collision.behavior=convert"
@@ -84,12 +82,13 @@ append /etc/ambari-server/conf/ambari.properties "authentication.ldap.groupNamin
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.groupObjectClass=posixGroup"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.managerDn=uid=ldapbind,cn=users,cn=accounts,$LDAP_DOMAIN"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.managerPassword=/etc/ambari-server/conf/ldap-password.dat"
-append /etc/ambari-server/conf/ambari.properties "authentication.ldap.primaryUrl=$KAC_ADM_IP1:389"
+append /etc/ambari-server/conf/ambari.properties "authentication.ldap.primaryUrl=$IPA_IP1:389"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.referral=ignore"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.useSSL=false"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.userObjectClass=posixAccount"
 append /etc/ambari-server/conf/ambari.properties "authentication.ldap.usernameAttribute=uid"
 
+yum install -y perl
 #get_password ldapbind
 #This strips the trailing newline, which otherwise chokes ambari up
 perl -0pe 's/\n\Z//' $passwordDir/ldapbind > /etc/ambari-server/conf/ldap-password.dat
@@ -99,26 +98,6 @@ systemctl restart ambari-server
 #7.3.3  Ambari Sync
 
 yum install expect -y
-cat > /vagrant/nah-abri/ambari-ldap-sync.exp <<EOC
-#!/usr/bin/expect
-# https://community.hortonworks.com/articles/74332/how-to-automate-ldap-sync-for-ambari-1.html
-
-#Ambari can be slow on the first boot
-set timeout -1
-
-set user [lindex \$argv 0]
-set pass [lindex \$argv 1]
-set syncParam [lindex \$argv 2]
-puts \$pass
-
-spawn /usr/sbin/ambari-server sync-ldap \$syncParam
-expect "Enter Ambari Admin login:" { send -- "\$user\n" }
-expect "Enter Ambari Admin password:" { send -- "\$pass\n" }
-send -- "\n"
-
-expect eof
-EOC
-
 
 # set -o verbose #Print lines as they are executed
 # set -o nounset #Stop script if attempting to use an unset variable
@@ -134,10 +113,8 @@ append /etc/ambari-server/ambari-users.csv 'admin'
 
 
 
-set -x
 #Sync amad and admin. At this point, admin is a normal user, so the password is admin
-expect /vagrant/nah-abri/ambari-ldap-sync.exp "admin" "admin" "--users=/etc/ambari-server/ambari-users.csv"
-set +x
+expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "admin" "--users=/etc/ambari-server/ambari-users.csv"
 
 
 rm -f /etc/ambari-server/ambari-groups.csv
@@ -147,8 +124,7 @@ append /etc/ambari-server/ambari-groups.csv 'kacusers,admins,subadmins,p000,p001
 adminPass=$(get_password admin) # The admin account is now an LDAP account
 
 #Now we sync the relevant groups with all their users. And we use the new admin pass
-set -x
-expect /vagrant/nah-abri/ambari-ldap-sync.exp "admin" "$adminPass" '--groups=/etc/ambari-server/ambari-groups.csv' 2>&1
+expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "$adminPass" '--groups=/etc/ambari-server/ambari-groups.csv' 2>&1
 
 
 # Second Step, give users Admin priviledges
@@ -185,10 +161,10 @@ adminUser="admin"
 adminPass=$(get_password admin)
 
 #Find all members of the admins group, and turn them into ambari admins
-usersFromGroup admins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $adminPass $KAC_ABRI"
+usersFromGroup admins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $adminPass $MASTER_NAME"
 
 #Find all members of the subadmins group and turn them into ambari admins
-usersFromGroup subadmins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $adminPass $KAC_ABRI"
+usersFromGroup subadmins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $adminPass $MASTER_NAME"
 
 # Ambari must own this folder, and it does not do so by default.
 chown ambari:ambari /var/run/ambari-server/ -R
