@@ -23,7 +23,6 @@ yum install -y ipa-client
 set +e
 ipa-client-install --uninstall --unattended
 set -e
-set -x
 
 ipa-client-install \
     --domain=${DOMAIN_NAME1} \

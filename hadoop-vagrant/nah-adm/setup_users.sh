@@ -7,8 +7,8 @@ source ../common.sh
 source ../machines.sh
 
 
-#3.1  Groups
-#Create the groups
+echo "3.1  Groups"
+echo "Create the groups"
 
 
 #set -o nounset #Stop script if attempting to use an unset variable
@@ -41,17 +41,15 @@ ipa group-add p001       --gid ${p001Group} --desc='Group for project p001'
 #ipa group-add p002       --gid ${p002Group} --desc='Group for project p002'
 #ipa group-add p003       --gid ${p003Group} --desc='Group for project p003'
 
-#3.2  System Users
-#Remove all system users. Useful when you want to recreate the users
-
-
+echo "3.2  System Users"
+echo "Remove all system users. Useful when you want to recreate the users"
 ipa user-find --class SystemUser | grep login: | cut -d':' -f2 | xargs -r ipa user-del
 
 
-#3.2.1  ldapbind, jupyterhub and rstudio
+echo "3.2.1  ldapbind, jupyterhub and rstudio"
 
 
-## System services
+echo "# System services"
 
 ipa user-add ldapbind \
     --first='Bind User' \
@@ -83,10 +81,10 @@ ipa user-add rstudio \
     --class=SystemUser
 ipa group-add-member systemservices --user rstudio
 
-#3.2.2  ambari, am_agent, ams, ambari-qa
+echo "3.2.2  ambari, am_agent, ams, ambari-qa"
 
 
-### Ambari services
+echo "## Ambari services"
 ipa user-add ambari \
     --first='Server' \
     --homedir=/var/lib/ambari-server/keys/ \
@@ -135,7 +133,7 @@ ipa group-add-member ambariservices --user ambari-qa
 ipa group-add-member hadoop         --user ambari-qa
 
 
-#3.2.3  Hadoop users
+echo "3.2.3  Hadoop users"
 
 
 ipa user-add hdfs \
@@ -156,7 +154,7 @@ ipa group-add-member hadoop --user hdfs
 
 ID=$hadoopGroup
 
-#Most hadoop users do not need a personal group, so they are native members of the hadoop group
+echo "Most hadoop users do not need a personal group, so they are native members of the hadoop group"
 function createHadoopUser(){
     local NAME=$1
     ID=$((ID+1))
@@ -172,7 +170,7 @@ function createHadoopUser(){
     ipa group-add-member hadoop --user $NAME
 }
 
-#Some hadoop services want a personal group, so create one and add them as members of the hadoop group.
+echo "Some hadoop services want a personal group, so create one and add them as members of the hadoop group."
 function createHadoopUserWithGroup(){
     local NAME=$1
     ID=$((ID+1))
@@ -215,14 +213,14 @@ createHadoopUser zeppelin
 createHadoopUser zookeeper
 
 
-#3.2.4  Syshomes
-#Create syshome folders for all system users
+echo "3.2.4  Syshomes"
+echo "Create syshome folders for all system users"
 
 
-#Ensure the user defs are up to date before using 'id'
+echo "Ensure the user defs are up to date before using 'id'"
 sss_cache -E
 
-### Create home dirs for all system users
+echo "## Create home dirs for all system users"
 users=$(ipa user-find --class SystemUser | grep login: | cut -d':' -f2)
 
 for user in $users; do
@@ -232,10 +230,10 @@ for user in $users; do
     ln -sf "$SYSHOME_DIR/$user" "/syshome/$user"
 done
 
-#3.3  Human Users
+echo "3.3  Human Users"
 
 
-#3.3.1  abrsadm
+echo "3.3.1  abrsadm"
 
 
 USERNAME=abrsadm
@@ -275,7 +273,7 @@ ipa group-add-member subadmins --user $USERNAME
 ipa group-add-member kacusers --user $USERNAME
 
 
-#3.3.2  abr
+echo "3.3.2  abr"
 
 USERNAME=abr
 
@@ -296,15 +294,15 @@ sudo sss_cache -E
 sudo mkdir -p $AUTOHOME_DIR/$USERNAME
 sudo chown $USERNAME:$USERNAME $AUTOHOME_DIR/$USERNAME -R
 
-#3.4  Passwords
+echo "3.4  Passwords"
 
 
 sudo yum install -y expect
 
 set_password vagrant vagrant123
 
-#Users to set password for
-#password_users="ldapbind,amad";
+echo "Users to set password for"
+echo "password_users="ldapbind,amad";"
 password_users="abrsadm,abr,ldapbind,vagrant";
 
 OLDIFS=$IFS
@@ -315,39 +313,39 @@ for user in ${password_users}; do
     expect $SCRIPT_DIR/setUserPassword.exp "$user" "$password"
 done
 
-#3.5  Sudo rules
+echo "3.5  Sudo rules"
 
 
 set -o verbose #Print lines as they are executed
 set -o nounset #Stop script if attempting to use an unset variable
 #set -o errexit #Stop script if any command fails
 
-# Ambari Customizable Users
+echo " Ambari Customizable Users"
 #ambari ALL=(ALL) NOPASSWD:SETENV: 
-ambari_custom_users="/bin/su hdfs *,/bin/su ambariqa *,/bin/su ranger *,/bin/su zookeeper *,/bin/su knox *,/bin/su falcon *,/bin/su ams *,/bin/su flume *,/bin/su hbase *,/bin/su spark1 *,/bin/su spark2 *,/bin/su accumulo *,/bin/su hive *,/bin/su hcat *,/bin/su kafka *,/bin/su mapred *,/bin/su oozie *,/bin/su sqoop *,/bin/su storm *,/bin/su tez *,/bin/su atlas *,/bin/su yarn *,/bin/su kms *,/bin/su activity_analyzer *,/bin/su livy *,/bin/su zeppelin *,/bin/su infra-solr *,/bin/su logsearch *"
+ambari_custom_users="/bin/su hdfs *,/bin/su ambari-qa *,/bin/su ranger *,/bin/su zookeeper *,/bin/su knox *,/bin/su falcon *,/bin/su ams *,/bin/su flume *,/bin/su hbase *,/bin/su spark1 *,/bin/su spark2 *,/bin/su accumulo *,/bin/su hive *,/bin/su hcat *,/bin/su kafka *,/bin/su mapred *,/bin/su oozie *,/bin/su sqoop *,/bin/su storm *,/bin/su tez *,/bin/su atlas *,/bin/su yarn *,/bin/su kms *,/bin/su activity_analyzer *,/bin/su livy *,/bin/su zeppelin *,/bin/su infra-solr *,/bin/su logsearch *,/bin/su root *"
 
-# Ambari: Core System Commands
+echo " Ambari: Core System Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
-ambari_core_commands="/usr/bin/yum,/usr/bin/zypper,/usr/bin/apt-get,/bin/mkdir,/usr/bin/test,/bin/ln,/bin/ls,/bin/chown,/bin/chmod,/bin/chgrp,/bin/cp,/usr/sbin/setenforce,/usr/bin/stat,/bin/mv,/bin/sed,/bin/rm,/bin/kill,/bin/readlink,/usr/bin/pgrep,/bin/cat,/usr/bin/unzip,/bin/tar,/usr/bin/tee,/bin/touch,/usr/bin/mysql,/sbin/service mysqld *,/usr/bin/dpkg *,/bin/rpm *,/usr/sbin/hst *"
+ambari_core_commands="/usr/bin/yum,/usr/bin/zypper,/usr/bin/apt-get,/bin/mkdir,/usr/bin/test,/bin/ln,/bin/ls,/bin/chown,/bin/chmod,/bin/chgrp,/bin/cp,/usr/sbin/setenforce,/usr/bin/stat,/bin/mv,/bin/sed,/bin/rm,/bin/kill,/bin/readlink,/usr/bin/pgrep,/bin/cat,/usr/bin/unzip,/bin/tar,/usr/bin/tee,/bin/touch,/usr/bin/mysql,/sbin/service mysqld *,/usr/bin/dpkg *,/bin/rpm *,/usr/sbin/hst *,/usr/bin/kinit *,/usr/bin/find *"
 
-# Ambari: Hadoop and Configuration Commands
+echo " Ambari: Hadoop and Configuration Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
 ambari_conf_commands="/usr/bin/hdp-select,/usr/bin/conf-select,/usr/hdp/current/hadoop-client/sbin/hadoop-daemon.sh,/usr/lib/hadoop/bin/hadoop-daemon.sh,/usr/lib/hadoop/sbin/hadoop-daemon.sh,/usr/bin/ambari-python-wrap *"
 
-# Ambari: System User and Group Commands
+echo " Ambari: System User and Group Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
 ambari_usermanagement_commands="/usr/sbin/groupadd,/usr/sbin/groupmod,/usr/sbin/useradd,/usr/sbin/usermod"
 
-# Ambari: Knox Commands
+echo " Ambari: Knox Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
 ambari_knox_commands="/usr/bin/python2.6 /var/lib/ambari-agent/data/tmp/validateKnoxStatus.py *,/usr/hdp/current/knox-server/bin/knoxcli.sh"
 
-# Ambari: Ranger Commands
+echo " Ambari: Ranger Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
 ambari_ranger_commands="/usr/hdp/*/ranger-usersync/setup.sh,/usr/bin/ranger-usersync-stop,/usr/bin/ranger-usersync-start,/usr/hdp/*/ranger-admin/setup.sh *,/usr/hdp/*/ranger-knox-plugin/disable-knox-plugin.sh *,/usr/hdp/*/ranger-storm-plugin/disable-storm-plugin.sh *,/usr/hdp/*/ranger-hbase-plugin/disable-hbase-plugin.sh *,/usr/hdp/*/ranger-hdfs-plugin/disable-hdfs-plugin.sh *,/usr/hdp/current/ranger-admin/ranger_credential_helper.py,/usr/hdp/current/ranger-kms/ranger_credential_helper.py,/usr/hdp/*/ranger-*/ranger_credential_helper.py"
 
 
-# Ambari Infra and LogSearch Commands
+echo " Ambari Infra and LogSearch Commands"
 #ambari ALL=(ALL) NOPASSWD:SETENV:
 ambari_solr_commands="/usr/lib/ambari-infra-solr/bin/solr *,/usr/lib/ambari-logsearch-logfeeder/run.sh *,/usr/sbin/ambari-metrics-grafana *,/usr/lib/ambari-infra-solr-client/solrCloudCli.sh *"
 
@@ -382,14 +380,24 @@ echo
 IFS="$OLDIFS"
 
 
-# Default sudo options
+#ipa sudorule-add smokeusers --hostcat="all" --runasusercat='all' --runasgroupcat='all'
+#ipa sudorule-add-user smokeusers --users='ambari-qa'
+#ipa sudorule-add-option smokeusers --sudooption='!authenticate'
+#ipa sudorule-add-option smokeusers --sudooption='!requiretty'
+#ipa sudocmdgroup-add 'smokeusers'
+#ipa sudocmd-add '/usr/bin/kinit *'
+#ipa sudocmdgroup-add-member 'smokeusers' --sudocmds='/usr/bin/kinit *'
+#ipa sudorule-add-allow-command smokeusers --sudocmdgroups='smokeusers'
+
+
+echo " Default sudo options"
 ipa sudorule-add defaults --hostcat='all' --usercat='all'
 ipa sudorule-add-option defaults --sudooption='!requiretty'
 ipa sudorule-add-option defaults --sudooption='!env_reset'
 ipa sudorule-add-option defaults --sudooption='env_delete-=PATH'
 
 
-# subadmins sudorules
+echo " subadmins sudorules"
 ipa sudorule-add subadmins --hostcat="all" --cmdcat='all' --runasusercat='all' --runasgroupcat='all'
 ipa sudorule-add-user subadmins --groups=subadmins
 ipa sudorule-add-user subadmins --groups=admins
@@ -397,7 +405,7 @@ ipa sudorule-add-option subadmins --sudooption='!authenticate'
 ipa sudorule-add-option subadmins --sudooption='!requiretty'
 
 
-# jupyterhub sudorules
+echo " jupyterhub sudorules"
 ipa sudorule-add jupyterhub --hostcat='all' --runasusercat='all' --runasgroupcat='all'
 ipa sudorule-add-user jupyterhub --users=jupyterhub
 ipa sudorule-add-option jupyterhub --sudooption='!authenticate'

@@ -14,7 +14,7 @@ function get(){
 
 function delete(){
     local path="$1"
-    curl -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
+    curl -q -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
 }
 
 

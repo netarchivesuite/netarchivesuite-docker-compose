@@ -24,5 +24,23 @@
         }
       ]
     }
-  ]
+  ],
+  "credentials": [{
+    "alias": "kdc.admin.credential",
+    "principal": "admin@NAH.HADOOP",
+    "key": "admin",
+    "type": "TEMPORARY"
+  }],
+  "security": {
+    "type": "NONE",
+    "kerberos_descriptor" : {
+      "properties": {
+        "realm" : "NAH.HADOOP",
+        "principal_suffix": ""
+      }
+    }
+  },
+  "Clusters": {
+    "cluster_name": "NAH"
+  }
 }

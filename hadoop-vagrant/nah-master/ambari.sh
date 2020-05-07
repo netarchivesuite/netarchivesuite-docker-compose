@@ -44,22 +44,23 @@ ambari-server setup \
 
 #Create the schema
 set +e
-	PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
-	    --host=${AMBARI_DATABASE_HOST} \
-	    --port=${AMBARI_DATABASE_PORT} \
-	    --username=${AMBARI_DATABASE_USER} \
-	    ambari \
-	    -c \
-	    "CREATE SCHEMA ${AMBARI_DATABASE_NAME} AUTHORIZATION $AMBARI_DATABASE_USER; \
-	    ALTER SCHEMA ${AMBARI_DATABASE_NAME} OWNER TO $AMBARI_DATABASE_USER; \
-	    ALTER ROLE $AMBARI_DATABASE_USER SET search_path to '${AMBARI_DATABASE_NAME}', 'public';"
+PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
+    --host=${AMBARI_DATABASE_HOST} \
+    --port=${AMBARI_DATABASE_PORT} \
+    --username=${AMBARI_DATABASE_USER} \
+    ambari \
+    -c \
+    "DROP SCHEMA IF EXISTS ${AMBARI_DATABASE_NAME} CASCADE;\
+    CREATE SCHEMA ${AMBARI_DATABASE_NAME} AUTHORIZATION $AMBARI_DATABASE_USER; \
+    ALTER SCHEMA ${AMBARI_DATABASE_NAME} OWNER TO $AMBARI_DATABASE_USER; \
+    ALTER ROLE $AMBARI_DATABASE_USER SET search_path to '${AMBARI_DATABASE_NAME}', 'public';"
 
-	#Create the tables
-	PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
-	    --host=${AMBARI_DATABASE_HOST} \
-	    --port=${AMBARI_DATABASE_PORT} \
-	    --username=${AMBARI_DATABASE_USER} ambari \
-	    --file=/var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
+#Create the tables
+PGPASSWORD="${AMBARI_DATABASE_PASS}" psql \
+    --host=${AMBARI_DATABASE_HOST} \
+    --port=${AMBARI_DATABASE_PORT} \
+    --username=${AMBARI_DATABASE_USER} ambari \
+    --file=/var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
 
 set -e
 #We need these for inescapable ambari services

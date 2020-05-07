@@ -1,0 +1,30 @@
+[
+  {
+    "Clusters": {
+      "desired_config": {
+        "type": "krb5-conf",
+        "tag": "version1",
+        "properties": {
+          "manage_krb5_conf": "false"
+
+        }
+      }
+    }
+  },
+  {
+    "Clusters": {
+      "desired_config": {
+        "type": "kerberos-env",
+        "tag": "version1",
+        "properties": {
+          "realm": "NAH.HADOOP",
+          "kdc_type": "none",
+          "kdc_host": "nah-adm.nah.hadoop",
+          "manage_identities": "false",
+          "install_packages": "false",
+          "manage_auth_to_local": "true"
+        }
+      }
+    }
+  }
+]

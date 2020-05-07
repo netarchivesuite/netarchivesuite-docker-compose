@@ -32,11 +32,10 @@
           "dfs.namenode.http-address": "%HOSTGROUP::master%:50070",
           "dfs.datanode.data.dir": "/hdfs/datanode",
           "dfs.namenode.name.dir": "/hdfs/namenode",
-          "dfs.namenode.checkpoint.dir" : "/hdfs/namesecondary",
+          "dfs.namenode.checkpoint.dir": "/hdfs/namesecondary",
           "dfs.namenode.secondary.http-address": "%HOSTGROUP::master%:50090",
-          "dfs.namenode.http-bind-host" : "0.0.0.0",
-          "dfs.namenode.https-bind-host" : "0.0.0.0"
-
+          "dfs.namenode.http-bind-host": "0.0.0.0",
+          "dfs.namenode.https-bind-host": "0.0.0.0"
         }
       }
     },
@@ -186,6 +185,14 @@
   ],
   "Blueprints": {
     "stack_name": "HDP",
-    "stack_version": "2.6"
+    "stack_version": "2.6",
+    "security": {
+      "type": "NONE",
+      "kerberos_descriptor": {
+        "properties": {
+          "principal_suffix": ""
+        }
+      }
+    }
   }
 }

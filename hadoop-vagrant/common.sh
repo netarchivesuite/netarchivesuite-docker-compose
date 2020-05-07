@@ -89,6 +89,35 @@ function ip1(){
 
 
 
+function get(){
+    local path="$1"
+    curl -s -H "X-Requested-By: ambari" -X GET -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
+}
+
+function delete(){
+    local path="$1"
+    curl -q -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
+}
+
+
+function post(){
+    local path="$1"
+    local body="${2:-null}"
+    curl -s -H "X-Requested-By: ambari" -X POST -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path" -d "$body"
+}
+
+
+function put(){
+    local path="$1"
+    local body="${2:-null}"
+    curl -s -H "X-Requested-By: ambari" -X PUT -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path" -d "$body"
+}
+
+
+adminPass=$(get_password admin)
+
+
+
 export hadoopGroup=11000
 export hdfsGroup=11200
 export systemServiceGroup=15000
