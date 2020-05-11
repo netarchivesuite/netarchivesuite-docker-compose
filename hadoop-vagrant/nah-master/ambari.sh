@@ -24,7 +24,7 @@ AMBARI_DATABASE_NAME=ambari
 AMBARI_DATABASE_USER=ambari
 AMBARI_DATABASE_PASS=$(get_password postgres_ambari)
 AMBARI_DATABASE_PORT=5432
-AMBARI_SYSTEM_USER=ambari
+AMBARI_SYSTEM_USER=ambari-server
 
 echo -e "y\ny\n${AMBARI_SYSTEM_USER}\ny" | \
 ambari-server setup \
@@ -108,7 +108,7 @@ yum install expect -y
 
 # First step, sync users from LDAP
 
-# Sync only LDAP users from kacusers
+# Sync only LDAP users from nahusers
 rm -f /etc/ambari-server/ambari-users.csv
 append /etc/ambari-server/ambari-users.csv 'admin'
 
@@ -119,7 +119,7 @@ expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "admin" "--users=/etc/am
 
 
 rm -f /etc/ambari-server/ambari-groups.csv
-append /etc/ambari-server/ambari-groups.csv 'kacusers,admins,subadmins,p000,p001'
+append /etc/ambari-server/ambari-groups.csv 'nahusers,admins,subadmins,p000,p001'
 
 # Now admin have become a ldap user, so his password is now the password of the ldap server
 adminPass=$(get_password admin) # The admin account is now an LDAP account
@@ -134,7 +134,7 @@ expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "$adminPass" '--groups=/
 #Shorthand to find members of a group
 function usersFromGroup(){
     group="$1"
-    ipa user-find --in-groups=kacusers --in-groups="$group" | grep 'login:' | cut -d':' -f2
+    ipa user-find --in-groups=nahusers --in-groups="$group" | grep 'login:' | cut -d':' -f2
 }
 export usersFromGroup
 
@@ -168,4 +168,7 @@ usersFromGroup admins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $admi
 usersFromGroup subadmins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $adminPass $MASTER_NAME"
 
 # Ambari must own this folder, and it does not do so by default.
-chown ambari:ambari /var/run/ambari-server/ -R
+chown ambari-server:ambari-server /var/run/ambari-server/ -R
+
+
+setConfig core-site "hadoop.proxyuser.HTTP.groups" "nahusers"

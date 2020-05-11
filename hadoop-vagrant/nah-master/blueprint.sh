@@ -9,27 +9,25 @@ source ../machines.sh
 
 function get(){
     local path="$1"
-    curl -s -H "X-Requested-By: ambari" -X GET -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
+    curl -s -H "X-Requested-By: ambari" -X GET -u "admin:$(get_password admin)" "http://$MASTER_NAME:8080/api/v1/$path"
 }
 
 function delete(){
     local path="$1"
-    curl -q -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path"
+    curl -q -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$(get_password admin)" "http://$MASTER_NAME:8080/api/v1/$path"
 }
 
 
 function post(){
     local path="$1"
     local body="$2"
-    curl -s -H "X-Requested-By: ambari" -X POST -u "admin:$adminPass" "http://$MASTER_NAME:8080/api/v1/$path" -d $body
+    curl -s -H "X-Requested-By: ambari" -X POST -u "admin:$(get_password admin)" "http://$MASTER_NAME:8080/api/v1/$path" -d $body
 }
 
 
-adminPass=$(get_password admin)
-
 #set -e makes the execution stop if anything fails
 set -e
-#Step 2: Register Blueprint with Ambari
+echo "Step 2: Register Blueprint with Ambari"
 delete "blueprints/$CLUSTER_NAME" || true
 
 sleep 5
@@ -41,7 +39,7 @@ get "blueprints/$CLUSTER_NAME"
 
 sleep 5
 
-#Step 3: Create Cluster Creation Template
+echo "Step 3: Create Cluster Creation Template"
 delete "clusters/$CLUSTER_NAME" || true
 
 sleep 10

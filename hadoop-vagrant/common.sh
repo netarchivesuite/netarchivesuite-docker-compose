@@ -118,6 +118,26 @@ adminPass=$(get_password admin)
 
 
 
+function setConfig(){
+	set -x
+    /var/lib/ambari-server/resources/scripts/configs.py \
+        --user=admin \
+        --password=$(get_password admin) \
+        --host=$(hostname) \
+        --port=8080 \
+        --protocol=http \
+        --action=set \
+        --cluster=NAH \
+        --config-type="$1" \
+        --key="$2" \
+        --value="$3"
+
+    set +x
+}
+
+
+
+
 export hadoopGroup=11000
 export hdfsGroup=11200
 export systemServiceGroup=15000

@@ -5,6 +5,10 @@
 # This configures your system to use the dnsmasq plugin and to forward all requests to the .hadoop network to the freeipa server.
 # This allows you host to resolve the vagrant hosts
 
+#DO NOT DO THIS UNTIL nah-adm is up and running. In fact, wait until the cluster is up
+
+#TODO check lookup via 10.0.0.9
+
 sudo -i <<-EOF
 
 	cat - > /etc/NetworkManager/conf.d/00-use-dnsmasq.conf <<-EOS

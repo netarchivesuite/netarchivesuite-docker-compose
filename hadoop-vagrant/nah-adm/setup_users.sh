@@ -31,7 +31,7 @@ ipa group-add subadmins --gid ${subadminsGroup} --desc='For daily administration
 
 ipa group-add admins    --gid ${adminsGroup}    --desc='Account administrators group'
 
-ipa group-add kacusers      --gid ${usersGroup}     --desc='Standard user accounts, for unprivileged users.'
+ipa group-add nahusers      --gid ${usersGroup}     --desc='Standard user accounts, for unprivileged users.'
 
 ipa group-add hdfs          --gid ${hdfsGroup}      --desc='HDFS group'
 
@@ -85,7 +85,7 @@ echo "3.2.2  ambari, am_agent, ams, ambari-qa"
 
 
 echo "## Ambari services"
-ipa user-add ambari \
+ipa user-add ambari-server \
     --first='Server' \
     --homedir=/var/lib/ambari-server/keys/ \
     --uid=$((ambariServiceGroup+1)) \
@@ -93,9 +93,9 @@ ipa user-add ambari \
     --gidnumber=$((ambariServiceGroup+1)) \
     --last='Ambari' \
     --class=SystemUser
-ipa group-add-member ambariservices --user ambari
+ipa group-add-member ambariservices --user ambari-server
 #Ambari must be in hadoop group to read some keytabs when kerberos is used https://www.ibm.com/support/knowledgecenter/SSPT3X_4.2.0/com.ibm.swg.im.infosphere.biginsights.admin.doc/doc/admin_iop_server_kerberos.html
-ipa group-add-member hadoop --user ambari
+ipa group-add-member hadoop --user ambari-server
 
 ipa user-add am_agent \
     --first='Agent' \
@@ -128,7 +128,7 @@ ipa user-add ambari-qa \
     --gidnumber=${hadoopGroup} \
     --last='Ambari' \
     --class=SystemUser
-ipa group-add-member kacusers       --user ambari-qa
+ipa group-add-member nahusers       --user ambari-qa
 ipa group-add-member ambariservices --user ambari-qa
 ipa group-add-member hadoop         --user ambari-qa
 
@@ -249,7 +249,7 @@ ipa user-add $USERNAME \
     --class=SubAdmin \
     --email="abr@kb.dk"
 ipa group-add-member subadmins --user $USERNAME
-ipa group-add-member kacusers --user $USERNAME
+ipa group-add-member nahusers --user $USERNAME
 
 
 sudo sss_cache -E
@@ -270,7 +270,7 @@ ipa user-add $USERNAME \
     --class=SubAdmin \
     --email="vagrant@kb.dk"
 ipa group-add-member subadmins --user $USERNAME
-ipa group-add-member kacusers --user $USERNAME
+ipa group-add-member nahusers --user $USERNAME
 
 
 echo "3.3.2  abr"
@@ -285,9 +285,9 @@ ipa user-add $USERNAME \
     --uid=$((p000Group+1)) \
     --shell=/bin/bash \
     --gidnumber=$((p000Group+1)) \
-    --class=KacUser \
+    --class=NahUser \
     --email="abr@kb.dk"
-ipa group-add-member kacusers --user $USERNAME
+ipa group-add-member nahusers --user $USERNAME
 ipa group-add-member p000 --user $USERNAME
 
 sudo sss_cache -E

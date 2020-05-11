@@ -7,6 +7,9 @@ cd /vagrant/clients
 source ../common.sh
 source ../machines.sh
 
+if [ -e /vagrant/clients/$(hostname)_ipaclient ]; then
+	exit 0
+fi
 
 
 mv /etc/resolv.conf /etc/resolv.conf.orig
@@ -40,11 +43,10 @@ ipa-client-install \
 #Set the sudo timeout
 sed -i "s|\(\[domain/\${DOMAIN_NAME1}\]\)|\1\nentry_cache_sudo_timeout = 10|g" /etc/sssd/sssd.conf
 
-#Set the kerberos tickets so hadoop can read them
-sed -i "s|default_ccache_name.*|default_ccache_name = /tmp/krb5cc_%{uid}|g" /etc/krb5.conf
-
 append /etc/nsswitch.conf "sudoers: files sss"
 
+cp /etc/krb5.conf /etc/krb5.conf.old
+cp /vagrant/clients/krb5.conf /etc/krb5.conf
 
 kinit_admin
 
@@ -86,3 +88,5 @@ sudo grep automount /etc/nsswitch.conf
 # The autofs service must be started before you can log in
 sudo systemctl enable autofs
 sudo systemctl restart autofs
+
+touch /vagrant/clients/$(hostname)_ipaclient

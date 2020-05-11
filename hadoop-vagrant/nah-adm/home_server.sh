@@ -23,7 +23,7 @@ systemctl restart nfs-server
 
 
 #2.4  Automounted Homes
-#First configure automounting in FreeIPA on kac-adm
+#First configure automounting in FreeIPA on nah-adm
 
 
 kinit_admin

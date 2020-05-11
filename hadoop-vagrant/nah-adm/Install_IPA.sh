@@ -38,8 +38,8 @@ ipa-server-install \
     --ip-address="$IPA_IP1" \
     --idstart="${usersGroup}" \
     --setup-dns \
-    --auto-forwarders \
-    --auto-reverse
+	--no-reverse \
+    --auto-forwarders
 
 systemctl enable ipa
 

@@ -18,9 +18,9 @@
         },
         "properties": {
           "fs.defaultFS": "hdfs://%HOSTGROUP::master%:8020",
-          "hadoop.proxyuser.ambari.hosts": "%HOSTGROUP::master%",
-          "hadoop.proxyuser.hdfs.hosts": "*",
-          "hadoop.proxyuser.ambari.groups": "*"
+          "hadoop.proxyuser.ambari-server.hosts": "%HOSTGROUP::master%",
+          "hadoop.proxyuser.ambari-server.groups": "*",
+          "hadoop.proxyuser.hdfs.hosts": "*"
         }
       }
     },

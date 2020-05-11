@@ -14,8 +14,8 @@ source ../machines.sh
 hosts=$(get "hosts" |grep host_name| sed -n 's/.*"host_name" : "\([^\"]*\)".*/\1/p')
 
 for host in $hosts; do
-	post "clusters/$CLUSTER_NAME/hosts?Hosts/host_name=$host" \
-	'{"host_components" : [{"HostRoles" : {"component_name":"KERBEROS_CLIENT"}}]}'
+    post "clusters/$CLUSTER_NAME/hosts?Hosts/host_name=$host" \
+    '{"host_components" : [{"HostRoles" : {"component_name":"KERBEROS_CLIENT"}}]}'
 done
 
 #### Install the KERBEROS service and components
@@ -48,7 +48,7 @@ put "clusters/$CLUSTER_NAME" '{"Clusters": {"security_type" : "KERBEROS"}}'
 
 
 ## PRODUCE THE KERBEROS CSV
-get "clusters/$CLUSTER_NAME/kerberos_identities?fields=*&format=csv" > kerberos.csv
+get "clusters/$CLUSTER_NAME/kerberos_identities?fields=*&format=csv" > $SCRIPT_DIR/kerberos.csv
 
 
 
@@ -58,25 +58,51 @@ get "clusters/$CLUSTER_NAME/kerberos_identities?fields=*&format=csv" > kerberos.
 
 dd if=/dev/urandom of=/vagrant/passwords/http_secret bs=1024 count=1
 
-echo "$hosts" | xargs -r -i ssh "vagrant@{}" sudo -i <<EOF
-cp /vagrant/passwords/http_secret /etc/security/http_secret
-chown hdfs:hadoop /etc/security/http_secret
-chmod 440 /etc/security/http_secret
-EOF
+for host in $hosts; do
+    echo "$host"
+    ssh -t "vagrant@$host" "sudo cp /vagrant/passwords/http_secret /etc/security/http_secret;
+                            sudo chown hdfs:hadoop /etc/security/http_secret;
+                            sudo chmod 440 /etc/security/http_secret"
+done
 
-function setConfig(){
-	/var/lib/ambari-server/resources/scripts/configs.py \
-		-u admin -p $(get_password admin) \
-		-l $(hostname) \
-		-n NAH \
-		-c "$1" \
-		-k "$2" \
-		-v "$3"
-}
+
 setConfig hdfs-site "hadoop.http.authentication.simple.anonymous.allowed" "false"
 setConfig hdfs-site "hadoop.http.authentication.signature.secret.file"  "/etc/security/http_secret"
 setConfig hdfs-site "hadoop.http.authentication.type" "kerberos"
 setConfig hdfs-site "hadoop.http.authentication.kerberos.keytab"  "/etc/security/keytabs/spnego.service.keytab"
 setConfig hdfs-site "hadoop.http.authentication.kerberos.principal"  "HTTP/_HOST@NAH.HADOOP"
 setConfig hdfs-site "hadoop.http.filter.initializers"  "org.apache.hadoop.security.AuthenticationFilterInitializer"
-setConfig hdfs-site "hadoop.http.authentication.cookie.domain"  "nah.hadoop"
+setConfig hdfs-site "hadoop.http.authentication.cookie.domain"  "$(hostname -d)"
+
+
+
+
+
+
+kinit_admin
+set -x
+
+#TODO how to get ambari to start kerberos creation programmatically
+#https://github.com/apache/ambari/blob/branch-2.5/ambari-server/docs/security/kerberos/enabling_kerberos.md
+
+source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv hosts)
+
+source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv services)
+
+
+
+sudo -u vagrant -i <<-EOF
+
+source /vagrant/machines.sh
+
+mkdir -p /vagrant/keytabs
+cd /vagrant/keytabs
+
+kinit_admin
+
+source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv keytabs)
+
+
+source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv distribute)
+
+EOF

@@ -5,6 +5,17 @@ HADOOP_NET = "10.0.0"
 HADOOP_NETWORK = "nah.hadoop"
 IPA_ADM_IP = HADOOP_NET + ".9"
 
+required_plugins = %w(vagrant-reload vagrant-sshfs vagrant_reboot_linux)
+
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
 
 Vagrant.configure("2") do |config|
 
@@ -18,13 +29,14 @@ Vagrant.configure("2") do |config|
     v.cpus = 1
   end
 
-  #Require vagrant plugin install vagrant-sshfs
-  config.vm.synced_folder ".", "/vagrant", type: "sshfs"
 
 
   config.vm.provision :shell,
                       inline: "yum update -y",
                       name: "yum update"
+
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync_auto: true
+
 
   config.vm.provision :shell,
                       inline: "echo -e 'vagrant123\nvagrant123'|  passwd vagrant",
@@ -56,6 +68,7 @@ Vagrant.configure("2") do |config|
     subconfig.vm.box = BOX_IMAGE
     subconfig.vm.hostname = "nah-adm." + HADOOP_NETWORK
     subconfig.vm.network :private_network, ip: IPA_ADM_IP
+    subconfig.vm.provision :reload
 
     subconfig.vm.provision :shell, path: "nah-adm/Install_IPA.sh", name: 'Install IPA'
     subconfig.vm.provision :shell, path: "nah-adm/home_server.sh", name: 'Automounts server'
@@ -106,9 +119,11 @@ Vagrant.configure("2") do |config|
 
     subconfig.vm.provision :shell, path: "nah-master/ssh_access.sh", name: 'Ensure that the master can ssh to the other hosts'
 
+    subconfig.vm.provision :shell, path: "nah-master/kerberos-enable.sh", name: 'Enable kerberos on the cluster'
+
     # Ambari must own this folder, and it does not do so by default.
     subconfig.vm.provision :shell,
-                           inline: "(id ambari && chown ambari:ambari /var/run/ambari-server/ -R) || true",
+                           inline: "(id ambari-server && chown ambari-server:ambari-server /var/run/ambari-server/ -R) || true",
                            name: "Owning /var/run/ambari-server/",
                            run: "always"
   end
