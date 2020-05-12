@@ -10,8 +10,7 @@ vagrant up nah-master
 #So reload the machine
 vagrant reload nah-master
 #Sync the /vagrant folder
-vagrant rsync nah-master
-
+vagrant sshfs nah-master
 
 vagrant ssh --command "sudo /vagrant/clients/ipaclient.sh" nah-master
 vagrant ssh --command "sudo /vagrant/clients/ambari_client.sh" nah-master
@@ -23,5 +22,4 @@ vagrant ssh --command "sudo /vagrant/nah-master/kerberos-enable.sh" nah-master
 
 
 #Sync the /vagrant folder with passwords and the like
-vagrant rsync nah-master
 

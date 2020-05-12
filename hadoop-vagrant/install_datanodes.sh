@@ -12,6 +12,7 @@ echo "$datanodes" | xargs -r -i -n 1 -P 3 bash -c "
 node={};
 vagrant destroy -f \$node;
 vagrant up \$node;
+vagrant sshfs \$node;
 vagrant ssh --command 'sudo /vagrant/clients/ipaclient.sh' \$node;
 vagrant ssh --command 'sudo /vagrant/clients/ambari_client.sh' \$node;
 "

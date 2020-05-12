@@ -100,9 +100,6 @@
         },
         {
           "name": "DATANODE"
-        },
-        {
-          "name": "METRICS_MONITOR"
         }
       ],
       "configurations": [],
@@ -124,16 +121,7 @@
           "name": "AMBARI_SERVER"
         },
         {
-          "name": "METRICS_MONITOR"
-        },
-        {
           "name": "ZOOKEEPER_CLIENT"
-        },
-        {
-          "name": "METRICS_COLLECTOR"
-        },
-        {
-          "name": "METRICS_GRAFANA"
         },
         {
           "name": "HISTORYSERVER"
@@ -164,22 +152,6 @@
       "recovery_settings": [
         {
           "recovery_enabled": "true"
-        }
-      ]
-    },
-    {
-      "service_settings": [
-        {
-          "recovery_enabled": "true",
-          "name": "AMBARI_METRICS"
-        }
-      ]
-    },
-    {
-      "component_settings": [
-        {
-          "recovery_enabled": "true",
-          "name": "METRICS_COLLECTOR"
         }
       ]
     }
