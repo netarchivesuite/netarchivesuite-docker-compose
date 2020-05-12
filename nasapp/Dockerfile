@@ -19,6 +19,7 @@ WORKDIR /nas
 
 COPY *.j2 /nas/
 COPY wait-for-postgres.sh /nas/wait-for-postgres.sh
+COPY clearBitmag.sh /nas/clearBitmag.sh
 COPY jmxremote.password /nas/jmxremote.password
 COPY docker-entrypoint.sh /
 COPY h3server.jks /

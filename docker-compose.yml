@@ -173,6 +173,9 @@ services:
         ports:
           - 8878:8078
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  cleaner:
+      build: nasapp
+      command: ["/nas/clearBitmag.sh"]
   mq:
     image: seges/openmq
     ports:
