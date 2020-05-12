@@ -169,6 +169,3 @@ usersFromGroup subadmins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $a
 
 # Ambari must own this folder, and it does not do so by default.
 chown ambari-server:ambari-server /var/run/ambari-server/ -R
-
-
-setConfig core-site "hadoop.proxyuser.HTTP.groups" "nahusers"

@@ -42,6 +42,10 @@ ipa-server-install \
     --auto-forwarders
 
 systemctl enable ipa
+sudo systemctl enable ntpd
+sudo systemctl disable chronyd
+sudo systemctl start ntpd
+
 
 append /etc/nsswitch.conf "sudoers: files sss"
 

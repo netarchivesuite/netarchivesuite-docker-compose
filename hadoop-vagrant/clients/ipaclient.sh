@@ -7,10 +7,6 @@ cd /vagrant/clients
 source ../common.sh
 source ../machines.sh
 
-if [ -e /vagrant/clients/$(hostname)_ipaclient ]; then
-	exit 0
-fi
-
 
 mv /etc/resolv.conf /etc/resolv.conf.orig
 cat > /etc/resolv.conf << EOC
@@ -39,6 +35,12 @@ ipa-client-install \
     --force-ntpd \
     --automount-location=default \
     --force-join
+
+sudo systemctl enable ntpd
+sudo systemctl disable chronyd
+sudo systemctl stop ntpd
+sudo ntpdate $IPA_SERVER
+sudo systemctl start ntpd
 
 #Set the sudo timeout
 sed -i "s|\(\[domain/\${DOMAIN_NAME1}\]\)|\1\nentry_cache_sudo_timeout = 10|g" /etc/sssd/sssd.conf
@@ -88,5 +90,3 @@ sudo grep automount /etc/nsswitch.conf
 # The autofs service must be started before you can log in
 sudo systemctl enable autofs
 sudo systemctl restart autofs
-
-touch /vagrant/clients/$(hostname)_ipaclient

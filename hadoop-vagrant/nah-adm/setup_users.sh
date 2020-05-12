@@ -301,6 +301,8 @@ sudo yum install -y expect
 
 set_password vagrant vagrant123
 
+#TODO something problem asking for password...
+
 echo "Users to set password for"
 echo "password_users="ldapbind,amad";"
 password_users="abrsadm,abr,ldapbind,vagrant";

@@ -5,7 +5,7 @@ HADOOP_NET = "10.0.0"
 HADOOP_NETWORK = "nah.hadoop"
 IPA_ADM_IP = HADOOP_NET + ".9"
 
-required_plugins = %w(vagrant-reload vagrant-sshfs vagrant_reboot_linux)
+required_plugins = %w(vagrant-sshfs)
 
 plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
 if not plugins_to_install.empty?
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
                       inline: "yum update -y",
                       name: "yum update"
 
-  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync_auto: true
+  config.vm.synced_folder ".", "/vagrant", type: "sshfs"
 
 
   config.vm.provision :shell,
@@ -68,11 +68,11 @@ Vagrant.configure("2") do |config|
     subconfig.vm.box = BOX_IMAGE
     subconfig.vm.hostname = "nah-adm." + HADOOP_NETWORK
     subconfig.vm.network :private_network, ip: IPA_ADM_IP
-    subconfig.vm.provision :reload
+    #subconfig.vm.provision :reload
 
-    subconfig.vm.provision :shell, path: "nah-adm/Install_IPA.sh", name: 'Install IPA'
-    subconfig.vm.provision :shell, path: "nah-adm/home_server.sh", name: 'Automounts server'
-    subconfig.vm.provision :shell, path: "nah-adm/setup_users.sh", name: 'Setup users'
+    #subconfig.vm.provision :shell, path: "nah-adm/Install_IPA.sh", name: 'Install IPA'
+    #subconfig.vm.provision :shell, path: "nah-adm/home_server.sh", name: 'Automounts server'
+    #subconfig.vm.provision :shell, path: "nah-adm/setup_users.sh", name: 'Setup users'
 
 
   end
@@ -87,11 +87,11 @@ Vagrant.configure("2") do |config|
       subconfig.vm.network :private_network, ip: "#{HADOOP_NET}.1#{j}"
 
       subconfig.vm.provider "virtualbox" do |v|
-        v.memory = 4096
-        v.cpus = 2
+        v.memory = 8192
+        v.cpus = 4
       end
-      subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
-      subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
+      #subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
+      #subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
 
     end
   }
@@ -107,19 +107,19 @@ Vagrant.configure("2") do |config|
       v.memory = 4096
       v.cpus = 4
     end
-
-    subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
-    subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
-
-    subconfig.vm.provision :shell, path: "nah-master/postgres.sh", name: 'Postgres database'
-
-    subconfig.vm.provision :shell, path: "nah-master/ambari.sh", name: 'Ambari Server'
-
-    subconfig.vm.provision :shell, path: "nah-master/blueprint.sh", name: 'Blueprints'
-
-    subconfig.vm.provision :shell, path: "nah-master/ssh_access.sh", name: 'Ensure that the master can ssh to the other hosts'
-
-    subconfig.vm.provision :shell, path: "nah-master/kerberos-enable.sh", name: 'Enable kerberos on the cluster'
+    #
+    # subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
+    # subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'
+    #
+    # subconfig.vm.provision :shell, path: "nah-master/postgres.sh", name: 'Postgres database'
+    #
+    # subconfig.vm.provision :shell, path: "nah-master/ambari.sh", name: 'Ambari Server'
+    #
+    # subconfig.vm.provision :shell, path: "nah-master/blueprint.sh", name: 'Blueprints'
+    #
+    # subconfig.vm.provision :shell, path: "nah-master/ssh_access.sh", name: 'Ensure that the master can ssh to the other hosts'
+    #
+    # subconfig.vm.provision :shell, path: "nah-master/kerberos-enable.sh", name: 'Enable kerberos on the cluster'
 
     # Ambari must own this folder, and it does not do so by default.
     subconfig.vm.provision :shell,
