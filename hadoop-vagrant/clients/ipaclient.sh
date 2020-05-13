@@ -36,6 +36,8 @@ ipa-client-install \
     --automount-location=default \
     --force-join
 
+echo 'KRB5CCNAME=FILE:/tmp/krb5cc_$UID' > /etc/profile.d/kerberos.sh
+
 sudo systemctl enable ntpd
 sudo systemctl disable chronyd
 sudo systemctl stop ntpd
@@ -69,6 +71,8 @@ set -e
 host $(ip1) | grep -F $(hostname -f)
 host "$(hostname -f)" | grep -F $(ip1)
 
+#Ensure that this is the only dns server
+sudo sed -i 's/nameserver 10.0.2.2//g' /etc/resolv.conf
 
 
 

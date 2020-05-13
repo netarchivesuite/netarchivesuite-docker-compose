@@ -231,15 +231,15 @@ done
 echo "3.3  Human Users"
 
 
-echo "3.3.1  abrsadm"
+echo "3.3.1  subadmin"
 
 
-USERNAME=abrsadm
+USERNAME=subadmin
 
 
 ipa user-add $USERNAME \
-    --first='Asger Askov' \
-    --last='Blekinge' \
+    --first='Subadmin' \
+    --last='Hadoop' \
     --homedir=/autohome/$USERNAME \
     --uid=$((subadminsGroup+1)) \
     --shell=/bin/bash \
@@ -271,26 +271,27 @@ ipa group-add-member subadmins --user $USERNAME
 ipa group-add-member nahusers --user $USERNAME
 
 
-echo "3.3.2  abr"
+echo "3.3.2  nahuser"
 
-USERNAME=abr
+USERNAME=nahuser
 
 
 ipa user-add $USERNAME \
-    --first='Asger Askov' \
-    --last='Blekinge' \
+    --first='Netarchive' \
+    --last='Hadoop' \
     --homedir=/autohome/$USERNAME \
     --uid=$((p000Group+1)) \
     --shell=/bin/bash \
     --gidnumber=$((p000Group+1)) \
     --class=NahUser \
-    --email="abr@kb.dk"
+    --email="csr@kb.dk"
 ipa group-add-member nahusers --user $USERNAME
 ipa group-add-member p000 --user $USERNAME
 
 sudo sss_cache -E
 sudo mkdir -p $AUTOHOME_DIR/$USERNAME
 sudo chown $USERNAME:$USERNAME $AUTOHOME_DIR/$USERNAME -R
+
 
 echo "3.4  Passwords"
 
@@ -299,19 +300,31 @@ sudo yum install -y expect
 
 set_password vagrant vagrant123
 
-#TODO something problem asking for password...
-
 echo "Users to set password for"
-echo "password_users="ldapbind,amad";"
-password_users="abrsadm,abr,ldapbind,vagrant";
+password_users="subadmin,nahuser,ldapbind,vagrant";
+echo "password_users="$password_users
 
 OLDIFS=$IFS
 IFS=',';
 for user in ${password_users}; do
     echo -e "\n\n$user";
     password=$(get_password "${user}")
-    expect $SCRIPT_DIR/setUserPassword.exp "$user" "$password"
+    expect /vagrant/nah-adm/setUserPassword.exp "$user" "$password"
 done
+IFS=$OLDIFS
+
+
+keytabUsers="nahuser"
+OLDIFS=$IFS
+IFS=',';
+for user in ${keytabUsers}; do
+    echo -e "\n\n$user";
+    principalName=$(ipa user-show $user | grep 'Principal name' | cut -d: -f2)
+    expect /vagrant/nah-adm/getKeytabWithPassword.exp $principalName $(get_password nahuser) $IPA_SERVER /vagrant/passwords/$user.keytab
+done
+IFS=$OLDIFS
+
+
 
 echo "3.5  Sudo rules"
 

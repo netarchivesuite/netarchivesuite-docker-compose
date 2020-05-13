@@ -69,6 +69,7 @@ function keytabs(){
     echo "function ipa_get_keytab() {
         encodedName=\$(echo \${PRINCIPAL} | md5sum - | awk \"{print \\\$1}\")
         if [ ! -f \${encodedName} ]; then
+            echo \${PRINCIPAL}
             ipa-getkeytab --server=${IPA_HOST} --principal=\${PRINCIPAL} --keytab=\${encodedName}
         fi
         }"

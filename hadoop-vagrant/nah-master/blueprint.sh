@@ -51,17 +51,20 @@ set +e
 
 jq --version || (sudo yum install -y epel-release; sudo yum install -y jq)
 
-echo "Wait for HDFS to be started"
+echo "Wait for HDFS  to be started"
 while : ; do
    hdfsState=$(get "clusters/$CLUSTER_NAME/services/HDFS" | jq '.ServiceInfo.state' -r)
-   [[ "$hdfsState" = "Started" ]] || break
+   [[ "$hdfsState" = "STARTED" ]] && break
 done
 
-echo "Wait for Ambari metrics to be started. This seems to be the last service started, so when it is done, the startup is done"
+echo "Wait for YARN Primary to be started"
 while : ; do
-   metricsState=$(get "clusters/$CLUSTER_NAME/services/AMBARI_METRICS" | jq '.ServiceInfo.state' -r)
-   [[ "$metricsState" = "Started" ]] || break
+   hdfsState=$(get "clusters/$CLUSTER_NAME/services/YARN" | jq '.ServiceInfo.state' -r)
+   [[ "$hdfsState" = "STARTED" ]] && break
 done
+
+echo "Sleep for 60 seconds to give Ambari time to start the remaining services"
+sleep 60
 
 
 popd > /dev/null

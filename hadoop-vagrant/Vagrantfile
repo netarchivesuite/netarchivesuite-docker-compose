@@ -89,6 +89,7 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provider "virtualbox" do |v|
         v.memory = 8192
         v.cpus = 4
+        v.auto_nat_dns_proxy = false
       end
       #subconfig.vm.provision :shell, path: "clients/ipaclient.sh", name: 'IPA client'
       #subconfig.vm.provision :shell, path: "clients/ambari_client.sh", name: 'Ambari client'

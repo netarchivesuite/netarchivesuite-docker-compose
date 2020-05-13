@@ -49,12 +49,12 @@ done
 
 echo "Get the default Kerberos Descriptor"
 
-get "stacks/HDP/versions/2.6/artifacts/kerberos_descriptor"
+#get "stacks/HDP/versions/2.6/artifacts/kerberos_descriptor"
 
 
 #### Get the customized Kerberos Descriptor (if previously set)
 
-get "clusters/$CLUSTER_NAME/artifacts/kerberos_descriptor"
+#get "clusters/$CLUSTER_NAME/artifacts/kerberos_descriptor"
 
 #### Set the Kerberos Descriptor
 
@@ -71,9 +71,28 @@ get "clusters/$CLUSTER_NAME/kerberos_identities?fields=*&format=csv" > $SCRIPT_D
 
 
 
+setConfig core-site "hadoop.security.authentication" "kerberos"
+setConfig core-site "hadoop.security.authorization" "true"
+setConfig core-site "hadoop.security.auth_to_local" 'RULE:[2:$1@$0](nn@NAH.HADOOP)s/.*/hdfs/
+RULE:[2:$1@$0](jn@NAH.HADOOP)s/.*/hdfs/
+RULE:[2:$1@$0](dn@NAH.HADOOP)s/.*/hdfs/
+RULE:[2:$1@$0](nm@NAH.HADOOP)s/.*/yarn/
+RULE:[2:$1@$0](rm@NAH.HADOOP)s/.*/yarn/
+RULE:[2:$1@$0](jhs@NAH.HADOOP)s/.*/mapred/
+DEFAULT'
+
+
+setConfig core-site "hadoop.proxyuser.ambari-server.groups" "nahusers"
+setConfig core-site "hadoop.proxyuser.ambari-server.hosts" "$(hostname -f)"
+
+setConfig hdfs-site "dfs.datanode.use.datanode.hostname" "true"
+setConfig hdfs-site "dfs.client.use.datanode.hostname" "true"
+
+
 
 # https://docs.cloudera.com/HDPDocuments/HDP3/HDP-3.1.0/authentication-with-kerberos/content/authe_spnego_configuring_http_authentication_for_hdfs_yarn_mapreduce2_hbase_oozie_falcon_and_storm.html
 
+echo $hosts
 dd if=/dev/urandom of=/vagrant/passwords/http_secret bs=1024 count=1
 for host in $hosts; do
     echo "$host"
@@ -92,18 +111,12 @@ setConfig core-site "hadoop.http.filter.initializers"  "org.apache.hadoop.securi
 setConfig core-site "hadoop.http.authentication.cookie.domain"  "$(hostname -d)"
 
 setConfig core-site "hadoop.proxyuser.HTTP.groups" "nahusers"
-setConfig core-site "hadoop.proxyuser.ambari-server.groups" "nahusers"
-setConfig core-site "hadoop.proxyuser.ambari-server.hosts" "$(hostname -f)"
-
-
-
 
 
 
 kinit_admin
 set -x
 
-#TODO how to get ambari to start kerberos creation programmatically
 #https://github.com/apache/ambari/blob/branch-2.5/ambari-server/docs/security/kerberos/enabling_kerberos.md
 
 source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv hosts)
@@ -114,7 +127,7 @@ source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv
 
 sudo -u vagrant -i <<-EOF
 
-source /vagrant/machines.sh
+source /vagrant/utils/machines.sh
 
 mkdir -p /vagrant/keytabs
 cd /vagrant/keytabs
@@ -129,15 +142,8 @@ source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv
 EOF
 
 
-sudo ambari-server setup-security --security-option=setup-kerberos-jaas --jaas-principal=ambari-server@NAH.HADOOP --jaas-keytab=/etc/security/keytabs/ambari.server.keytab
 sudo chown ambari-server:ambari-server /etc/security/keytabs/ambari.server.keytab
-sudo systemctl restart ambari-server
-
-#TODO update Ambari Files View with
-# WebHDFS Authorization = auth=KERBEROS;proxyuser=ambari-server
-
-echo "Start all services"
-put  "clusters/$CLUSTER_NAME/services" '{"ServiceInfo": {"state": "STARTED"}}'
+sudo ambari-server setup-security --security-option=setup-kerberos-jaas --jaas-principal=ambari-server@NAH.HADOOP --jaas-keytab=/etc/security/keytabs/ambari.server.keytab
 
 
 popd > /dev/null

@@ -1,5 +1,5 @@
-SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
-pushd $SCRIPT_DIR > /dev/null
+SCRIPT_DIR_HERE=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR_HERE > /dev/null
 source common.sh
 
 IPA_SERVER=nah-adm.$DOMAIN_NAME1
