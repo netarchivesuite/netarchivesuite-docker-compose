@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
 
 
 #Start the machine. This causes it to do a yum update, which require a reload
@@ -16,3 +17,5 @@ vagrant sshfs \$node;
 vagrant ssh --command 'sudo /vagrant/clients/ipaclient.sh' \$node;
 vagrant ssh --command 'sudo /vagrant/clients/ambari_client.sh' \$node;
 "
+
+popd > /dev/null

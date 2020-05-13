@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=/vagrant/nah-adm
-
-cd /vagrant/nah-adm
-source ../common.sh
-source ../machines.sh
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
 setenforce 0
 
@@ -95,4 +93,4 @@ set -e
 host $(ip1) | grep -F $(hostname -f)
 host "$(hostname -f)" | grep -F $(ip1)
 
-
+popd > /dev/null

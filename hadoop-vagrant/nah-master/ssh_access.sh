@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
-
-SCRIPT_DIR=/vagrant/nah-master
-cd $SCRIPT_DIR
-source ../common.sh
-source ../machines.sh
 
 hosts=$(get "hosts" |grep host_name| sed -n 's/.*"host_name" : "\([^\"]*\)".*/\1/p')
 
@@ -18,3 +15,5 @@ sudo -u vagrant -i <<-EOF
 	echo "$hosts" | \
 		xargs -r -i sshpass -p "vagrant123" ssh-copy-id "vagrant@{}"
 EOF
+
+popd > /dev/null

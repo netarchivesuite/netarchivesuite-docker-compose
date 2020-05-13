@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
+
 set -e
-cd /vagrant/nah-master
-source ../common.sh
-source ../machines.sh
 
 
 
@@ -14,7 +15,7 @@ function get(){
 
 function delete(){
     local path="$1"
-    curl -q -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$(get_password admin)" "http://$MASTER_NAME:8080/api/v1/$path"
+    curl -s -H "X-Requested-By: ambari" -X DELETE -u "admin:$(get_password admin)" "http://$MASTER_NAME:8080/api/v1/$path"
 }
 
 
@@ -28,7 +29,7 @@ function post(){
 #set -e makes the execution stop if anything fails
 set -e
 echo "Step 2: Register Blueprint with Ambari"
-delete "blueprints/$CLUSTER_NAME" || true
+delete "blueprints/$CLUSTER_NAME" > /dev/null || true
 
 sleep 5
 
@@ -50,16 +51,17 @@ set +e
 
 jq --version || (sudo yum install -y epel-release; sudo yum install -y jq)
 
-#Wait for HDFS to be started
+echo "Wait for HDFS to be started"
 while : ; do
    hdfsState=$(get "clusters/$CLUSTER_NAME/services/HDFS" | jq '.ServiceInfo.state' -r)
    [[ "$hdfsState" = "Started" ]] || break
 done
 
-#Wait for Ambari metrics to be started. This seems to be the last service started, so when it is done, the startup is done
+echo "Wait for Ambari metrics to be started. This seems to be the last service started, so when it is done, the startup is done"
 while : ; do
    metricsState=$(get "clusters/$CLUSTER_NAME/services/AMBARI_METRICS" | jq '.ServiceInfo.state' -r)
    [[ "$metricsState" = "Started" ]] || break
 done
 
 
+popd > /dev/null

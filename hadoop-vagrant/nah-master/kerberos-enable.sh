@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-
-SCRIPT_DIR=/vagrant/nah-master
-cd $SCRIPT_DIR
-source ../common.sh
-source ../machines.sh
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
 #https://cwiki.apache.org/confluence/display/AMBARI/Automated+Kerberizaton#AutomatedKerberizaton-TheRESTAPI
 
@@ -141,3 +139,5 @@ sudo systemctl restart ambari-server
 echo "Start all services"
 put  "clusters/$CLUSTER_NAME/services" '{"ServiceInfo": {"state": "STARTED"}}'
 
+
+popd > /dev/null

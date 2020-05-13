@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
+
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
+
+
 set -e
-cd /vagrant/nah-master
-source ../common.sh
-source ../machines.sh
 
 
 #Install the database
@@ -24,3 +27,5 @@ append /var/lib/pgsql/data/pg_hba.conf "host     ambari          ambari         
 systemctl restart postgresql
 
 createDB ambari ambari
+
+popd > /dev/null

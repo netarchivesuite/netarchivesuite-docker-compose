@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=/vagrant/nah-adm
-
-cd $SCRIPT_DIR
-source ../common.sh
-source ../machines.sh
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
 
 echo "3.1  Groups"
@@ -417,3 +415,4 @@ ipa sudocmd-add '/usr/bin/sudospawner'
 ipa sudocmdgroup-add-member 'jupyterhub' --sudocmds='/usr/bin/sudospawner'
 ipa sudorule-add-allow-command jupyterhub --sudocmdgroups='jupyterhub'
 
+popd > /dev/null

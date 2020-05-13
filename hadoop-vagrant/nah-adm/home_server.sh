@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 #Export syshome dir via NFS.
-SCRIPT_DIR=/vagrant/nah-adm
 
-cd /vagrant/nah-adm
-source ../common.sh
-source ../machines.sh
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
 mkdir -p $SYSHOME_DIR
 #NFS exports this folder
@@ -75,3 +74,4 @@ systemctl restart nfs-server
 
 #Then set up the automounting of homes
 
+popd > /dev/null

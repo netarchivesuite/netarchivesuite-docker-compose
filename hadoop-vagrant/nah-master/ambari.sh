@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-set -e
-cd /vagrant/nah-master
-source ../common.sh
-source ../machines.sh
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
+set -e
 
 
 #Install java 8
@@ -114,17 +114,17 @@ append /etc/ambari-server/ambari-users.csv 'admin'
 
 
 
-#Sync amad and admin. At this point, admin is a normal user, so the password is admin
+echo "Sync amad and admin. At this point, admin is a normal user, so the password is admin"
 expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "admin" "--users=/etc/ambari-server/ambari-users.csv"
 
 
 rm -f /etc/ambari-server/ambari-groups.csv
 append /etc/ambari-server/ambari-groups.csv 'nahusers,admins,subadmins,p000,p001'
 
-# Now admin have become a ldap user, so his password is now the password of the ldap server
+echo "Now admin have become a ldap user, so his password is now the password of the ldap server"
 adminPass=$(get_password admin) # The admin account is now an LDAP account
 
-#Now we sync the relevant groups with all their users. And we use the new admin pass
+echo "Now we sync the relevant groups with all their users. And we use the new admin pass"
 expect /vagrant/nah-master/ambari-ldap-sync.exp "admin" "$adminPass" '--groups=/etc/ambari-server/ambari-groups.csv' 2>&1
 
 
@@ -169,3 +169,5 @@ usersFromGroup subadmins | xargs -r -I% bash -c "makeAmbariAdmin % $adminUser $a
 
 # Ambari must own this folder, and it does not do so by default.
 chown ambari-server:ambari-server /var/run/ambari-server/ -R
+
+popd > /dev/null

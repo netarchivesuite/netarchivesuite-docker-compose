@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-md5sum $(readlink -f ${BASH_SOURCE[0]})
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR > /dev/null
+source ../utils/machines.sh
 
 set -e
-cd /vagrant/clients/
-source ../common.sh
-source ../machines.sh
 
 #Install java 8
 yum install -y java-1.8.0-openjdk-devel
@@ -43,3 +42,5 @@ sudo chown am_agent:am_agent /var/run/ambari-agent/ -R
 systemctl enable ambari-agent
 
 systemctl restart ambari-agent
+
+popd > /dev/null
