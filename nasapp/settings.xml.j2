@@ -12,7 +12,7 @@
                 <storeMaxPillarFailures>1</storeMaxPillarFailures>
                 <tempdir>arcrepositoryTemp</tempdir>
                 <collectionID>netarkivet</collectionID>
-                <usepillar></usepillar>
+                <usepillar>file1-pillar</usepillar>
                 <!-- Set to 5 minutes to make it possible to retrieve large records
                          using FTP -->
                 <getTimeout>300000</getTimeout>
@@ -89,8 +89,21 @@
             <port>8078</port>
         </http>
         <applicationName>{{APP_CLASS}}</applicationName>
-
-
+        <hadoop>
+            <defaultFS>hdfs://node1</defaultFS>
+            <hdfs>
+                <uri>hdfs://node1:8020</uri>
+            </hdfs>
+            <resourcemanager>
+                <address>node1:8032</address>
+            </resourcemanager>
+            <mapred>
+                <framework>yarn</framework>
+                <inputDir>nas_input</inputDir>
+                <outputDir>nas_output</outputDir>
+            </mapred>
+        </hadoop>
+        <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
     </common>
 
     <monitor>
