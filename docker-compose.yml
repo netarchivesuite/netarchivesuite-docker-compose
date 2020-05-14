@@ -39,58 +39,6 @@ services:
       - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
       - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
     command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  nassbbitapp:
-#    build: nasapp
-#    links:
-#      - mq
-#      - ftp
-#    environment:
-#      - APP_LABEL=BitarchiveApplication
-#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
-#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-#      - REPLICA=SB
-#      - LOCATION=S
-#    volumes:
-#      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file1pillar/nasdocker:/nas/bitarchive
-#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  naskbbitapp:
-#      build: nasapp
-#      links:
-#        - mq
-#        - ftp
-#      environment:
-#        - APP_LABEL=BitarchiveApplication
-#        - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveApplication
-#        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-#        - REPLICA=KB
-#        - LOCATION=K
-#      volumes:
-#        - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/file2pillar/nasdocker:/nas/bitarchive
-#      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  naskbbamon:
-#    build: nasapp
-#    links:
-#     - mq
-#     - ftp
-#    environment:
-#      - APP_LABEL=BitarchiveMonitorApplication_KB
-#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
-#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-#      - REPLICA=KB
-#      - LOCATION=K
-#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  nassbbamon:
-#    build: nasapp
-#    links:
-#     - mq
-#     - ftp
-#    environment:
-#      - APP_LABEL=BitarchiveMonitorApplication_SB
-#      - APP_CLASS=dk.netarkivet.archive.bitarchive.BitarchiveMonitorApplication
-#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-#      - REPLICA=SB
-#      - LOCATION=S
-#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nashjm:
       build: nasapp
       links:
@@ -175,7 +123,9 @@ services:
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   cleaner:
       build: nasapp
-      command: ["/nas/clearBitmag.sh"]
+      links:
+          - bus
+      command: ["/nas/wait_for_it.sh", "bus:61616", "--", "/nas/clearBitmag.sh"]
   mq:
     image: seges/openmq
     ports:
