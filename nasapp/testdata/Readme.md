@@ -1,0 +1,1 @@
+Any files included in this directory will be uploaded to bitmag when the "cleaner" container is run.

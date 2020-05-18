@@ -23,5 +23,12 @@ cat $listing
      done
     fi
  done < $listing
-
  echo Finished clearing bitmag
+
+
+for file in /nas/testdata/*; do
+    echo "Uploading $file"
+    java -cp "/nas/lib/*" org.bitrepository.commandline.PutFileCmd -c $COLLECTION -s $CONFDIR -f $file
+done
+
+echo Finished uploading test data
