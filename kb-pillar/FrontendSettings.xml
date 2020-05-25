@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrontendSettings xmlns="http://kb.dk/bitrepository/PillarSettings.xsd">
+    <PillarID>kb-pillar</PillarID>
+    <Collections>
+        <Collection>
+            <CollectionID>netarkivet</CollectionID>
+            <DatabaseURL>jdbc:sqlite:/collection-netarkivet.db</DatabaseURL>
+            <StorageDirectory>collection-netarkivet</StorageDirectory>
+        </Collection>
+    </Collections>
+    <CertificateFile>netarkiv-disk-stage-02.crt</CertificateFile>
+    <PrivateKeyFile>netarkiv-disk-stage-02.p8</PrivateKeyFile>
+    <DisableGuidFilenames>true</DisableGuidFilenames>
+    <RepositorySettingsFile>RepositorySettings.xml</RepositorySettingsFile>
+    <UseTransactedSessions>false</UseTransactedSessions>
+<!--
+    <MaxConcurrentMessages>100</MaxConcurrentMessages>
+    <AllocServerTimeout>30000</AllocServerTimeout>
+-->
+    <ChecksumWatch>
+        <!-- Maximum age for stored checksums. No cached checksum exceeding this
+                  age will be returned by the pillar, and the pillar will attempt to
+                       recalculate checksums before reaching this age.
+                            604800000 == 7 days, 3600000 == 1 hour-->
+        <MaxChecksumAge>5184000000</MaxChecksumAge>
+        <ChecksumWatchdogInterval>120000</ChecksumWatchdogInterval>
+        <MaxChecksumRecalculations>500</MaxChecksumRecalculations>
+        <ChecksumRecalcBuffer>10</ChecksumRecalcBuffer>
+    </ChecksumWatch>
+    <!--
+     The default was previously hardwired to be: BackendSelectorMostFreeSpace
+    The alternatives are:
+     BackendSelectorLeastSpaceUsed, BackendSelectorRoundRobin
+    -->
+    <BackendSelectorClass>BackendSelectorMostFreeSpace</BackendSelectorClass>
+
+    <Backend>
+        <BackendID>Backend-100</BackendID>
+        <Connector>
+            <Host>localhost</Host>
+            <Port>44447</Port>
+        </Connector>
+        <StartCommand>
+            <MainClass>dk.kb.bitrepository.backend.BackendServer</MainClass>
+            <Arg>conf/BackendSettings.xml</Arg>
+        </StartCommand>
+    </Backend>
+
+    <!--
+    <Backend>
+        <BackendID>Backend-101</BackendID>
+        <Connector>
+            <Host>kb-s-bit.101.bitarkiv.kb.dk</Host>
+            <Port>44447</Port>
+        </Connector>
+    </Backend>
+    -->
+
+</FrontendSettings>

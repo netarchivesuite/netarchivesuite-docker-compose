@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BackendSettings xmlns="http://kb.dk/bitrepository/PillarSettings.xsd">
+    <Connector>
+        <Host>kb-s-bit-100.bitarkiv.kb.dk</Host>
+        <Port>44447</Port>
+    </Connector>
+    <BackendID>Backend-100</BackendID>
+    <ReadOnly>false</ReadOnly>
+    <MinSpaceLeft>1073741824</MinSpaceLeft>
+    <CertificateFile>netarkiv-disk-stage-02.crt</CertificateFile>
+    <PrivateKeyFile>netarkiv-disk-stage-02.p8</PrivateKeyFile>
+    <RepositorySettingsFile>RepositorySettings.xml</RepositorySettingsFile>
+    <DisableLayeredFolders>true</DisableLayeredFolders>
+    <!--Configure Storage Folders Here -->
+    <StorageDirectory>E:\kbhpillar\</StorageDirectory>
+    <StorageDirectory>F:\kbhpillar\</StorageDirectory>
+    <StorageDirectory>G:\kbhpillar\</StorageDirectory>
+    <StorageDirectory>H:\kbhpillar\</StorageDirectory>
+    <StorageDirectory>I:\kbhpillar\</StorageDirectory>
+    <StorageDirectory>J:\kbhpillar\</StorageDirectory>
+</BackendSettings>
