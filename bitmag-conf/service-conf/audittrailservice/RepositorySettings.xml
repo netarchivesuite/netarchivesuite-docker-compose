@@ -27,7 +27,7 @@
       <ID>netarkivet</ID>
       <Name>The web collection</Name>
       <PillarIDs>
-        <PillarID>file1-pillar</PillarID>
+        <PillarID>kb-pillar</PillarID>
       </PillarIDs>
     </Collection>
   </Collections>

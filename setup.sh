@@ -8,5 +8,5 @@ cp $RS $DIR/bitmag-conf/service-conf/service
 cp $RS $DIR/bitmag-conf/service-conf/integrityservice
 cp $RS $DIR/bitmag-conf/service-conf/monitoringservice
 cp $RS $DIR/bitmag-conf/service-conf/webclient
-cp $RS $DIR/filepillar
+cp $RS $DIR/kb-pillar
 cp $RS $DIR/nasapp/nasclientconfig

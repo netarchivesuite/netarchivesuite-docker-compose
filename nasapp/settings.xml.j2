@@ -12,7 +12,7 @@
                 <storeMaxPillarFailures>1</storeMaxPillarFailures>
                 <tempdir>arcrepositoryTemp</tempdir>
                 <collectionID>netarkivet</collectionID>
-                <usepillar>file1-pillar</usepillar>
+                <usepillar>kb-pillar</usepillar>
                 <!-- Set to 5 minutes to make it possible to retrieve large records
                          using FTP -->
                 <getTimeout>300000</getTimeout>
@@ -252,9 +252,9 @@
             In test, fetch all files from last 30 minutes every 5 minutes.
             -->
             <recentProducerSince>1800000</recentProducerSince>
-            <recentProducerInterval>300000</recentProducerInterval>
+            <recentProducerInterval>300000000</recentProducerInterval>
             <producerDelay>0</producerDelay>
-            <producerInterval>86400000</producerInterval>
+            <producerInterval>60000</producerInterval>
             <consumerThreads>5</consumerThreads>
             <initialFiles></initialFiles>
         </indexer>

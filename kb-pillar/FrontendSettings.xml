@@ -8,8 +8,8 @@
             <StorageDirectory>collection-netarkivet</StorageDirectory>
         </Collection>
     </Collections>
-    <CertificateFile>netarkiv-disk-stage-02.crt</CertificateFile>
-    <PrivateKeyFile>netarkiv-disk-stage-02.p8</PrivateKeyFile>
+    <CertificateFile>kb-pillar.crt</CertificateFile>
+    <PrivateKeyFile>kb-pillar.p8</PrivateKeyFile>
     <DisableGuidFilenames>true</DisableGuidFilenames>
     <RepositorySettingsFile>RepositorySettings.xml</RepositorySettingsFile>
     <UseTransactedSessions>false</UseTransactedSessions>
@@ -42,7 +42,7 @@
         </Connector>
         <StartCommand>
             <MainClass>dk.kb.bitrepository.backend.BackendServer</MainClass>
-            <Arg>conf/BackendSettings.xml</Arg>
+            <Arg>/kb-pillar/conf/BackendSettings.xml</Arg>
         </StartCommand>
     </Backend>
 

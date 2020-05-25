@@ -15,11 +15,18 @@ ADD RepositorySettings.xml /kb-pillar/conf
 ADD BackendSettings.xml /kb-pillar/conf
 ADD FrontendSettings.xml /kb-pillar/conf
 ADD log4j.properties /kb-pillar/conf
+ADD kb-pillar.crt /kb-pillar/conf
+ADD kb-pillar.p8 /kb-pillar/conf
+ADD wait_for_it.sh /kb-pillar/bin
+RUN chmod 755  /kb-pillar/bin/wait_for_it.sh
+
 
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar-backend
+RUN sed -i "s/JSVC_CWD_OPT=\"\"/JSVC_CWD_OPT=\"-nodetach -cwd \${KB_PILLAR_HOME}\"/" /kb-pillar/bin/kb-pillar
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 WORKDIR /kb-pillar
 
-CMD ["/kb-pillar/bin/kb-pillar", "start", "&&", "sleep infinity"]
+CMD ["/kb-pillar/bin/kb-pillar", "start", "&&", "sleep", "infinity"]
+#CMD ["sleep", "infinity"]
