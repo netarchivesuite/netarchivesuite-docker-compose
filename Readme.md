@@ -13,8 +13,8 @@ cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bund
 
 ```
 setup.sh
-docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml build
-docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml up
+docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml -f docker-compose-wrs.yml build
+docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml -f docker-compose-wrs.yml up
 ```
 
 will create a complete dockerised NetarchiveSuite + Bitmagasin
@@ -25,3 +25,14 @@ will create a complete dockerised NetarchiveSuite + Bitmagasin
 * Java debugger for Heritrix (Focused): localhost port 8500
 * Java debugger for Heritrix (Snapshot): localhost port 8501
  
+(Note: the last three are currently commented out in the docker compose file.)
+
+Any files in the nasapp/testdata folder will be uploaded to bitmag.
+
+In addition there is a WarcRecordService endpoint on localhost:8883 on which any uploaded compressed warc-files should 
+be accessible. E.g. on
+
+```
+curl -r "3442-" "http://localhost:8883/cgi-bin2/py1.cgi/10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz?foo=bar&x=y"
+```                     
+

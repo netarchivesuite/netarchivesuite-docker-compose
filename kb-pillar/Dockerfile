@@ -28,5 +28,4 @@ RUN sed -i "s/JSVC_CWD_OPT=\"\"/JSVC_CWD_OPT=\"-nodetach -cwd \${KB_PILLAR_HOME}
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 WORKDIR /kb-pillar
 
-CMD ["/kb-pillar/bin/kb-pillar", "start", "&&", "sleep", "infinity"]
-#CMD ["sleep", "infinity"]
+CMD ["/kb-pillar/bin/kb-pillar", "start"]
