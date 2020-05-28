@@ -9,7 +9,7 @@ COPY nas.zip nas.zip
 COPY h3bundler.zip h3bundler.zip
 
 RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools python3-pip && pip3 install j2cli
-RUN apt-get update && apt-get install -y less
+RUN apt-get update && apt-get install -y less && apt-get install -y iputils-ping
 
 RUN unzip nas.zip -d nas
 RUN unzip h3bundler.zip
@@ -20,6 +20,7 @@ WORKDIR /nas
 COPY *.j2 /nas/
 COPY wait-for-postgres.sh /nas/wait-for-postgres.sh
 COPY wait_for_it.sh /nas/wait_for_it.sh
+COPY wait_for_exit.sh /nas/wait_for_exit.sh
 COPY clearBitmag.sh /nas/clearBitmag.sh
 COPY jmxremote.password /nas/jmxremote.password
 COPY docker-entrypoint.sh /

@@ -103,6 +103,7 @@ services:
            - database
            - mq
            - bus
+           - cleaner
         environment:
             - APP_LABEL=WaybackIndexerApplication
             - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
@@ -114,7 +115,9 @@ services:
         - "bitmag_files:/bitmag"
         ports:
           - 5005:5005
-        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+        depends_on:
+          - cleaner
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
 #  nasvp:
 #        build: nasapp
 #        links:
