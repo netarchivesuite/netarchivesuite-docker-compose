@@ -1,14 +1,18 @@
 version: "3"
-services:
 #  dockerhost:
 #        image: qoomon/docker-host
 #        cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
 #        #mem_limit: 4M
 #        restart: on-failure
-  database:
-    build: nasdb
-    ports:
-      - "6543:5432"
+networks:
+  default:
+    external:
+      name: netarkivet-net
+
+volumes:
+  bitmag_files:
+
+services:
 #  nasar:
 #    build: nasapp
 #    links:
@@ -25,6 +29,10 @@ services:
 #      - REPLICA=SB
 #      - LOCATION=S
 #    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  database:
+    build: nasdb
+    ports:
+      - "6543:5432"
   nasgui:
     build: nasapp
     ports:
@@ -138,7 +146,3 @@ services:
     image: seges/openmq
     ports:
       - 7676
-networks:
-   default:
-     external:
-       name: netarkivet-net
