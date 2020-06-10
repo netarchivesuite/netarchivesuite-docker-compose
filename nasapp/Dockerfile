@@ -6,7 +6,7 @@ ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/ne
 #ADD nas.zip nas.zip
 #ADD h3bundler.zip h3bundler.zip
 
-RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools && easy_install j2cli
+RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools python-pip && pip install -U pip && pip install -U setuptools && pip install j2cli
 
 RUN unzip nas.zip -d nas
 ##RUN unzip h3bundler.zip
