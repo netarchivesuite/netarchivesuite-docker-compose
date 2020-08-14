@@ -10,14 +10,19 @@ cp ./deploy/distribution/target/NetarchiveSuite-5.7-IIPCH3-SNAPSHOT.zip ../netar
 cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bundler-5.7-IIPCH3-SNAPSHOT.zip ../netarchivesuite-docker-compose/nasapp/h3bundler.zip
 ```
 
+If using Hadoop for mass processing also copy the shaded wayback-indexer jar to the docker project
+```
+cp ./wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar ../netarchivesuite-docker-compose/nasapp/wayback-indexer.jar
+```
 
+Running the following
 ```
 setup.sh
 docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml -f docker-compose-wrs.yml build
 docker-compose -f docker-compose.yml -f docker-compose-bitmag.yml -f docker-compose-wrs.yml up
 ```
 
-will create a complete dockerised NetarchiveSuite + Bitmagasin
+will then create a complete dockerised NetarchiveSuite + Bitmagasin
 
 * NetarchiveSuite GUI: http://localhost:8078
 * Bitmagasin GUI: http://localhost:8180/bitrepository-webclient/status-service.html

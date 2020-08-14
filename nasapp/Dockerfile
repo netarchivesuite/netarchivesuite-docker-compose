@@ -27,6 +27,7 @@ COPY docker-entrypoint.sh /
 COPY h3server.jks /
 COPY nasclientconfig nasclientconfig
 COPY testdata /nas/testdata
+COPY wayback-indexer.jar /nas/lib/wayback-indexer.jar
 
 RUN chmod 755 /nas/*.j2
 RUN chmod 755 /nas/wait-for-postgres.sh
