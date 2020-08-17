@@ -298,7 +298,7 @@ echo "3.4  Passwords"
 
 sudo yum install -y expect
 
-set_password vagrant vagrant123
+get_password vagrant vagrant123
 
 echo "Users to set password for"
 password_users="subadmin,nahuser,ldapbind,vagrant";

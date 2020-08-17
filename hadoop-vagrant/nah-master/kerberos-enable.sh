@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+SCRIPT_DIR=$(dirname "$(readlink -f -- ${BASH_SOURCE[0]})")
+
 pushd $SCRIPT_DIR > /dev/null
 source ../utils/machines.sh
 
@@ -73,6 +74,7 @@ get "clusters/$CLUSTER_NAME/kerberos_identities?fields=*&format=csv" > $SCRIPT_D
 
 setConfig core-site "hadoop.security.authentication" "kerberos"
 setConfig core-site "hadoop.security.authorization" "true"
+#TODO use $REALM_NAME instead of NAH.HADOOP here
 setConfig core-site "hadoop.security.auth_to_local" 'RULE:[2:$1@$0](nn@NAH.HADOOP)s/.*/hdfs/
 RULE:[2:$1@$0](jn@NAH.HADOOP)s/.*/hdfs/
 RULE:[2:$1@$0](dn@NAH.HADOOP)s/.*/hdfs/
@@ -87,6 +89,19 @@ setConfig core-site "hadoop.proxyuser.ambari-server.hosts" "$(hostname -f)"
 
 setConfig hdfs-site "dfs.datanode.use.datanode.hostname" "true"
 setConfig hdfs-site "dfs.client.use.datanode.hostname" "true"
+
+
+setConfig yarn-site "yarn.timeline-service.http-authentication.simple.anonymous.allowed" "false"
+setConfig yarn-site "yarn.resourcemanager.webapp.delegation-token-auth-filter.enabled" "true"
+setConfig yarn-site "yarn.resourcemanager.proxyuser.*.groups" "nahusers"
+setConfig yarn-site "yarn.resourcemanager.proxyuser.*.hosts " "$(hostname -f)"
+setConfig yarn-site "yarn.timeline-service.http-authentication.cookie.domain"  "$(hostname -d)"
+setConfig yarn-site "yarn.timeline-service.http-authentication.proxyuser.*.groups" "nahusers"
+setConfig yarn-site "yarn.timeline-service.http-authentication.proxyuser.*.hosts" "$(hostname -f)"
+setConfig yarn-site "yarn.timeline-service.http-authentication.signature.secret.file"  "/etc/security/http_secret"
+
+
+
 
 
 
@@ -106,7 +121,7 @@ setConfig core-site "hadoop.http.authentication.simple.anonymous.allowed" "false
 setConfig core-site "hadoop.http.authentication.signature.secret.file"  "/etc/security/http_secret"
 setConfig core-site "hadoop.http.authentication.type" "kerberos"
 setConfig core-site "hadoop.http.authentication.kerberos.keytab"  "/etc/security/keytabs/spnego.service.keytab"
-setConfig core-site "hadoop.http.authentication.kerberos.principal"  "HTTP/_HOST@NAH.HADOOP"
+setConfig core-site "hadoop.http.authentication.kerberos.principal"  "HTTP/_HOST@N$REALM_NAME"
 setConfig core-site "hadoop.http.filter.initializers"  "org.apache.hadoop.security.AuthenticationFilterInitializer"
 setConfig core-site "hadoop.http.authentication.cookie.domain"  "$(hostname -d)"
 
@@ -134,6 +149,8 @@ cd /vagrant/keytabs
 
 kinit_admin
 
+set -x
+
 source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv keytabs)
 
 
@@ -141,9 +158,23 @@ source <(bash $SCRIPT_DIR/keytabs-create.sh $IPA_SERVER $SCRIPT_DIR/kerberos.csv
 
 EOF
 
+sed -i 's/^kerberos.check.jaas.configuration=true/#kerberos.check.jaas.configuration=true/' /etc/ambari-server/conf/ambari.properties
 
 sudo chown ambari-server:ambari-server /etc/security/keytabs/ambari.server.keytab
 sudo ambari-server setup-security --security-option=setup-kerberos-jaas --jaas-principal=ambari-server@NAH.HADOOP --jaas-keytab=/etc/security/keytabs/ambari.server.keytab
 
+sudo -i <<EOF
+echo 'com.sun.security.jgss.krb5.initiate {
+    com.sun.security.auth.module.Krb5LoginModule required
+    renewTGT=false
+    doNotPrompt=true
+    useKeyTab=true
+    keyTab="/etc/security/keytabs/ambari.server.keytab"
+    principal="ambari-server@NAH.HADOOP"
+    storeKey=true
+    useTicketCache=false;
+};
+' > /etc/ambari-server/conf/krb5JAASLogin.conf
+EOF
 
 popd > /dev/null

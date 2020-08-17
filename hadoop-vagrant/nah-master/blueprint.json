@@ -70,18 +70,7 @@
         }
       }
     },
-    {
-      "kerberos-env": {
-        "properties_attributes": {},
-        "properties": {
-          "realm": "NAH.HADOOP",
-          "kdc_type": "none",
-          "kdc_host": "nah-adm.nah.hadoop",
-          "manage_identities": "false",
-          "install_packages": "false"
-        }
-      }
-    },
+
     {
       "krb5-conf": {
         "properties_attributes": {},

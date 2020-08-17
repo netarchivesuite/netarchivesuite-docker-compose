@@ -4,6 +4,8 @@ SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 pushd $SCRIPT_DIR > /dev/null
 name=nah-adm
 
+source install_common.sh
+
 set -x
 
 utils/DNSMasq.sh off
@@ -12,21 +14,20 @@ utils/DNSMasq.sh off
 vagrant destroy -f $name
 #Start the machine. This causes it to do a yum update, which require a reload
 vagrant up $name
+
 #So reload the machine
 vagrant reload $name
-#Sync the /vagrant folder
-vagrant sshfs $name
+sleep 10
+vagrant snapshot save $name $name-1-clean
 
-#Install freeIPA
-vagrant ssh --command "sudo /vagrant/$name/Install_IPA.sh" $name
+
+doOrRestore $name "$name-2-ipa_server" "sudo /vagrant/$name/Install_IPA.sh"
 
 #Setup the shared homes
-vagrant ssh --command "sudo /vagrant/$name/home_server.sh" $name
+doOrRestore $name "$name-3-home_server" "sudo /vagrant/$name/home_server.sh"
 
 #Setup the users
-vagrant ssh --command "sudo /vagrant/$name/setup_users.sh" $name
-
-#Sync the /vagrant folder with passwords and the like
+doOrRestore $name "$name-4-users_created" "sudo /vagrant/$name/setup_users.sh"
 
 #Use the new freeIPA as a dns server
 utils/DNSMasq.sh on

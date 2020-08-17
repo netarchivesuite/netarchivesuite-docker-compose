@@ -25,12 +25,6 @@
       ]
     }
   ],
-  "credentials": [{
-    "alias": "kdc.admin.credential",
-    "principal": "admin@NAH.HADOOP",
-    "key": "admin",
-    "type": "TEMPORARY"
-  }],
   "security": {
     "type": "NONE",
     "kerberos_descriptor" : {

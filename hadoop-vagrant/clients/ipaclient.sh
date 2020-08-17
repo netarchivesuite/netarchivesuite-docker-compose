@@ -72,7 +72,7 @@ host $(ip1) | grep -F $(hostname -f)
 host "$(hostname -f)" | grep -F $(ip1)
 
 #Ensure that this is the only dns server
-sudo sed -i 's/nameserver 10.0.2.2//g' /etc/resolv.conf
+sudo sed -i 's/nameserver 10.0.2.[0-9]//g' /etc/resolv.conf
 
 
 

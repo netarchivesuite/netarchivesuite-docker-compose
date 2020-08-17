@@ -67,7 +67,7 @@ function keytabs(){
 
     echo "# Function to create keytab"
     echo "function ipa_get_keytab() {
-        encodedName=\$(echo \${PRINCIPAL} | md5sum - | awk \"{print \\\$1}\")
+        encodedName=\${PRINCIPAL////¤}
         if [ ! -f \${encodedName} ]; then
             echo \${PRINCIPAL}
             ipa-getkeytab --server=${IPA_HOST} --principal=\${PRINCIPAL} --keytab=\${encodedName}
@@ -97,9 +97,10 @@ function distribute(){
             set -o nounset #Stop script if attempting to use an unset variable
             set -o errexit #Stop script if any command fails
             set -o verbose #Print lines as they are executed
+            set -e
             sudo mkdir -p /etc/security/keytabs
-            encodedName=\$(echo \${PRINCIPAL} | md5sum - | awk \"{print \\\$1}\")
-            sudo cp \$PWD/\\\$encodedName \${FILE}
+            encodedName=\${PRINCIPAL////¤}
+            sudo cp -f \$PWD/\\\$encodedName \${FILE}
             sudo chown \${OWNER}:\${GROUP} \${FILE}
             sudo chmod \${PERM} \${FILE}
 	EOF

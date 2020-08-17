@@ -68,4 +68,4 @@ function sshwd() {
 }
 export sshwd
 
-sshwd -D 1337 -C -q $vagranthost
+sshwd -D 1337 -C    -q $vagranthost

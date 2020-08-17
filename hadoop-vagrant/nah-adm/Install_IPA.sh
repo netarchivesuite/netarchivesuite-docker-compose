@@ -36,7 +36,7 @@ ipa-server-install \
     --ip-address="$IPA_IP1" \
     --idstart="${usersGroup}" \
     --setup-dns \
-	--no-reverse \
+    --no-reverse \
     --auto-forwarders
 
 systemctl enable ipa
@@ -44,6 +44,14 @@ sudo systemctl enable ntpd
 sudo systemctl disable chronyd
 sudo systemctl start ntpd
 
+
+function insertAfter(){
+    local file="$1"
+    local after="$2"
+    local insert="$3"
+    grep -q "^\s*$insert\s*$" "$file" || sed -i -E "s/^(\s*$after)/\1\n$insert/" "$file"
+}
+insertAfter /etc/krb5.conf '\[libdefaults\]' '  allow_weak_crypto = true'
 
 append /etc/nsswitch.conf "sudoers: files sss"
 
