@@ -52,6 +52,10 @@ function insertAfter(){
     grep -q "^\s*$insert\s*$" "$file" || sed -i -E "s/^(\s*$after)/\1\n$insert/" "$file"
 }
 insertAfter /etc/krb5.conf '\[libdefaults\]' '  allow_weak_crypto = true'
+insertAfter /etc/krb5.conf '\[libdefaults\]' '  default_tkt_enctypes = aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 rc4-hmac'
+insertAfter /etc/krb5.conf '\[libdefaults\]' '  default_tgs_enctypes = aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 rc4-hmac'
+insertAfter /etc/krb5.conf '\[libdefaults\]' '  permitted_enctypes = aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 rc4-hmac'
+
 
 append /etc/nsswitch.conf "sudoers: files sss"
 
