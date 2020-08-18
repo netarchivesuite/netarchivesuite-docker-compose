@@ -15,6 +15,7 @@ function doOrRestore(){
     else
         if ! (vagrant status $name | grep -q "$name\s+running"); then
             vagrant reload $name
+            vagrant sshfs $name
         fi
         for command in "$@"; do
             vagrant ssh --command "$command" "$name"

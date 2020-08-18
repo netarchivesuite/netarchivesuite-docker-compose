@@ -68,6 +68,12 @@
           "sysprep_skip_create_users_and_groups": "true",
           "ignore_groupsusers_create": "true"
         }
+      },
+      "yarn-env": {
+        "properties_attributes": {},
+        "properties": {
+          "yarn_user": "yarn"
+        }
       }
     },
 
