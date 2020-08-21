@@ -50,7 +50,7 @@ class PrototypeRecordService(AbstractRecordService):
     def resolveFile(self, filename):
             ## form = cgi.FieldStorage()
             ## TODO form values can be used in other implementations e.g. form["collection"].value might be part of the file path
-            return '/data/' + filename
+            return '/kbhpillar/collection-netarkivet/' + filename
 
 if __name__ == "__main__":
     ## TODO read the service name from a config-file

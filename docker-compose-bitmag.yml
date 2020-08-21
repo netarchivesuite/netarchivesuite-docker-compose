@@ -1,10 +1,15 @@
 # Run with U_ID=$(id -u) G_ID=$(id -g) docker-compose -f docker-compose-bitmag.yml up
 version: "3"
+networks:
+  default:
+    external:
+      name: netarkivet-net
 services:
   bus:
     image: webcenter/activemq:5.12.0
     ports:
       - 61616
+      - 8161:8161
     environment:
       - ACTIVEMQ_MIN_MEMORY=512
       - ACTIVEMQ_MAX_MEMORY=2048
@@ -32,11 +37,25 @@ services:
     depends_on:
       - bus
       - dav
-  file1pillar:
-    build: filepillar
+#  file1pillar:
+#    build: filepillar
+#    volumes:
+#     # - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/pillar:/filedir
+#      - "bitmag_files:/filedir"
+#    depends_on:
+#      - bus
+#      - dav
+#    ports:
+#      - 22
+  kb-pillar:
+    build: kb-pillar
     volumes:
-      - /home/csr/projects/docker-csr/bitmag/bitrepository-quickstart/var/pillar:/filedir
+      - "bitmag_files:/kbhpillar"
     depends_on:
       - bus
       - dav
-    #command: ["tail", "-f", "/bitrepository-reference-pillar-1.9.0.1/bin/pillar.sh"]
+    tty: true
+    stdin_open: true
+    command: ["/kb-pillar/bin/wait_for_it.sh", "bus:61616", "--", "/kb-pillar/bin/kb-pillar", "start"]
+volumes:
+  bitmag_files:

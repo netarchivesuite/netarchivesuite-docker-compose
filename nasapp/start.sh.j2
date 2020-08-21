@@ -3,5 +3,10 @@ echo Starting linux application: {{APP_LABEL}}
 export CLASSPATH={{CLASSPATH}}:$CLASSPATH;
 ##java -Xmx1024m  -Ddk.netarkivet.settings.file=/nas/settings.xml -Dlogback.configurationFile=/nas/logback.xml dk.netarkivet.archive.arcrepository.ArcRepositoryApplication
 
+##if [ $H3_CHANNEL == "SNAPSHOT" ]; then
+##  echo "Clearing bitmag"
+##  /nas/clearBitmag.sh
+## fi
+
 java -Xmx1024m {{NAS_JAVA_OPTS|default('')}} -Dsettings.harvester.harvesting.heritrix.javaOpts={{HERITRIX_JAVA_OPTS|default('', false)}} -Ddk.netarkivet.settings.file=/nas/settings.xml -Dlogback.configurationFile=/nas/logback.xml {{APP_CLASS}}
 

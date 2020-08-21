@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BackendSettings xmlns="http://kb.dk/bitrepository/PillarSettings.xsd">
+    <Connector>
+        <Host>kb-pillar</Host>
+        <Port>44447</Port>
+    </Connector>
+    <BackendID>Backend-100</BackendID>
+    <ReadOnly>false</ReadOnly>
+    <MinSpaceLeft>741824</MinSpaceLeft>
+    <CertificateFile>kb-pillar.crt</CertificateFile>
+    <PrivateKeyFile>kb-pillar.p8</PrivateKeyFile>
+    <RepositorySettingsFile>RepositorySettings.xml</RepositorySettingsFile>
+    <DisableLayeredFolders>true</DisableLayeredFolders>
+    <!--Configure Storage Folders Here -->
+    <StorageDirectory>/kbhpillar/</StorageDirectory>
+</BackendSettings>

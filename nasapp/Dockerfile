@@ -19,13 +19,18 @@ WORKDIR /nas
 
 COPY *.j2 /nas/
 COPY wait-for-postgres.sh /nas/wait-for-postgres.sh
+COPY wait_for_it.sh /nas/wait_for_it.sh
+COPY clearBitmag.sh /nas/clearBitmag.sh
 COPY jmxremote.password /nas/jmxremote.password
 COPY docker-entrypoint.sh /
 COPY h3server.jks /
 COPY nasclientconfig nasclientconfig
+COPY testdata /nas/testdata
+
 RUN chmod 755 /nas/*.j2
 RUN chmod 755 /nas/wait-for-postgres.sh
 RUN chmod 755 /docker-entrypoint.sh
+RUN chmod 755 /nas/wait_for_it.sh
 EXPOSE 8078
 
 CMD ["/docker-entrypoint.sh"]

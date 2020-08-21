@@ -1,4 +1,8 @@
 version: "3"
+networks:
+  default:
+    external:
+      name: netarkivet-net
 services:
   wrs:
     build: https://github.com/pyohei/docker-cgi-python.git
@@ -7,3 +11,6 @@ services:
     volumes:
       - ./wrs/cgi-bin:/production/www/cgi-bin
       - ./wrs/testdata:/data
+      - "bitmag_files:/kbhpillar"
+volumes:
+  bitmag_files:
