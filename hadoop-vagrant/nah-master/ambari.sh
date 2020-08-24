@@ -26,9 +26,14 @@ AMBARI_DATABASE_PASS=$(get_password postgres_ambari)
 AMBARI_DATABASE_PORT=5432
 AMBARI_SYSTEM_USER=ambari-server
 
-echo -e "y\ny\n${AMBARI_SYSTEM_USER}\ny" | \
+echo -e "y\n
+y\n
+${AMBARI_SYSTEM_USER}\n
+y\n
+y\n" | \
 ambari-server setup \
     --java-home=/usr/lib/jvm/java-1.8.0 \
+    --enable-lzo-under-gpl-license \
     --database=postgres \
     --databasehost=${AMBARI_DATABASE_HOST} \
     --databaseport=${AMBARI_DATABASE_PORT} \
@@ -68,7 +73,8 @@ get_password grafana > /dev/null
 get_password smartsense > /dev/null
 
 #7.3.2  Setup ambari
-
+sudo systemctl enable ambari-server
+sudo systemctl start ambari-server
 
 # Setup LDAP sync
 append /etc/ambari-server/conf/ambari.properties "ldap.sync.username.collision.behavior=convert"

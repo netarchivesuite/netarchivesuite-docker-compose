@@ -111,9 +111,11 @@ echo $hosts
 dd if=/dev/urandom of=/vagrant/passwords/http_secret bs=1024 count=1
 for host in $hosts; do
     echo "$host"
-    sudo -u vagrant ssh -t "vagrant@$host" "sudo cp -f /vagrant/passwords/http_secret /etc/security/http_secret;
+    sudo -u vagrant -i <<-EOS
+      ssh -t "vagrant@$host" "sudo cp -f /vagrant/passwords/http_secret /etc/security/http_secret;
                             sudo chown hdfs:hadoop /etc/security/http_secret;
                             sudo chmod 440 /etc/security/http_secret"
+EOS
 done
 
 
@@ -121,7 +123,7 @@ setConfig core-site "hadoop.http.authentication.simple.anonymous.allowed" "false
 setConfig core-site "hadoop.http.authentication.signature.secret.file"  "/etc/security/http_secret"
 setConfig core-site "hadoop.http.authentication.type" "kerberos"
 setConfig core-site "hadoop.http.authentication.kerberos.keytab"  "/etc/security/keytabs/spnego.service.keytab"
-setConfig core-site "hadoop.http.authentication.kerberos.principal"  "HTTP/_HOST@N$REALM_NAME"
+setConfig core-site "hadoop.http.authentication.kerberos.principal"  "HTTP/_HOST@$REALM_NAME"
 setConfig core-site "hadoop.http.filter.initializers"  "org.apache.hadoop.security.AuthenticationFilterInitializer"
 setConfig core-site "hadoop.http.authentication.cookie.domain"  "$(hostname -d)"
 
