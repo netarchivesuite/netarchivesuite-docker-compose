@@ -16,7 +16,7 @@ class AbstractRecordService:
 
     def main(self):
         ## TODO make debugging switchable in config file
-        self.debug()
+        ##self.debug()
 
         obj = zlib.decompressobj(16 + zlib.MAX_WBITS)
         filename = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]

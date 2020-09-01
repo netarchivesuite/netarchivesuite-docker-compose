@@ -57,5 +57,6 @@ services:
     tty: true
     stdin_open: true
     command: ["/kb-pillar/bin/wait_for_it.sh", "bus:61616", "--", "/kb-pillar/bin/kb-pillar", "start"]
+    ##command: ["sleep", "1d"]
 volumes:
   bitmag_files:

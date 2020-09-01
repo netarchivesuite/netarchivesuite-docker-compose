@@ -8,6 +8,7 @@ FROM rightmesh/ubuntu-openjdk:16.04
 COPY nas.zip nas.zip
 COPY h3bundler.zip h3bundler.zip
 
+
 RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools python3-pip && pip3 install j2cli
 RUN apt-get update && apt-get install -y less
 
@@ -16,6 +17,7 @@ RUN unzip h3bundler.zip
 RUN mv heritrix-3* bundler
 RUN mv bundler/lib/* /nas/lib
 WORKDIR /nas
+COPY wayback_uber_jar.jar /nas/wayback_uber_jar.jar
 
 COPY *.j2 /nas/
 COPY wait-for-postgres.sh /nas/wait-for-postgres.sh

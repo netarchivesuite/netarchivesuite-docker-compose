@@ -90,7 +90,8 @@
         </http>
         <applicationName>{{APP_CLASS}}</applicationName>
         <hadoop>
-            <defaultFS>hdfs://node1</defaultFS>
+            <defaultFS>hdfs://node1:8020</defaultFS>
+            <username>vagrant</username>
             <hdfs>
                 <uri>hdfs://node1:8020</uri>
             </hdfs>
@@ -99,8 +100,9 @@
             </resourcemanager>
             <mapred>
                 <framework>yarn</framework>
-                <inputDir>nas_input</inputDir>
-                <outputDir>nas_output</outputDir>
+                <inputDir>/nas_input</inputDir>
+                <outputDir>/nas_output</outputDir>
+                <wayback_uber_jar>/nas/wayback_uber_jar.jar</wayback_uber_jar>
             </mapred>
         </hadoop>
         <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
@@ -255,7 +257,7 @@
             <recentProducerInterval>300000000</recentProducerInterval>
             <producerDelay>0</producerDelay>
             <producerInterval>60000</producerInterval>
-            <consumerThreads>5</consumerThreads>
+            <consumerThreads>3</consumerThreads>
             <initialFiles></initialFiles>
         </indexer>
     </wayback>

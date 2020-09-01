@@ -2,7 +2,7 @@
 
 Start server with 
 
-     docker-compose up
+     docker-compose -f docker-compose-wrs.yml up
 
 Then read a warc-record with 
 

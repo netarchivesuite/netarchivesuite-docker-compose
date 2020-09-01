@@ -19,7 +19,7 @@ ADD kb-pillar.crt /kb-pillar/conf
 ADD kb-pillar.p8 /kb-pillar/conf
 ADD wait_for_it.sh /kb-pillar/bin
 RUN chmod 755  /kb-pillar/bin/wait_for_it.sh
-
+RUN mkdir /kbhpillar_dir2
 
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar-backend
@@ -29,3 +29,4 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 WORKDIR /kb-pillar
 
 CMD ["/kb-pillar/bin/kb-pillar", "start"]
+#CMD ["sleep", "1d"]
