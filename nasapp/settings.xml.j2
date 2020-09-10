@@ -44,6 +44,7 @@
         <indexClient>
             <indexRequestTimeout>43200000</indexRequestTimeout>
         </indexClient>
+        <cacheDir>cache</cacheDir>
         <replicas>
             <!-- The names of all bit archive replicas in the
              environment, e.g., "nameOfBitachiveOne" and "nameOfBitachiveTwo". -->
@@ -90,6 +91,7 @@
         </http>
         <applicationName>{{APP_CLASS}}</applicationName>
         <hadoop>
+            <username>vagrant</username>
             <defaultFS>hdfs://node1</defaultFS>
             <hdfs>
                 <uri>hdfs://node1:8020</uri>
@@ -99,8 +101,16 @@
             </resourcemanager>
             <mapred>
                 <framework>yarn</framework>
-                <inputDir>nas_input</inputDir>
-                <outputDir>nas_output</outputDir>
+                <waybackUberJar>/nas/lib/wayback-indexer.jar</waybackUberJar>
+                <inputFilesParentDir>/kbhpillar/collection-netarkivet/</inputFilesParentDir>
+                <cache>
+                    <inputDir>nas_cache_input</inputDir>
+                    <outputDir>nas_cache_output</outputDir>
+                </cache>
+                <cdx>
+                    <inputDir>nas_cdx_input</inputDir>
+                    <outputDir>nas_cdx_output</outputDir>
+                </cdx>
             </mapred>
         </hadoop>
         <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
