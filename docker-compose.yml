@@ -93,18 +93,23 @@ services:
 #      ports:
 #        - 8443
 #      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  nasidx:
-#        build: nasapp
-#        links:
-#           - mq
-#           - ftp
-#        environment:
-#            - APP_LABEL=IndexServer
-#            - APP_CLASS=dk.netarkivet.harvester.indexserver.IndexServerApplication
-#            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
-#            - REPLICA=KB
-#            - LOCATION=K
-#        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasidx:
+        build: nasapp
+        links:
+           - mq
+           - bus
+           - cleaner
+        environment:
+            - APP_LABEL=IndexServer
+            - APP_CLASS=dk.netarkivet.harvester.indexserver.IndexServerApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
+            - REPLICA=KB
+            - LOCATION=K
+        volumes:
+        - "bitmag_files:/kbhpillar"
+        depends_on:
+          - cleaner
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
   naswbindexer:
         build: nasapp
         links:
@@ -120,7 +125,7 @@ services:
             - LOCATION=K
             - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
         volumes:
-        - "bitmag_files:/bitmag"
+        - "bitmag_files:/kbhpillar"
         ports:
           - 5005:5005
         depends_on:

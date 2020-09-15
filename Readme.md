@@ -12,7 +12,7 @@ cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bund
 
 If using Hadoop for mass processing also copy the shaded wayback-indexer jar to the docker project
 ```
-cp ./wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar ../netarchivesuite-docker-compose/nasapp/wayback-indexer.jar
+cp ./wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar ../netarchivesuite-docker-compose/nasapp/wayback-uber-jar.jar
 ```
 
 Running the following
