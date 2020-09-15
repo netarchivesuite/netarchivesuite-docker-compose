@@ -9,22 +9,20 @@ services:
     build: nasdb
     ports:
       - "6543:5432"
-#  nasar:
-#    build: nasapp
-#    links:
-#      - database
-#      - ftp
-#    depends_on:
-#      - database
-#      - mq
-#      - ftp
-#    environment:
-#      - APP_LABEL=ArcRepository
-#      - APP_CLASS=dk.netarkivet.archive.arcrepository.ArcRepositoryApplication
-#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-#      - REPLICA=SB
-#      - LOCATION=S
-#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasar:
+    build: nasapp
+    links:
+      - database
+    depends_on:
+      - database
+      - mq
+    environment:
+      - APP_LABEL=ArcRepository
+      - APP_CLASS=dk.netarkivet.archive.arcrepository.ArcRepositoryApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=SB
+      - LOCATION=S
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasgui:
     build: nasapp
     ports:
