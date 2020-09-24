@@ -21,4 +21,7 @@
   </root>
 
   <logger name="org.bitrepository" level="INFO" />
+  <logger name="org.apache" level="WARN" />
+  <logger name="org.apache.activemq" level="WARN" />
+  <logger name="httpclient" level="WARN" />
 </configuration>
