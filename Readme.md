@@ -4,15 +4,21 @@ First build NetarchiveSuite from the bitmag branch:
 ```
 csr@oates:~/projects/netarchivesuite$ mvn -DskipTests clean package
 ```
-Then copy the two distribution zips from Netarchivesuite to the docker project
+Then copy the two distribution zips from NetarchiveSuite (referred to as NAS) to the docker project (referred to as NAS-DC)
 ```
-cp ./deploy/distribution/target/NetarchiveSuite-5.7-IIPCH3-SNAPSHOT.zip ../netarchivesuite-docker-compose/nasapp/nas.zip
-cp ./harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bundler-5.7-IIPCH3-SNAPSHOT.zip ../netarchivesuite-docker-compose/nasapp/h3bundler.zip
+cp <NAS>/deploy/distribution/target/NetarchiveSuite-5.7-IIPCH3-SNAPSHOT.zip <NAS-DC>/nasapp/nas.zip
+cp <NAS>/harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bundler-5.7-IIPCH3-SNAPSHOT.zip <NAS-DC>/nasapp/h3bundler.zip
 ```
 
-If using Hadoop for mass processing also copy the shaded wayback-indexer jar to the docker project
+If using Hadoop for mass processing also copy the shaded wayback-indexer jar to the docker project:
 ```
-cp ./wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar ../netarchivesuite-docker-compose/nasapp/wayback-uber-jar.jar
+cp <NAS>/wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar <NAS-DC>/nasapp/wayback-uber-jar.jar
+```
+
+To use the kb-pillar for Bitmag storage, download the zip-file from http://code-01.kb.dk:8082/nexus/content/repositories/releases/dk/kb/bitrepository/pillar-frontend/1.3.3/pillar-frontend-1.3.3.zip
+and place it in the kb-pillar directory such that it has the path
+```
+<NAS-DC>/kb-pillar/pillar-frontend-1.3.3.zip
 ```
 
 Running the following
