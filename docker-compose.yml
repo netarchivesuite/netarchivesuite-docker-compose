@@ -33,20 +33,20 @@ services:
     build: nasdb
     ports:
       - "6543:5432"
-  nasgui:
-    build: nasapp
-    ports:
-      - "8078:8078"
-    links:
-      - database
-    depends_on:
-      - database
-      - mq
-    environment:
-      - APP_LABEL=GUIApplication
-      - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
-      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
-    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+#  nasgui:
+#    build: nasapp
+#    ports:
+#      - "8078:8078"
+#    links:
+#      - database
+#    depends_on:
+#      - database
+#      - mq
+#    environment:
+#      - APP_LABEL=GUIApplication
+#      - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
+#      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+#    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
 #  nashjm:
 #      build: nasapp
 #      links:
@@ -110,27 +110,27 @@ services:
         depends_on:
           - cleaner
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
-  naswbindexer:
-        build: nasapp
-        links:
-           - database
-           - mq
-           - bus
-           - cleaner
-        environment:
-            - APP_LABEL=WaybackIndexerApplication
-            - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
-            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar:/nas/lib/netarchivesuite-wayback-indexer.jar
-            - REPLICA=KB
-            - LOCATION=K
-            - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-        volumes:
-        - "bitmag_files:/kbhpillar"
-        ports:
-          - 5005:5005
-        depends_on:
-          - cleaner
-        command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
+#  naswbindexer:
+#        build: nasapp
+#        links:
+#           - database
+#           - mq
+#           - bus
+#           - cleaner
+#        environment:
+#            - APP_LABEL=WaybackIndexerApplication
+#            - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
+#            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar:/nas/lib/netarchivesuite-wayback-indexer.jar
+#            - REPLICA=KB
+#            - LOCATION=K
+#            - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+#        volumes:
+#        - "bitmag_files:/kbhpillar"
+#        ports:
+#          - 5005:5005
+#        depends_on:
+#          - cleaner
+#        command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
 #  nasvp:
 #        build: nasapp
 #        links:
