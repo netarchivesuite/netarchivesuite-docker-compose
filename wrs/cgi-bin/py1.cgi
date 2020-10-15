@@ -16,7 +16,7 @@ class AbstractRecordService:
 
     def main(self):
         ## TODO make debugging switchable in config file
-        self.debug()
+        ##self.debug()
 
         obj = zlib.decompressobj(16 + zlib.MAX_WBITS)
         filename = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
@@ -40,6 +40,7 @@ class AbstractRecordService:
                         self.onError("416 Requested Range Not Satisfiable", "Invalid offset: " + filename + ":" + str(offset))
         except IOError as e:
             self.onError("404 Not Found", "Could not find file " + filename)
+            raise e
 
     def debug(self):
         cgitb.enable()
@@ -50,7 +51,8 @@ class PrototypeRecordService(AbstractRecordService):
     def resolveFile(self, filename):
             ## form = cgi.FieldStorage()
             ## TODO form values can be used in other implementations e.g. form["collection"].value might be part of the file path
-            return '/kbhpillar/collection-netarkivet/' + filename
+            ##return '/kbhpillar/collection-netarkivet/' + filename
+            return '/data/' + filename
 
 if __name__ == "__main__":
     ## TODO read the service name from a config-file
