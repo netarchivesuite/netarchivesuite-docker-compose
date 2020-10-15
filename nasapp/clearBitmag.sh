@@ -5,7 +5,7 @@ echo Started clearing bitmag
 COLLECTION=netarkivet
 BASEDIR=$(dirname $0)
 CONFDIR="/nas/nasclientconfig"
-PILLARS="file1-pillar"
+PILLARS="kb-pillar"
 
 listing=$(mktemp)
 trap "rm -f $listing" 0 2 3 5
