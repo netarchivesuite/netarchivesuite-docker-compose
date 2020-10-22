@@ -25,7 +25,10 @@ class AbstractFileResolver:
             print("Content-type: text/plain\r\n")
             print(data)
         except Exception as e:
-            self.onError("500 Internal Server Error", "Error resolving " + filename, e)
+            print("Status: 200")
+            print("Content-type: text/plain\r\n")
+            print("\r\n")
+
     def debug(self):
         cgitb.enable()
         cgi.test()
