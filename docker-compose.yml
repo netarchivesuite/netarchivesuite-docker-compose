@@ -33,10 +33,6 @@ services:
     build: nasdb
     ports:
       - "6543:5432"
-  database:
-    build: nasdb
-    ports:
-      - "6543:5432"
   nasar:
     build: nasapp
     links:
