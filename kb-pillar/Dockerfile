@@ -1,6 +1,6 @@
 FROM rightmesh/ubuntu-openjdk:16.04
 
-RUN apt-get update && apt-get -y install zip less jsvc sqlite3 vi nano
+RUN apt-get update && apt-get -y install zip less jsvc sqlite3 vim nano
 
 ## Download zip-file from http://code-01.kb.dk:8082/nexus/content/repositories/releases/dk/kb/bitrepository/pillar-frontend/1.3.3/pillar-frontend-1.3.3.zip
 ADD pillar-frontend-1.3.3.zip /pillar.zip
