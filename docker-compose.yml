@@ -130,6 +130,7 @@ services:
            - mq
            - bus
            - cleaner
+           - fileresolver
         environment:
             - APP_LABEL=WaybackIndexerApplication
             - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication

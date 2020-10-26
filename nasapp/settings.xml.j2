@@ -117,6 +117,10 @@
             </mapred>
         </hadoop>
         <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
+        <fileResolver>
+            <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
+            <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi/</baseUrl>
+        </fileResolver>
     </common>
 
     <monitor>

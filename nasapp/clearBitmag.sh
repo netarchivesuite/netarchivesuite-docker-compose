@@ -40,4 +40,4 @@ for file in /nas/testdata/*; do
 done
 
 echo Finished uploading test data
-sleep  1d
+##sleep  1d
