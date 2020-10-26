@@ -19,17 +19,14 @@ class AbstractFileResolver:
         if debug:
             self.debug()
         try:
-            filename = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
-            filenameu = urllib.unquote(filename).strip()
-            data = self.resolveFile(filenameu)
+            pattern = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
+            pattern_decoded = urllib.unquote(pattern).strip()
+            data = self.resolveFile(pattern_decoded)
             print("Status: 200")
             print("Content-type: text/plain\r\n")
             print(data)
         except Exception as e:
-            print("Status: 200")
-            print("Content-type: text/plain\r\n")
-            print("\r\n")
-            print(e)
+            onError(500, "Error matching " + pattern, e)
     def debug(self):
         cgitb.enable()
         cgi.test()
@@ -38,17 +35,13 @@ class AbstractFileResolver:
 class PrototypeFileResolver(AbstractFileResolver):
     def resolveFile(self, filename):
         cmds = [finder, filename]
-        pipes = subprocess.Popen(cmds , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        std_out, std_err = pipes.communicate()
-        if pipes.returncode != 0:
-            err_msg = "%s. Code: %s" % (std_err.strip(), pipes.returncode)
-            return err_msg
-        else:
-            return std_out
-        ##try:
-        ##    return subprocess.check_output([finder, filename],stderr=subprocess.PIPE,shell=True).strip()
-        ##except subprocess.CalledProcessError as e:
-        ##    print(e.returncode, e.output)
+        try:
+            return subprocess.check_output(cmds)
+        except Exception as e:
+            ## Expected on zero matches
+            return ""
+
+
 
 
 class FailingFileResolver(AbstractFileResolver):
