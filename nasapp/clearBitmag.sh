@@ -34,7 +34,7 @@ cat $listing
  echo Finished clearing bitmag
 
 
-for file in /nas/testdata/*; do
+for file in $(find /nas/testdata -maxdepth 1 -type f); do
     echo "Uploading $file"
     java -cp "/nas/lib/*" -Dlogback.configurationFile=/nas/logback.xml org.bitrepository.commandline.PutFileCmd -c $COLLECTION -s $CONFDIR -f $file
 done
