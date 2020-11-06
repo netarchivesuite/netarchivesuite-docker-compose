@@ -107,17 +107,21 @@
                 <framework>yarn</framework>
                 <waybackUberJar>/nas/lib/wayback-uber-jar.jar</waybackUberJar>
                 <inputFilesParentDir>/kbhpillar/collection-netarkivet/</inputFilesParentDir>
-                <metadataJob>
+                <metadataExtractionJob>
                     <inputDir>nas_cache_input</inputDir>
                     <outputDir>nas_cache_output</outputDir>
-                </metadataJob>
+                </metadataExtractionJob>
                 <cdxJob>
                     <inputDir>nas_cdx_input</inputDir>
                     <outputDir>nas_cdx_output</outputDir>
                 </cdxJob>
+                <metadataCDXJob>
+                    <inputDir>nas_metadata_cdx_input</inputDir>
+                    <outputDir>nas_metadata_cdx_output</outputDir>
+                </metadataCDXJob>
             </mapred>
         </hadoop>
-        <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
+        <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
     </common>
 
     <monitor>
