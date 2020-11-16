@@ -112,6 +112,7 @@ services:
            - mq
            - bus
            - cleaner
+           - ftp
         environment:
             - APP_LABEL=IndexServer
             - APP_CLASS=dk.netarkivet.harvester.indexserver.IndexServerApplication
@@ -174,3 +175,12 @@ services:
     image: seges/openmq
     ports:
       - 7676
+  ftp:
+    build: docker-proftpd
+    ports:
+      - 20
+      - "21:21"
+      - "21100-21110:21100-21110"
+    environment:
+      - USERNAME=jms
+      - PASSWORD=jms*ftp
