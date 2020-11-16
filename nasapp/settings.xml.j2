@@ -118,6 +118,10 @@
             </mapred>
         </hadoop>
         <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
+        <fileResolver>
+            <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
+            <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi/</baseUrl>
+        </fileResolver>
     </common>
 
     <monitor>
@@ -269,7 +273,7 @@
             <recentProducerInterval>300000000</recentProducerInterval>
             <producerDelay>0</producerDelay>
             <producerInterval>60000</producerInterval>
-            <consumerThreads>5</consumerThreads>
+            <consumerThreads>3</consumerThreads>
             <initialFiles></initialFiles>
         </indexer>
     </wayback>

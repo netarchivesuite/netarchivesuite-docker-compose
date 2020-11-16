@@ -12,5 +12,18 @@ services:
       - ./wrs/cgi-bin:/production/www/cgi-bin
       - ./wrs/testdata:/data
       - "bitmag_files:/kbhpillar"
+  fileresolver:
+    build: fileresolver
+    ports:
+      - "8884:80"
+    volumes:
+      - ./fileresolver/cgi-bin:/production/www/cgi-bin
+      - "fileresolverdb:/db"
+  fileresolverdb:
+    build: fileresolverdb
+    volumes:
+      - "bitmag_files:/kbhpillar"
+      - "fileresolverdb:/db"
 volumes:
   bitmag_files:
+  fileresolverdb:

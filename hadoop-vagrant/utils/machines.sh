@@ -1,0 +1,20 @@
+SCRIPT_DIR_HERE=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+pushd $SCRIPT_DIR_HERE > /dev/null
+source common.sh
+
+IPA_SERVER=nah-adm.$DOMAIN_NAME1
+IPA_IP1=${SUBNET1}.9
+
+MASTER_NAME=nah-master.$DOMAIN_NAME1
+MASTER_IP1=${SUBNET1}.113
+
+DATA1_NAME=nah-data-001.$DOMAIN_NAME1
+DATA1_IP1=${SUBNET1}.11
+
+DATA2_NAME=nah-data-002.$DOMAIN_NAME1
+DATA2_IP1=${SUBNET1}.12
+
+DATA3_NAME=nah-data-003.$DOMAIN_NAME1
+DATA3_IP1=${SUBNET1}.13
+
+popd  > /dev/null
