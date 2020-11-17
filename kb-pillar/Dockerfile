@@ -9,8 +9,8 @@ RUN unzip /pillar.zip
 
 RUN mv kb-pillar-1.3.3 /kb-pillar
 
-RUN mkdir /kb-pillar/conf
-RUN mkdir /kbhpillar_dir2
+RUN mkdir -p /kb-pillar/conf
+RUN mkdir -p /kbhpillar_dir2
 
 ADD RepositorySettings.xml /kb-pillar/conf
 ADD BackendSettings.xml /kb-pillar/conf
@@ -21,7 +21,6 @@ ADD kb-pillar.p8 /kb-pillar/conf
 ADD wait_for_it.sh /kb-pillar/bin
 ADD scripts/mass_ingest.sh /kb-pillar/bin
 RUN chmod 755  /kb-pillar/bin/wait_for_it.sh
-RUN mkdir /kbhpillar_dir2
 
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar-backend
