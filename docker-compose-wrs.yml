@@ -20,7 +20,10 @@ services:
       - ./fileresolver/cgi-bin:/production/www/cgi-bin
       - "fileresolverdb:/db"
   fileresolverdb:
-    build: fileresolverdb
+    build:
+      context: fileresolverdb
+      args:
+        TESTFILES: "true"
     volumes:
       - "bitmag_files:/kbhpillar"
       - "fileresolverdb:/db"
