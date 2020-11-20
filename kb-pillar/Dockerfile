@@ -21,7 +21,6 @@ ADD kb-pillar.p8 /kb-pillar/conf
 ADD wait_for_it.sh /kb-pillar/bin
 ADD scripts/mass_ingest.sh /kb-pillar/bin
 RUN chmod 755  /kb-pillar/bin/wait_for_it.sh
-RUN mkdir /kbhpillar_dir2
 
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar
 RUN sed -i "s/\"no\"/\"yes\"/" /kb-pillar/bin/kb-pillar-backend
