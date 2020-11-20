@@ -13,4 +13,5 @@
     <DisableLayeredFolders>true</DisableLayeredFolders>
     <!--Configure Storage Folders Here -->
     <StorageDirectory>/kbhpillar/</StorageDirectory>
+    <!--<StorageDirectory>/kbhpillar_dir2</StorageDirectory>-->
 </BackendSettings>

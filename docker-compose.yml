@@ -33,6 +33,20 @@ services:
     build: nasdb
     ports:
       - "6543:5432"
+  nasar:
+    build: nasapp
+    links:
+      - database
+    depends_on:
+      - database
+      - mq
+    environment:
+      - APP_LABEL=ArcRepository
+      - APP_CLASS=dk.netarkivet.archive.arcrepository.ArcRepositoryApplication
+      - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+      - REPLICA=SB
+      - LOCATION=S
+    command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasgui:
     build: nasapp
     ports:
@@ -65,7 +79,6 @@ services:
       build: nasapp
       links:
          - mq
-         - ftp
          - bus
       environment:
           - APP_LABEL=HarvestController_Focused
@@ -120,6 +133,7 @@ services:
            - mq
            - bus
            - cleaner
+           - fileresolver
         environment:
             - APP_LABEL=WaybackIndexerApplication
             - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
@@ -150,6 +164,12 @@ services:
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   cleaner:
       build: nasapp
+      environment:
+        - APP_LABEL=Bitmag
+        - APP_CLASS=dk.netarkivet.wayback.indexer.WaybackIndexerApplication
+        - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar:/nas/lib/netarchivesuite-wayback-indexer.jar
+        - REPLICA=KB
+        - LOCATION=K
       links:
           - bus
       command: ["/nas/wait_for_it.sh", "bus:61616", "--", "/nas/clearBitmag.sh"]
