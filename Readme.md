@@ -10,9 +10,9 @@ cp <NAS>/deploy/distribution/target/NetarchiveSuite-5.7-IIPCH3-SNAPSHOT.zip <NAS
 cp <NAS>/harvester/heritrix3/heritrix3-bundler/target/NetarchiveSuite-heritrix3-bundler-5.7-IIPCH3-SNAPSHOT.zip <NAS-DC>/nasapp/h3bundler.zip
 ```
 
-If using Hadoop for mass processing also copy the shaded wayback-indexer jar to the docker project:
+If using Hadoop for mass processing also copy the shaded uber jar to the docker project:
 ```
-cp <NAS>/wayback/wayback-indexer/target/wayback-indexer-5.7-IIPCH3-SNAPSHOT-withdeps.jar <NAS-DC>/nasapp/wayback-uber-jar.jar
+cp <NAS>/hadoop-uber-jar/target/hadoop-uber-jar-5.7-IIPCH3-SNAPSHOT-shaded.jar <NAS-DC>/nasapp/hadoop-uber-jar.jar
 ```
 
 To use the kb-pillar for Bitmag storage, download the zip-file from http://code-01.kb.dk:8082/nexus/content/repositories/releases/dk/kb/bitrepository/pillar-frontend/1.3.3/pillar-frontend-1.3.3.zip
