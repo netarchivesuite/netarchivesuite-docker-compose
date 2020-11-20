@@ -121,7 +121,7 @@
                 </metadataCDXJob>
             </mapred>
         </hadoop>
-        <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
+        <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
         <fileResolver>
             <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
             <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi/</baseUrl>
@@ -277,7 +277,7 @@
             <recentProducerInterval>300000000</recentProducerInterval>
             <producerDelay>0</producerDelay>
             <producerInterval>60000</producerInterval>
-            <consumerThreads>3</consumerThreads>
+            <consumerThreads>5</consumerThreads>
             <initialFiles></initialFiles>
         </indexer>
     </wayback>
