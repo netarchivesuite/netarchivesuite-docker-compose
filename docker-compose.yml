@@ -46,6 +46,8 @@ services:
       - APP_LABEL=GUIApplication
       - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
       - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
+    volumes:
+      - "bitmag_files:/kbhpillar"
     command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nashjm:
       build: nasapp
@@ -77,22 +79,22 @@ services:
         ##- 5005:5005
       hostname: nasharfocus
       command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-#  nasharsnap:
-#      build: nasapp
-#      links:
-#         - mq
-#         - ftp
-#         - bus
-#      environment:
-#          - APP_LABEL=HarvestController_Snapshot
-#          - APP_CLASS=dk.netarkivet.harvester.heritrix3.HarvestControllerApplication
-#          - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-heritrix3-controller.jar
-#          - REPLICA=KB
-#          - LOCATION=K
-#          - H3_CHANNEL=SNAPSHOT
-#      ports:
-#        - 8443
-#      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasharsnap:
+      build: nasapp
+      links:
+         - mq
+         - ftp
+         - bus
+      environment:
+          - APP_LABEL=HarvestController_Snapshot
+          - APP_CLASS=dk.netarkivet.harvester.heritrix3.HarvestControllerApplication
+          - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-heritrix3-controller.jar
+          - REPLICA=KB
+          - LOCATION=K
+          - H3_CHANNEL=SNAPSHOT
+      ports:
+        - 8443
+      command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasidx:
         build: nasapp
         links:
@@ -132,20 +134,20 @@ services:
         depends_on:
           - cleaner
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
-#  nasvp:
-#        build: nasapp
-#        links:
-#           - mq
-#           - ftp
-#        environment:
-#            - APP_LABEL=ViewerProxyApplication
-#            - APP_CLASS=dk.netarkivet.viewerproxy.ViewerProxyApplication
-#            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
-#            - REPLICA=KB
-#            - LOCATION=K
-#        ports:
-#          - 8878:8078
-#        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
+  nasvp:
+        build: nasapp
+        links:
+           - mq
+           - ftp
+        environment:
+            - APP_LABEL=ViewerProxyApplication
+            - APP_CLASS=dk.netarkivet.viewerproxy.ViewerProxyApplication
+            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
+            - REPLICA=KB
+            - LOCATION=K
+        ports:
+          - 8878:8078
+        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   cleaner:
       build: nasapp
       links:
