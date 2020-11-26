@@ -15,13 +15,17 @@ class AbstractFileResolver:
         print ("\r\n")
         print (e)
 
-    def main(self):
+    def main(self, collection_dict):
         if debug:
             self.debug()
         try:
             pattern = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
             pattern_decoded = urllib.unquote(pattern).strip()
-            data = self.resolveFile(pattern_decoded)
+            collectionId = cgi.FieldStorage().getValue('collectionId')
+            filedir = None
+            if collectionId is not None:
+                filedir = collection_dict[collectionId][directory]
+            data = self.resolveFile(pattern_decoded, filedir)
             print("Status: 200")
             print("Content-type: text/plain\r\n")
             print(data)
@@ -33,8 +37,8 @@ class AbstractFileResolver:
 
 
 class PrototypeFileResolver(AbstractFileResolver):
-    def resolveFile(self, filename):
-        cmds = [finder, filename]
+    def resolveFile(self, filename, filedir):
+        cmds = [finder, filename, filedir]
         try:
             return subprocess.check_output(cmds)
         except Exception as e:
@@ -45,7 +49,7 @@ class PrototypeFileResolver(AbstractFileResolver):
 
 
 class FailingFileResolver(AbstractFileResolver):
-    def resolveFile(self, filename):
+    def resolveFile(self, filename, filedir):
         raise NameError("Failed by design!")
 
 
@@ -55,7 +59,8 @@ if __name__ == "__main__":
     finder = parser.get('fileresolver', 'finder')
     debug = parser.getboolean('fileresolver', 'debug')
     service = parser.get('fileresolver', 'service')
+    collection_dict = {sect: dict(parser.items(sect)) for sect in parser.sections()}
+    collection_dict.pop('fileresolver', None)
+    //print(collection_dict['netarkivet']['directory'])
     serviceClass_ = globals()[service]
-    serviceClass_().main()
-
-
+    serviceClass_().main(collection_dict)

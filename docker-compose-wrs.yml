@@ -11,7 +11,7 @@ services:
     volumes:
       - ./wrs/cgi-bin:/production/www/cgi-bin
       - ./wrs/testdata:/data
-      - "bitmag_files:/kbhpillar"
+      - "bitmag_files:/netarkivet"
   fileresolver:
     build: fileresolver
     ports:
@@ -25,7 +25,7 @@ services:
       args:
         TESTFILES: "true"
     volumes:
-      - "bitmag_files:/kbhpillar"
+      - "bitmag_files:/netarkivet"
       - "fileresolverdb:/db"
 volumes:
   bitmag_files:

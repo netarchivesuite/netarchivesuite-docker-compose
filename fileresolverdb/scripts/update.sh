@@ -3,6 +3,6 @@
 while [ true ]
 do
    echo "Updating db"
-   updatedb --require-visibility 0 -U /kbhpillar/collection-netarkivet/ -o /db/db.db
+   updatedb --require-visibility 0 -U /netarkivet/ -o /db/db.db
    sleep 3s
 done
