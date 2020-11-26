@@ -5,11 +5,11 @@ from ConfigParser import SafeConfigParser
 
 class AbstractFileResolver:
 
-    def resolveFile(self, filename):
+    def resolveFile(self, filename, filedir):
         raise Exception("resolveFile method not implemented")
 
     def onError(self, returnCode, message, e):
-        print ("Status: " + returnCode)
+        print ("Status: " + str(returnCode))
         print ("Content-Type: text/html\r\n")
         print (message)
         print ("\r\n")
@@ -21,16 +21,17 @@ class AbstractFileResolver:
         try:
             pattern = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
             pattern_decoded = urllib.unquote(pattern).strip()
-            collectionId = cgi.FieldStorage().getValue('collectionId')
-            filedir = None
-            if collectionId is not None:
-                filedir = collection_dict[collectionId][directory]
+            collectionId = cgi.FieldStorage().getvalue('collectionId')
+            if (collectionId is not None) and (collectionId in collection_dict):
+                filedir = collection_dict[collectionId]['directory']
+            else:
+                filedir = None
             data = self.resolveFile(pattern_decoded, filedir)
             print("Status: 200")
             print("Content-type: text/plain\r\n")
             print(data)
         except Exception as e:
-            onError(500, "Error matching " + pattern, e)
+            self.onError(500, "Error matching " + pattern, e)
     def debug(self):
         cgitb.enable()
         cgi.test()
@@ -38,7 +39,10 @@ class AbstractFileResolver:
 
 class PrototypeFileResolver(AbstractFileResolver):
     def resolveFile(self, filename, filedir):
-        cmds = [finder, filename, filedir]
+        if filedir is not None:
+            cmds = [finder, filename, filedir]
+        else:
+            cmds = [finder, filename]
         try:
             return subprocess.check_output(cmds)
         except Exception as e:
@@ -61,6 +65,5 @@ if __name__ == "__main__":
     service = parser.get('fileresolver', 'service')
     collection_dict = {sect: dict(parser.items(sect)) for sect in parser.sections()}
     collection_dict.pop('fileresolver', None)
-    //print(collection_dict['netarkivet']['directory'])
     serviceClass_ = globals()[service]
     serviceClass_().main(collection_dict)
