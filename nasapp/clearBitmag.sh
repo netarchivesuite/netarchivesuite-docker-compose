@@ -39,5 +39,10 @@ for file in $(find /nas/testdata -maxdepth 1 -type f); do
     java -cp "/nas/lib/*" -Dlogback.configurationFile=/nas/logback.xml org.bitrepository.commandline.PutFileCmd -c $COLLECTION -s $CONFDIR -f $file
 done
 
+for file in $(find /nas/dummydata -maxdepth 1 -type f); do
+    echo "Uploading $file"
+    java -cp "/nas/lib/*" -Dlogback.configurationFile=/nas/logback.xml org.bitrepository.commandline.PutFileCmd -c dummy_collection -s $CONFDIR -f $file
+done
+
 echo Finished uploading test data
 ##sleep  1d

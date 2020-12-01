@@ -5,7 +5,12 @@
         <Collection>
             <CollectionID>netarkivet</CollectionID>
             <DatabaseURL>jdbc:sqlite:/collection-netarkivet.db</DatabaseURL>
-            <StorageDirectory>collection-netarkivet</StorageDirectory>
+            <StorageDirectory>filedir</StorageDirectory>
+        </Collection>
+        <Collection>
+            <CollectionID>dummy_collection</CollectionID>
+            <DatabaseURL>jdbc:sqlite:/dummy.db</DatabaseURL>
+            <StorageDirectory>dummydir</StorageDirectory>
         </Collection>
     </Collections>
     <CertificateFile>kb-pillar.crt</CertificateFile>

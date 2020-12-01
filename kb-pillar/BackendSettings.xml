@@ -12,6 +12,8 @@
     <RepositorySettingsFile>RepositorySettings.xml</RepositorySettingsFile>
     <DisableLayeredFolders>true</DisableLayeredFolders>
     <!--Configure Storage Folders Here -->
-    <StorageDirectory>/kbhpillar/</StorageDirectory>
+    <StorageDirectory>/netarkivet/001</StorageDirectory>
+    <StorageDirectory>/netarkivet/002</StorageDirectory>
+    <StorageDirectory>/netarkivet/003</StorageDirectory>
     <!--<StorageDirectory>/kbhpillar_dir2</StorageDirectory>-->
 </BackendSettings>
