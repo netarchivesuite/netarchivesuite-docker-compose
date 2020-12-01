@@ -31,7 +31,7 @@ class AbstractRecordService:
         in_body = False
         try:
             filepath = self.resolveFile(filename, filedir)
-            print >> sys.stderr, "File found \''" + filepath + "\''"
+            ##print >> sys.stderr, "File found \''" + filepath + "\''"
             with open(filepath) as fin:
                 fin.seek(offset) ## TODO check try/except that this is not larger than the file
                 while True:
@@ -66,7 +66,7 @@ class LocalDBService(AbstractRecordService):
            cmds = [finder, filename, filedir]
         else:
            cmds = [finder, filename]
-        print >> sys.stderr, 'Executing ' + str(cmds)
+        ##print >> sys.stderr, 'Executing ' + str(cmds)
         return subprocess.check_output(cmds).strip(' \n\t')
 
 if __name__ == "__main__":
