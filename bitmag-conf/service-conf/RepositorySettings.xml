@@ -30,6 +30,13 @@
         <PillarID>kb-pillar</PillarID>
       </PillarIDs>
     </Collection>
+    <Collection>
+      <ID>dummy_collection</ID>
+      <Name>The dummy collection</Name>
+      <PillarIDs>
+        <PillarID>kb-pillar</PillarID>
+      </PillarIDs>
+    </Collection>
   </Collections>
   <ProtocolSettings>
     <DefaultChecksumType>MD5</DefaultChecksumType>

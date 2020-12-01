@@ -32,6 +32,15 @@
         <PillarID>file2-pillar</PillarID>
       </PillarIDs>
     </Collection>
+    <Collection>
+      <ID>dummy_collection</ID>
+      <Name>The dummy collection</Name>
+      <PillarIDs>
+        <PillarID>checksum-pillar</PillarID>
+        <PillarID>file1-pillar</PillarID>
+        <PillarID>file2-pillar</PillarID>
+      </PillarIDs>
+    </Collection>
   </Collections>
   <ProtocolSettings>
     <DefaultChecksumType>MD5</DefaultChecksumType>

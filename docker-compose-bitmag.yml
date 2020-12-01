@@ -50,7 +50,7 @@ services:
   kb-pillar:
     build: kb-pillar
     volumes:
-      - "bitmag_files:/kbhpillar"
+      - "bitmag_files:/netarkivet"
     depends_on:
       - bus
       - dav

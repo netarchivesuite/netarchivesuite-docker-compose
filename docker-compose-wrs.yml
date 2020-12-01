@@ -5,13 +5,15 @@ networks:
       name: netarkivet-net
 services:
   wrs:
-    build: https://github.com/pyohei/docker-cgi-python.git
+    ##build: https://github.com/pyohei/docker-cgi-python.git
+    build: wrs
     ports:
       - "8883:80"
     volumes:
       - ./wrs/cgi-bin:/production/www/cgi-bin
       - ./wrs/testdata:/data
       - "bitmag_files:/netarkivet"
+      - "fileresolverdb:/db"
   fileresolver:
     build: fileresolver
     ports:

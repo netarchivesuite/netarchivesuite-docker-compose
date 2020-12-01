@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 regex=$1
 dir=$2
+database=/db/db.db
+##database=tempdata/db.db
+
 if [ -z $dir ]; then
-  locate --regex --basename -d /db/db.db $1
+  locate --regex --basename -d $database $1
 else
-  if [[ ${str:0:1} == "/" ]] ; then
-    fullregex='/'$dir'/'$regex
-  else
-    fullregex='/'$dir$regex
+  if [[ ${regex:0:1} == "^" ]] ; then
+    regex=${regex:1}  ## doesn't make sense to have a "^" not at the start
   fi
-  locate --regex -d /db/db.db $fullregex
+  fullregex="/$dir/$regex"
+  locate --regex -d $database $fullregex
 fi
