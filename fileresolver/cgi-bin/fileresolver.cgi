@@ -5,7 +5,7 @@ from ConfigParser import SafeConfigParser
 
 class AbstractFileResolver:
 
-    def resolveFile(self, filename, filedir):
+    def resolveFile(self, filename, filedir, exactfilename):
         raise Exception("resolveFile method not implemented")
 
     def onError(self, returnCode, message, e):
@@ -26,7 +26,8 @@ class AbstractFileResolver:
                 filedir = collection_dict[collectionId]['directory']
             else:
                 filedir = None
-            data = self.resolveFile(pattern_decoded, filedir)
+            exactfilename = cgi.FieldStorage().getvalue('exactfilename')
+            data = self.resolveFile(pattern_decoded, filedir, exactfilename)
             print("Status: 200")
             print("Content-type: text/plain\r\n")
             print(data)
@@ -38,11 +39,17 @@ class AbstractFileResolver:
 
 
 class PrototypeFileResolver(AbstractFileResolver):
-    def resolveFile(self, filename, filedir):
-        if filedir is not None:
-            cmds = [finder, filename, filedir]
+    def resolveFile(self, filename, filedir, exactfilename):
+        if (exactfilename == 'true'):
+            usefinder = exactfinder
         else:
-            cmds = [finder, filename]
+            usefinder = finder
+
+        if filedir is not None:
+            cmds = [usefinder, filename, filedir]
+        else:
+            cmds = [usefinder, filename]
+
         try:
             return subprocess.check_output(cmds)
         except Exception as e:
@@ -61,6 +68,7 @@ if __name__ == "__main__":
     parser = SafeConfigParser()
     parser.read('fileresolver.conf')
     finder = parser.get('fileresolver', 'finder')
+    exactfinder = parser.get('fileresolver', 'exactfinder')
     debug = parser.getboolean('fileresolver', 'debug')
     service = parser.get('fileresolver', 'service')
     collection_dict = {sect: dict(parser.items(sect)) for sect in parser.sections()}
