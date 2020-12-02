@@ -107,18 +107,22 @@
                 <framework>yarn</framework>
                 <hadoopUberJar>/nas/lib/hadoop-uber-jar.jar</hadoopUberJar>
                 <inputFilesParentDir>/kbhpillar/collection-netarkivet/</inputFilesParentDir>
-                <metadataExtractionJob>
-                    <inputDir>nas_cache_input</inputDir>
-                    <outputDir>nas_cache_output</outputDir>
-                </metadataExtractionJob>
                 <cdxJob>
                     <inputDir>nas_cdx_input</inputDir>
                     <outputDir>nas_cdx_output</outputDir>
                 </cdxJob>
-                <metadataCDXJob>
+                <metadataExtractionJob>
+                    <inputDir>nas_cache_input</inputDir>
+                    <outputDir>nas_cache_output</outputDir>
+                </metadataExtractionJob>
+                <metadataCDXExtractionJob>
                     <inputDir>nas_metadata_cdx_input</inputDir>
                     <outputDir>nas_metadata_cdx_output</outputDir>
-                </metadataCDXJob>
+                </metadataCDXExtractionJob>
+                <crawlLogExtractionJob>
+                    <inputDir>nas_crawllog_input</inputDir>
+                    <outputDir>nas_crawllog_output</outputDir>
+                </crawlLogExtractionJob>
             </mapred>
         </hadoop>
         <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
