@@ -120,7 +120,7 @@ services:
             - REPLICA=KB
             - LOCATION=K
         volumes:
-        - "bitmag_files:/kbhpillar"
+        - "bitmag_files:/netarkivet"
         depends_on:
           - cleaner
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
@@ -140,7 +140,7 @@ services:
             - LOCATION=K
             - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
         volumes:
-        - "bitmag_files:/kbhpillar"
+        - "bitmag_files:/netarkivet"
         ports:
           - 5005:5005
         depends_on:
