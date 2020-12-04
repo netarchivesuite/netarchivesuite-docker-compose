@@ -1,8 +1,4 @@
-\echo Creating tablespace tsindex
-CREATE TABLESPACE tsindex
-LOCATION '/tsindex';
 
-GRANT ALL ON TABLESPACE tsindex TO PUBLIC;
 
 \echo Creating devel role
 CREATE ROLE "devel" LOGIN PASSWORD 'devel123'

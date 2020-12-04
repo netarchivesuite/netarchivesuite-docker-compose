@@ -130,8 +130,8 @@ CREATE TABLE domains (
 CREATE SEQUENCE domains_id_seq OWNED BY domains.domain_id;
 ALTER TABLE domains ALTER COLUMN domain_id SET DEFAULT NEXTVAL('domains_id_seq');
 
-CREATE INDEX domainnameid on domains(name) TABLESPACE tsindex;
-CREATE INDEX aliasindex on domains(alias) TABLESPACE tsindex;
+CREATE INDEX domainnameid on domains(name);
+CREATE INDEX aliasindex on domains(alias);
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE domains TO netarchivesuite;
 GRANT USAGE ON SEQUENCE domains_id_seq TO netarchivesuite;
@@ -152,9 +152,9 @@ CREATE TABLE configurations (
 CREATE SEQUENCE configurations_id_seq OWNED BY configurations.config_id;
 ALTER TABLE configurations ALTER COLUMN config_id SET DEFAULT NEXTVAL('configurations_id_seq');
 
-CREATE INDEX configurationname on configurations(name) TABLESPACE tsindex;
-CREATE INDEX configurationmaxbytes on configurations(maxbytes) TABLESPACE tsindex;
-CREATE INDEX configdomain on configurations(domain_id) TABLESPACE tsindex;
+CREATE INDEX configurationname on configurations(name) ;
+CREATE INDEX configurationmaxbytes on configurations(maxbytes) ;
+CREATE INDEX configdomain on configurations(domain_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE configurations TO netarchivesuite;
 GRANT USAGE ON SEQUENCE configurations_id_seq TO netarchivesuite;
@@ -189,8 +189,8 @@ CREATE TABLE seedlists (
 CREATE SEQUENCE seedlists_id_seq OWNED BY seedlists.seedlist_id;
 ALTER TABLE seedlists ALTER COLUMN seedlist_id SET DEFAULT NEXTVAL('seedlists_id_seq');
 
-CREATE INDEX seedlistname on seedlists(name) TABLESPACE tsindex;
-CREATE INDEX seedlistdomain on seedlists(domain_id) TABLESPACE tsindex;
+CREATE INDEX seedlistname on seedlists(name) ;
+CREATE INDEX seedlistdomain on seedlists(domain_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE seedlists TO netarchivesuite;
 GRANT USAGE ON SEQUENCE seedlists_id_seq TO netarchivesuite;
@@ -210,8 +210,8 @@ CREATE TABLE passwords (
 CREATE SEQUENCE passwords_id_seq OWNED BY passwords.password_id;
 ALTER TABLE passwords ALTER COLUMN password_id SET DEFAULT NEXTVAL('passwords_id_seq');
 
-CREATE INDEX passwordname on passwords(name) TABLESPACE tsindex;
-CREATE INDEX passworddomain on passwords(domain_id) TABLESPACE tsindex;
+CREATE INDEX passwordname on passwords(name) ;
+CREATE INDEX passworddomain on passwords(domain_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE passwords TO netarchivesuite;
 GRANT USAGE ON SEQUENCE passwords_id_seq TO netarchivesuite;
@@ -227,7 +227,7 @@ CREATE TABLE ownerinfo (
 CREATE SEQUENCE ownerinfo_id_seq OWNED BY ownerinfo.ownerinfo_id;
 ALTER TABLE ownerinfo ALTER COLUMN ownerinfo_id SET DEFAULT NEXTVAL('ownerinfo_id_seq');
 
-CREATE INDEX ownerinfodomain on ownerinfo(domain_id) TABLESPACE tsindex;
+CREATE INDEX ownerinfodomain on ownerinfo(domain_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE ownerinfo TO netarchivesuite;
 GRANT USAGE ON SEQUENCE ownerinfo_id_seq TO netarchivesuite;
@@ -247,12 +247,12 @@ CREATE TABLE historyinfo (
 CREATE SEQUENCE historyinfo_id_seq OWNED BY historyinfo.historyinfo_id;
 ALTER TABLE historyinfo ALTER COLUMN historyinfo_id SET DEFAULT NEXTVAL('historyinfo_id_seq');
 
-CREATE INDEX historyinfoharvest on historyinfo (harvest_id) TABLESPACE tsindex;
-CREATE INDEX historyinfoconfigharvest on historyinfo (config_id,harvest_id) TABLESPACE tsindex;
-CREATE INDEX historyinfojobharvest on historyinfo (job_id,harvest_id) TABLESPACE tsindex;
-CREATE INDEX historyinfoharvestconfig on historyinfo (harvest_id,config_id) TABLESPACE tsindex;
-CREATE INDEX historyinfoconfig on historyinfo(config_id) TABLESPACE tsindex;
-CREATE INDEX historyinfojob on historyinfo(job_id) TABLESPACE tsindex;
+CREATE INDEX historyinfoharvest on historyinfo (harvest_id) ;
+CREATE INDEX historyinfoconfigharvest on historyinfo (config_id,harvest_id) ;
+CREATE INDEX historyinfojobharvest on historyinfo (job_id,harvest_id) ;
+CREATE INDEX historyinfoharvestconfig on historyinfo (harvest_id,config_id) ;
+CREATE INDEX historyinfoconfig on historyinfo(config_id) ;
+CREATE INDEX historyinfojob on historyinfo(job_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE historyinfo TO netarchivesuite;
 GRANT USAGE ON SEQUENCE historyinfo_id_seq TO netarchivesuite;
@@ -274,7 +274,7 @@ CREATE TABLE harvestdefinitions (
      audience varchar(100)
 );
 
-CREATE INDEX harvestdefinitionssubmitdate on harvestdefinitions (submitted) TABLESPACE tsindex;
+CREATE INDEX harvestdefinitionssubmitdate on harvestdefinitions (submitted) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE harvestdefinitions TO netarchivesuite;
 
@@ -297,7 +297,7 @@ CREATE TABLE partialharvests (
      nextdate timestamp
 );
 
-CREATE INDEX partialharvestsnextdate on partialharvests (nextdate) TABLESPACE tsindex;
+CREATE INDEX partialharvestsnextdate on partialharvests (nextdate) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE partialharvests TO netarchivesuite;
 
@@ -389,8 +389,8 @@ CREATE TABLE jobs (
     harvestname_prefix varchar(100)	
 );
 
-CREATE INDEX jobstatus on jobs(status) TABLESPACE tsindex;
-CREATE INDEX jobharvestid on jobs(harvest_id) TABLESPACE tsindex;
+CREATE INDEX jobstatus on jobs(status) ;
+CREATE INDEX jobharvestid on jobs(harvest_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE jobs TO netarchivesuite;
 
@@ -401,7 +401,7 @@ CREATE TABLE job_configs (
     PRIMARY KEY ( job_id, config_id )
 );
 
-CREATE INDEX jobconfigjob on job_configs(job_id) TABLESPACE tsindex;
+CREATE INDEX jobconfigjob on job_configs(job_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE job_configs TO netarchivesuite;
 
@@ -422,7 +422,7 @@ OWNED BY global_crawler_trap_lists.global_crawler_trap_list_id;
 ALTER TABLE global_crawler_trap_lists ALTER COLUMN global_crawler_trap_list_id
 SET DEFAULT NEXTVAL('global_crawler_trap_list_id_seq');
 
-CREATE INDEX gctlistsid on global_crawler_trap_lists(global_crawler_trap_list_id) TABLESPACE tsindex;
+CREATE INDEX gctlistsid on global_crawler_trap_lists(global_crawler_trap_list_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE global_crawler_trap_lists TO netarchivesuite;
 GRANT USAGE ON SEQUENCE global_crawler_trap_list_id_seq TO netarchivesuite;
@@ -439,8 +439,8 @@ OWNED BY global_crawler_trap_expressions.id;
 ALTER TABLE global_crawler_trap_expressions ALTER COLUMN id
 SET DEFAULT NEXTVAL('global_crawler_trap_expressions_id_seq');
 
-CREATE INDEX gctexprid on global_crawler_trap_expressions(id) TABLESPACE tsindex;
-CREATE INDEX gctexprlistid on global_crawler_trap_expressions(crawler_trap_list_id) TABLESPACE tsindex;
+CREATE INDEX gctexprid on global_crawler_trap_expressions(id) ;
+CREATE INDEX gctexprlistid on global_crawler_trap_expressions(crawler_trap_list_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE global_crawler_trap_expressions TO netarchivesuite;
 GRANT USAGE ON SEQUENCE global_crawler_trap_expressions_id_seq TO netarchivesuite;
@@ -476,9 +476,9 @@ CREATE TABLE runningJobsHistory (
      CONSTRAINT pkRunningJobsHistory PRIMARY KEY (jobId, harvestName, elapsedSeconds, tstamp)
 );
 
-CREATE INDEX runningJobsHistoryCrawlJobId on runningJobsHistory (jobId) TABLESPACE tsindex;
-CREATE INDEX runningJobsHistoryCrawlTime on runningJobsHistory (elapsedSeconds) TABLESPACE tsindex;
-CREATE INDEX runningJobsHistoryHarvestName on runningJobsHistory (harvestName) TABLESPACE tsindex;
+CREATE INDEX runningJobsHistoryCrawlJobId on runningJobsHistory (jobId) ;
+CREATE INDEX runningJobsHistoryCrawlTime on runningJobsHistory (elapsedSeconds) ;
+CREATE INDEX runningJobsHistoryHarvestName on runningJobsHistory (harvestName) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE runningJobsHistory TO netarchivesuite;
 
@@ -507,8 +507,8 @@ CREATE TABLE runningJobsMonitor (
      CONSTRAINT pkRunningJobsMonitor PRIMARY KEY (jobId, harvestName)
 );
 
-CREATE INDEX runningJobsMonitorJobId on runningJobsMonitor (jobId) TABLESPACE tsindex;
-CREATE INDEX runningJobsMonitorHarvestName on runningJobsMonitor (harvestName) TABLESPACE tsindex;
+CREATE INDEX runningJobsMonitorJobId on runningJobsMonitor (jobId) ;
+CREATE INDEX runningJobsMonitorHarvestName on runningJobsMonitor (harvestName) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE runningJobsMonitor TO netarchivesuite;
 
@@ -608,7 +608,7 @@ CREATE TABLE harvestchannel (
 CREATE SEQUENCE harvestchannel_id_seq OWNED BY harvestchannel.id;
 ALTER TABLE harvestchannel ALTER COLUMN id SET DEFAULT NEXTVAL('harvestchannel_id_seq');
 
-CREATE INDEX harvestchannelnameid on harvestchannel(name) TABLESPACE tsindex;
+CREATE INDEX harvestchannelnameid on harvestchannel(name) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE harvestchannel TO netarchivesuite;
 GRANT USAGE ON SEQUENCE harvestchannel_id_seq TO netarchivesuite;
@@ -636,7 +636,7 @@ CREATE TABLE eav_type_attribute (
 
 ALTER TABLE eav_type_attribute ADD CONSTRAINT eav_type_attribute_pkey PRIMARY KEY (tree_id, id);
 
-CREATE UNIQUE INDEX eav_type_attribute_idx on eav_type_attribute(tree_id, id) TABLESPACE tsindex;
+CREATE UNIQUE INDEX eav_type_attribute_idx on eav_type_attribute(tree_id, id) ;
 
 CREATE SEQUENCE eav_attribute_seq;
 
@@ -653,7 +653,7 @@ CREATE TABLE eav_attribute (
 
 ALTER TABLE eav_attribute ADD CONSTRAINT eav_attribute_pkey PRIMARY KEY (tree_id, id);
 
-CREATE INDEX eav_attribute_idx on eav_attribute(tree_id, entity_id) TABLESPACE tsindex;
+CREATE INDEX eav_attribute_idx on eav_attribute(tree_id, entity_id) ;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE eav_attribute TO netarchivesuite;
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE eav_type_attribute TO netarchivesuite;
