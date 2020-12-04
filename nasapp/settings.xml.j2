@@ -105,19 +105,26 @@
             </resourcemanager>
             <mapred>
                 <framework>yarn</framework>
-                <waybackUberJar>/nas/lib/wayback-uber-jar.jar</waybackUberJar>
+                <hadoopUberJar>/nas/lib/hadoop-uber-jar.jar</hadoopUberJar>
                 <inputFilesParentDir>/kbhpillar/collection-netarkivet/</inputFilesParentDir>
-                <metadataJob>
-                    <inputDir>nas_cache_input</inputDir>
-                    <outputDir>nas_cache_output</outputDir>
-                </metadataJob>
                 <cdxJob>
                     <inputDir>nas_cdx_input</inputDir>
                     <outputDir>nas_cdx_output</outputDir>
                 </cdxJob>
+                <metadataExtractionJob>
+                    <inputDir>nas_cache_input</inputDir>
+                    <outputDir>nas_cache_output</outputDir>
+                </metadataExtractionJob>
+                <metadataCDXExtractionJob>
+                    <inputDir>nas_metadata_cdx_input</inputDir>
+                    <outputDir>nas_metadata_cdx_output</outputDir>
+                </metadataCDXExtractionJob>
+                <crawlLogExtractionJob>
+                    <inputDir>nas_crawllog_input</inputDir>
+                    <outputDir>nas_crawllog_output</outputDir>
+                </crawlLogExtractionJob>
             </mapred>
         </hadoop>
-        <useHadoopAsMassProcessor>true</useHadoopAsMassProcessor>
         <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
         <fileResolver>
             <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
@@ -274,7 +281,7 @@
             <recentProducerInterval>300000000</recentProducerInterval>
             <producerDelay>0</producerDelay>
             <producerInterval>60000</producerInterval>
-            <consumerThreads>3</consumerThreads>
+            <consumerThreads>5</consumerThreads>
             <initialFiles></initialFiles>
         </indexer>
     </wayback>

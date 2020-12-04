@@ -29,7 +29,9 @@ COPY docker-entrypoint.sh /
 COPY h3server.jks /
 COPY nasclientconfig nasclientconfig
 COPY testdata /nas/testdata
-COPY wayback-uber-jar.jar /nas/lib/wayback-uber-jar.jar
+# COPY wayback-uber-jar.jar /nas/lib/wayback-uber-jar.jar
+# COPY harvester-uber-jar.jar /nas/lib/harvester-uber-jar.jar
+COPY hadoop-uber-jar.jar /nas/lib/hadoop-uber-jar.jar
 
 RUN chmod 755 /nas/*.j2
 RUN chmod 755 /nas/wait-for-postgres.sh
