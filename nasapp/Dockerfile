@@ -17,7 +17,7 @@ RUN unzip h3bundler.zip
 RUN mv heritrix-3* bundler
 RUN mv bundler/lib/* /nas/lib
 WORKDIR /nas
-##COPY wayback_uber_jar.jar /nas/wayback_uber_jar.jar
+##COPY hadoop-uber-jar.jar /nas/hadoop-uber-jar.jar
 
 COPY *.j2 /nas/
 COPY wait-for-postgres.sh /nas/wait-for-postgres.sh
