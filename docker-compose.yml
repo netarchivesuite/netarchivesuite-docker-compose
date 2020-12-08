@@ -61,7 +61,7 @@ services:
       - APP_CLASS=dk.netarkivet.common.webinterface.GUIApplication
       - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-harvester-core.jar:/nas/lib/netarchivesuite-archive-core.jar
     volumes:
-      - "bitmag_files:/kbhpillar"
+      - "bitmag_files:/netarkivet"
     command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nashjm:
       build: nasapp
@@ -122,7 +122,7 @@ services:
             - REPLICA=KB
             - LOCATION=K
         volumes:
-        - "bitmag_files:/kbhpillar"
+        - "bitmag_files:/netarkivet"
         depends_on:
           - cleaner
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/nas/wait_for_exit.sh", "cleaner", "/docker-entrypoint.sh"]
@@ -142,7 +142,7 @@ services:
             - LOCATION=K
             - NAS_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
         volumes:
-        - "bitmag_files:/kbhpillar"
+        - "bitmag_files:/netarkivet"
         ports:
           - 5005:5005
         depends_on:

@@ -3,7 +3,7 @@
         <environmentName>{{NAS_ENV | default('nasdocker')}}</environmentName>
         <applicationInstanceId/>
         <arcrepositoryClient>
-            <class>dk.netarkivet.archive.arcrepository.distribute.JMSBitmagArcRepositoryClient</class>
+            <class>dk.netarkivet.archive.arcrepository.distribute.BitmagArcRepositoryClient</class>
             <bitrepository>
                 <!-- if not set, use of certificates is disabled. If the keyfilename does not exist
                     use of certificates is disabled as well.
@@ -32,16 +32,15 @@
             <userPassword>jms*ftp</userPassword>
         </remoteFile>
         <jms>
-            <class>
-                dk.netarkivet.common.distribute.JMSConnectionSunMQ
-            </class>
+            <class>dk.netarkivet.common.distribute.JMSConnectionSunMQ</class>
             <broker>mq</broker>
             <port>7676</port>
         </jms>
         <jmx>
             <passwordFile>/nas/jmxremote.password</passwordFile>
             <timeout>300</timeout>
-            <port>8170</port><rmiPort>8270</rmiPort></jmx>
+            <port>8170</port><rmiPort>8270</rmiPort>
+        </jmx>
         <indexClient>
             <indexRequestTimeout>43200000</indexRequestTimeout>
         </indexClient>
@@ -106,7 +105,7 @@
             <mapred>
                 <framework>yarn</framework>
                 <hadoopUberJar>/nas/lib/hadoop-uber-jar.jar</hadoopUberJar>
-                <inputFilesParentDir>/kbhpillar/collection-netarkivet/</inputFilesParentDir>
+                <inputFilesParentDir>/netarkivet/collection-netarkivet/</inputFilesParentDir>
                 <cdxJob>
                     <inputDir>nas_cdx_input</inputDir>
                     <outputDir>nas_cdx_output</outputDir>
@@ -126,9 +125,12 @@
             </mapred>
         </hadoop>
         <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
+        <warcRecordService>
+            <baseUrl>http://wrs:80/cgi-bin2/warcrecordservice.cgi</baseUrl>
+        </warcRecordService>
         <fileResolver>
             <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
-            <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi/</baseUrl>
+            <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi</baseUrl>
         </fileResolver>
     </common>
 
