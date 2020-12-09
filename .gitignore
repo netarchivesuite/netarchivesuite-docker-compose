@@ -47,5 +47,5 @@ fabric.properties
 
 nasapp/h3bundler.zip
 nasapp/nas.zip
-nasapp/wayback-uber-jar.jar
+nasapp/hadoop-uber-jar.jar
 tomcat_logs
