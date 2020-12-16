@@ -1,7 +1,6 @@
-#!/usr/bin/python2.7
-import zlib, cgitb, cgi, os, subprocess, urllib
-from ConfigParser import SafeConfigParser
-
+#!/usr/bin/python3
+import cgitb, cgi, os, subprocess, urllib.parse
+from configparser import SafeConfigParser
 
 class AbstractFileResolver:
 
@@ -9,28 +8,28 @@ class AbstractFileResolver:
         raise Exception("resolveFile method not implemented")
 
     def onError(self, returnCode, message, e):
-        print ("Status: " + str(returnCode))
-        print ("Content-Type: text/html\r\n")
-        print (message)
-        print ("\r\n")
-        print (e)
+        print("Status: " + str(returnCode))
+        print("Content-Type: text/html\r\n")
+        print(message)
+        print("\r\n")
+        print(e)
 
     def main(self, collection_dict):
         if debug:
             self.debug()
         try:
             pattern = os.environ['REQUEST_URI'].split('/')[-1].split('?')[0]
-            pattern_decoded = urllib.unquote(pattern).strip()
+            pattern_decoded = urllib.parse.unquote(pattern).strip()
             collectionId = cgi.FieldStorage().getvalue('collectionId')
             if (collectionId is not None) and (collectionId in collection_dict):
                 filedir = collection_dict[collectionId]['directory']
             else:
                 filedir = None
-            exactfilename = cgi.FieldStorage().getvalue('exactfilename')
+            exactfilename = bool(cgi.FieldStorage().getvalue('exactfilename'))
             data = self.resolveFile(pattern_decoded, filedir, exactfilename)
             print("Status: 200")
             print("Content-type: text/plain\r\n")
-            print(data)
+            print(data.decode('utf-8'))
         except Exception as e:
             self.onError(500, "Error matching " + pattern, e)
     def debug(self):
@@ -40,7 +39,7 @@ class AbstractFileResolver:
 
 class PrototypeFileResolver(AbstractFileResolver):
     def resolveFile(self, filename, filedir, exactfilename):
-        if (exactfilename == 'true'):
+        if (exactfilename):
             usefinder = exactfinder
         else:
             usefinder = finder
@@ -55,8 +54,6 @@ class PrototypeFileResolver(AbstractFileResolver):
         except Exception as e:
             ## Expected on zero matches
             return ""
-
-
 
 
 class FailingFileResolver(AbstractFileResolver):
