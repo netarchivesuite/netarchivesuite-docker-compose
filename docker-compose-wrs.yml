@@ -4,16 +4,16 @@ networks:
     external:
       name: netarkivet-net
 services:
-  wrs:
-    ##build: https://github.com/pyohei/docker-cgi-python.git
-    build: wrs
-    ports:
-      - "8883:80"
-    volumes:
-      - ./wrs/cgi-bin:/production/www/cgi-bin
-      - ./wrs/testdata:/data
-      - "bitmag_files:/netarkivet"
-      - "fileresolverdb:/db"
+  #wrs:
+  #  ##build: https://github.com/pyohei/docker-cgi-python.git
+  #  build: wrs
+  #  ports:
+  #    - "8883:80"
+  #  volumes:
+  #    - ./wrs/cgi-bin:/production/www/cgi-bin
+  #    - ./wrs/testdata:/data
+  #    - "bitmag_files:/netarkivet"
+  #    - "fileresolverdb:/db"
   fileresolver:
     build: fileresolver
     ports:
@@ -27,6 +27,16 @@ services:
       args:
         TESTFILES: "true"
     volumes:
+      - "bitmag_files:/netarkivet"
+      - "fileresolverdb:/db"
+  wrs-https:
+    build: wrs-https
+    ports:
+      - "8883:80"
+      - "10443:10443"
+    volumes:
+      - ./wrs/cgi-bin:/production/www/cgi-bin
+      - ./wrs/testdata:/data
       - "bitmag_files:/netarkivet"
       - "fileresolverdb:/db"
 volumes:
