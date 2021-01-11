@@ -1,6 +1,5 @@
 ## Prototype python-cgi script for accessing warc-records.
 ### Starting the service
-To start the server run
 
     docker-compose -f docker-compose-wrs.yml up
 
@@ -17,7 +16,8 @@ to issue a certificate for the service was generated using a self-signed certifi
 The legitimacy of such a certificate can of course not be verified and thus curl fails without the flag.
 
 ### Access the service through the browser
-In case you just want to see that the service is up and running through the browser, you can simply go to your browser settings and add the certificate.
+In case you just want to see that the service is up and running through the browser, 
+you can simply go to your browser settings and add the pkcs12-file, e.g. test-client.p12.
 You should then be able to access the Apache default site at https://localhost:10443.
 
 ### Certificate passwords
