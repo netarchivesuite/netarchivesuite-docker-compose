@@ -17,7 +17,7 @@ The legitimacy of such a certificate can of course not be verified and thus curl
 
 ### Access the service through the browser
 In case you just want to see that the service is up and running through the browser, 
-you can simply go to your browser settings and add the pkcs12-file, e.g. test-client.p12.
+you can simply go to your browser settings under '*Manage certificates*' and import the pkcs12-file, e.g. test-client.p12.
 You should then be able to access the Apache default site at https://localhost:10443.
 
 ### Certificate passwords
