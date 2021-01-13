@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 import zlib, cgitb, cgi, os, subprocess, urllib
-from ConfigParser import SafeConfigParser
+from ConfigParser import ConfigParser
 
 
 class AbstractFileResolver:
@@ -65,7 +65,7 @@ class FailingFileResolver(AbstractFileResolver):
 
 
 if __name__ == "__main__":
-    parser = SafeConfigParser()
+    parser = ConfigParser()
     parser.read('fileresolver.conf')
     finder = parser.get('fileresolver', 'finder')
     exactfinder = parser.get('fileresolver', 'exactfinder')

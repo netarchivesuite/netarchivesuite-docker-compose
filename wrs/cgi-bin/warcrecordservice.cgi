@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import zlib, cgitb, cgi, os, subprocess, sys
-from configparser import SafeConfigParser
+from configparser import ConfigParser
 
 ##
 ## TODO 's are reminders for the mature production implementation
@@ -70,7 +70,7 @@ class LocalDBService(AbstractRecordService):
         return subprocess.check_output(cmds).decode('utf-8').strip(' \n\t')
 
 if __name__ == "__main__":
-    parser = SafeConfigParser()
+    parser = ConfigParser()
     parser.read('warcrecordservice.conf')
     debug = parser.getboolean('wrs', 'debug')
     service = parser.get('wrs', 'service_class')
