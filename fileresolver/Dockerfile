@@ -55,8 +55,9 @@ COPY apache2 /etc/apache2
 ## Copy CA Public Key
 COPY certs/ca.crt /etc/ssl/certs
 ## Copy Server (pub and key)
-COPY certs/server.crt /etc/ssl/certs/
-COPY certs/server.key /etc/ssl/private/
+COPY certs/server.pem /etc/ssl/certs
+#COPY certs/server.crt /etc/ssl/certs/
+#COPY certs/server.key /etc/ssl/private/
 
 RUN a2enmod cgi \
     && a2enmod ssl \
