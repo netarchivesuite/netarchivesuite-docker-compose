@@ -30,6 +30,7 @@ openssl genrsa -out test-client.key 2048
 openssl req -new -key test-client.key -sha256 -out test-client.csr
 openssl x509 -req -days 365 -sha256 -in test-client.csr -CA ca.crt -CAkey ca.key -set_serial 2 -out test-client.crt
 openssl pkcs12 -export -inkey test-client.key -in test-client.crt -out test-client.p12
+openssl pkcs12 -in test-client.p12 -out test-client.pem -nodes (if you want PEM format)
 ```
 In order to create a new certificate just follow the same steps and change any `test-client.*` part to the path you wish for.
 
