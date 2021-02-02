@@ -126,12 +126,18 @@
         </hadoop>
         <useBitmagHadoopBackend>true</useBitmagHadoopBackend>
         <warcRecordService>
-            <baseUrl>http://wrs:80/cgi-bin2/warcrecordservice.cgi</baseUrl>
+            <baseUrl>https://wrs:10443/cgi-bin/warcrecordservice.cgi</baseUrl>
+            <keyfile>/nas/security/test-client.pem</keyfile>
         </warcRecordService>
         <fileResolver>
-            <class>dk.netarkivet.common.utils.FileResolverRESTClient</class>
-            <baseUrl>http://fileresolver:80/cgi-bin2/fileresolver.cgi</baseUrl>
+            <class>dk.netarkivet.common.utils.service.FileResolverRESTClient</class>
+            <baseUrl>https://fileresolver:10444/cgi-bin/fileresolver.cgi</baseUrl>
+            <keyfile>/nas/security/test-client.pem</keyfile>
         </fileResolver>
+        <trustStore>
+            <path>/nas/security/truststore.jks</path>
+            <password>test</password>
+        </trustStore>
     </common>
 
     <monitor>

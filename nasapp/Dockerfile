@@ -32,6 +32,7 @@ COPY testdata /nas/testdata
 # COPY wayback-uber-jar.jar /nas/lib/wayback-uber-jar.jar
 # COPY harvester-uber-jar.jar /nas/lib/harvester-uber-jar.jar
 COPY hadoop-uber-jar.jar /nas/lib/hadoop-uber-jar.jar
+COPY security /nas/security
 
 RUN chmod 755 /nas/*.j2
 RUN chmod 755 /nas/wait-for-postgres.sh

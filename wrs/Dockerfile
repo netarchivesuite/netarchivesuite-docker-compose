@@ -33,7 +33,7 @@ RUN apt-get -y install python3.8
 RUN apt-get -y install python3.9
 
 # Apache settings
-ENV APACHE_SERVER_NAME localhost
+ENV APACHE_SERVER_NAME wrs
 ENV APACHE_SSL_PORT 10443
 ENV APPLICATION_URL https://${APACHE_SERVER_NAME}:${APACHE_SSL_PORT}
 ENV APACHE_RUN_USER www-data
@@ -55,7 +55,7 @@ COPY apache2 /etc/apache2
 ## Copy CA Public Key
 COPY certs/ca.crt /etc/ssl/certs
 ## Copy Server (pub and key)
-COPY certs/server.pem /etc/ssl/certs/
+COPY certs/wrs-server.pem /etc/ssl/certs/
 #COPY certs/server.crt /etc/ssl/certs/
 #COPY certs/server.key /etc/ssl/private/
 
