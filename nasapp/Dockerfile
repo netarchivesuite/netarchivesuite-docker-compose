@@ -1,12 +1,18 @@
-FROM rightmesh/ubuntu-openjdk:16.04
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get install -y software-properties-common build-essential git openjdk-8-jre openjdk-8-jdk  && add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y python3.6 python3.6-dev python3-pip
+
+RUN ln -sfn /usr/bin/python3.6 /usr/bin/python3 && ln -sfn /usr/bin/python3 /usr/bin/python && ln -sfn /usr/bin/pip3 /usr/bin/pip
+
+RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools && pip install -U pip && pip install -U setuptools && pip install j2cli
+
 
 ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/6.0/distribution-6.0.zip nas.zip
 ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/heritrix3-bundler/6.0/heritrix3-bundler-6.0.zip h3bundler.zip
 
 #ADD nas.zip nas.zip
 #ADD h3bundler.zip h3bundler.zip
-
-RUN apt-get update && apt-get install -y ca-certificates unzip postgresql-client python-setuptools python-pip && pip install -U pip && pip install -U setuptools && pip install j2cli
 
 RUN unzip nas.zip -d nas
 ##RUN unzip h3bundler.zip
