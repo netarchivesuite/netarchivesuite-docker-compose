@@ -43,7 +43,9 @@ class AbstractRecordService:
                         if not(in_body):
                             print("Content-type: application/warc\r\n")
                             in_body = True
-                        print(decompress_data)
+                        sys.stdout.flush()
+                        sys.stdout.buffer.write(decompress_data)
+                        ##print(decompress_data.decode('utf-8'))
                     except zlib.error as e:
                         self.onError("416 Requested Range Not Satisfiable", "Invalid offset: " + filename + ":" + str(offset))
         except IOError as e:
