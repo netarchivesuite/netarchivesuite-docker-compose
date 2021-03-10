@@ -40,11 +40,11 @@ will then create a complete dockerised NetarchiveSuite + Bitmagasin
 
 Any files in the nasapp/testdata folder will be uploaded to bitmag.
 
-In addition there is a WarcRecordService endpoint on localhost:8883 on which any uploaded compressed warc-files should 
+In addition there is a WarcRecordService endpoint on https://localhost:10433 on which any uploaded compressed warc-files should 
 be accessible. E.g. on
 
 ```
-curl -r "3442-" "http://localhost:8883/cgi-bin2/py1.cgi/10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz?foo=bar&x=y"
-curl http://localhost:8884/cgi-bin2/fileresolver.cgi/1*
+curl --cert-type P12 --cert test-client.p12:test -r "3442-" "http://localhost:8883/cgi-bin2/py1.cgi/10-4-20161218234343407-00000-kb-test-har-003.kb.dk.warc.gz?foo=bar&x=y"
+curl --cert-type P12 --cert test-client.p12:test http://localhost:8884/cgi-bin2/fileresolver.cgi/1*
 ```                     
 
