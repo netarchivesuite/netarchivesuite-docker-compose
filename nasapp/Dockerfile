@@ -1,7 +1,7 @@
 FROM rightmesh/ubuntu-openjdk:16.04
 
-ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/6.0/distribution-6.0.zip nas.zip
-ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/heritrix3-bundler/6.0/heritrix3-bundler-6.0.zip h3bundler.zip
+ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/7.3/distribution-7.3.zip nas.zip
+ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/heritrix3-bundler/7.3/heritrix3-bundler-7.3.zip h3bundler.zip
 
 #ADD nas.zip nas.zip
 #ADD h3bundler.zip h3bundler.zip
