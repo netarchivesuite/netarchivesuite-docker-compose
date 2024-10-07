@@ -13,24 +13,13 @@ RUN apt-get -y install wget
 RUN apt-get install less
 
 # Install get-pip script
-RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN wget https://bootstrap.pypa.io/pip/3.6/get-pip.py
 
 # Python3.6
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get -y install python3.6
-RUN apt-get -y install python3.6-dev python3-distutils
+RUN apt-get -y install python3.6-dev python3.6-distutils
 RUN python3.6 get-pip.py
-
-# Python3.7
-RUN apt-get -y install python3.7
-RUN apt-get -y install python3.7-dev
-RUN python3.7 get-pip.py
-
-# Python3.8
-RUN apt-get -y install python3.8
-
-# Python3.9
-RUN apt-get -y install python3.9
 
 # Apache settings
 ENV APACHE_SERVER_NAME wrs
