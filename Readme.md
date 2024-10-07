@@ -48,3 +48,15 @@ curl --cert-type P12 --cert test-client.p12:test -r "3442-" "http://localhost:88
 curl --cert-type P12 --cert test-client.p12:test http://localhost:8884/cgi-bin2/fileresolver.cgi/1*
 ```                     
 
+### Renew certificates for fileresolver/wrs
+```
+# 1. Create new CA cert and key
+openssl req -x509 -newkey rsa:4096 -keyout ca.key -out ca.crt -sha256 -days 3650 -nodes
+# 2. Renew client cert
+openssl x509 -req -days 3650 -sha256 -in test-client.csr -CA ca.crt -CAkey ca.key -set_serial 2 -out test-client.crt
+# 3. Update pem- and p12-file with new cert
+cat test-client.crt test-client.key > test-client.pem
+openssl pkcs12 -export -inkey test-client.key -in test-client.crt -out test-client.p12
+```
+Repeat step 2 and 3 using `fileresolver-server` or `wrs-server` instead of `test-client` to renew server certs.
+Generating p12-files can be skipped if you just want to use pem-files (already how certs are provided for the servers).
