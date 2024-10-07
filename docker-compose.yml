@@ -190,6 +190,6 @@ services:
     environment:
       USERNAME: jms
       PASSWORD: jms*ftp
-      FTP_ROOT: /ftp
-    volumes:
-      - /ftp
+      FTP_ROOT: /home/jms
+    #volumes:
+    #  - /ftp
