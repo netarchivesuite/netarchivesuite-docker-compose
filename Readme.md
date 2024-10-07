@@ -11,7 +11,7 @@ will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8
 In addition, a java debugger can be attached to the heritrix processes on port 8500 (Focused) or 8501 (Snapshot) and the
 NetarchiveSuite database will be exposed on port 6543.
 
-For more information on using NetarchiveSuite, see the [Quickstart Manual](https://sbforge.org/display/NASDOC/Quick+Start+Manual).
+For more information on using NetarchiveSuite, see the [Quickstart Manual](8878l).
 
 #### More About This Docker-Compose Assembly
 
