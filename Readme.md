@@ -4,7 +4,7 @@
 
 `docker-compose build`
 
-`docker-compose up`
+`docker container rm netarchivesuite-docker-compose_ftp_1 & docker-compose up`
 
 will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8078 and viewerproxy on localhost port 8878
 

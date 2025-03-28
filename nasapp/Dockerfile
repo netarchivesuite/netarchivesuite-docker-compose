@@ -1,6 +1,7 @@
 ##FROM ibmjava:8
 ##FROM ibm-semeru-runtimes:open-8-jdk-jammy
-FROM openjdk:8-jdk-slim
+##FROM openjdk:8-jdk-slim
+FROM openjdk:17-jdk-slim
 ##FROM rightmesh/ubuntu-openjdk:18.04
 
 ##ADD https://sbforge.org/nexus/service/local/repositories/releases/content/org/netarchivesuite/distribution/7.3/distribution-7.3.zip nas.zip
@@ -37,6 +38,8 @@ RUN chmod 755 /nas/*.j2
 RUN chmod 755 /nas/wait-for-postgres.sh
 RUN chmod 755 /docker-entrypoint.sh
 EXPOSE 8078
+EXPOSE 8170
+EXPOSE 8270
 
 ## CMD ["/nas/start.sh"]
 CMD ["/docker-entrypoint.sh"]
