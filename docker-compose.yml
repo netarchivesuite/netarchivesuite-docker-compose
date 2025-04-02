@@ -1,4 +1,5 @@
 version: "3"
+
 services:
 #  dockerhost:
 #        image: qoomon/docker-host
@@ -189,10 +190,12 @@ services:
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   mq:
     image: seges/openmq
+    hostname: mq
     ports:
       - 7676
   ftp:
     image: arkenklo/docker-proftpd
+    hostname: ftp
     ports:
       - "20:20"
       - "21:21"

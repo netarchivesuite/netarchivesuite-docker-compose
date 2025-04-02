@@ -2,9 +2,9 @@
 
 ##### Very Quick Start
 
-`docker-compose build`
+`docker-compose -p nas build`
 
-`docker container rm netarchivesuite-docker-compose_ftp_1 & docker-compose up`
+`docker container rm nas_ftp_1 & docker-compose -p nas up`
 
 will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8078 and viewerproxy on localhost port 8878
 
