@@ -122,7 +122,7 @@
             <heritrix>
                 <inactivityTimeout>1800</inactivityTimeout>
                 <noresponseTimeout>1800</noresponseTimeout>
-                <crawlLoopWaitTime>60</crawlLoopWaitTime>
+                <crawlLoopWaitTime>10</crawlLoopWaitTime>
             </heritrix>
             <frontier>
                 <!-- 1 minute -->
@@ -165,8 +165,9 @@
                 <defaultSchedule>Once_a_week</defaultSchedule>
             </domain>
         </datamodel>
-        <viewerproxy>
-            <baseDir>viewerproxy</baseDir>
-        </viewerproxy>
+        <history>
+            <maxSizeInBrowser>1000000</maxSizeInBrowser>
+            <allowFileDownloads>true</allowFileDownloads>
+        </history>
     </harvester>
 </settings>

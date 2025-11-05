@@ -6,16 +6,17 @@
 
 `docker container rm nas_ftp_1 & docker-compose -p nas up`
 
-will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8078 and viewerproxy on localhost port 8878
+will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8078.
 
-In addition, a java debugger can be attached to the heritrix processes on port 8500 (Focused) or 8501 (Snapshot) and the
-NetarchiveSuite database will be exposed on port 6543.
+In addition, a java debugger can be attached to the heritrix processes on port 8500 (Focused) or 8501 (Snapshot) and port 8600 for the Focused HarvestController application. Debuggers can similarly be added to other applications in the build using the same mechanism in the docker-compose.yml file.
+
+NetarchiveSuite database will be exposed on port 6543 and the Heritrix GUI for Focused harvests is available at localhost port 8090.
 
 For more information on using NetarchiveSuite, see the [Quickstart Manual](8878l).
 
 #### More About This Docker-Compose Assembly
 
-The assembly starts a complete NetarchiveSuite installation consisting of 15 containers. Three of these containers are services used by NetarchiveSuite (jms-broker, ftp-server, postgres database) and the other 12 are a network of NetarchiveSuite applications. In a production environment, these 12 applications would run on multiple machines, possibly widely geographically distributed.
+The assembly starts a complete NetarchiveSuite installation consisting of 14 containers. Three of these containers are services used by NetarchiveSuite (jms-broker, ftp-server, postgres database) and the other 11 are a network of NetarchiveSuite applications. In a production environment, these 11 applications would run on multiple machines, possibly widely geographically distributed.
 
 Each NetarchiveSuite application instance is based on the Dockerfile defined in the "nasapp" directory. Each application uses the same distribution of NetarchiveSuite software whose location is defined inside the Dockerfile. These can either be fetched from our nexus installation, or provided by the user - for example in order to test self-developed code.
 

@@ -1,11 +1,6 @@
 version: "3"
 
 services:
-#  dockerhost:
-#        image: qoomon/docker-host
-#        cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
-#        #mem_limit: 4M
-#        restart: on-failure
   database:
     build: nasdb
     ports:
@@ -123,10 +118,13 @@ services:
           - REPLICA=KB
           - LOCATION=K
           - H3_CHANNEL=FOCUSED
-          - HERITRIX_JAVA_OPTS=-Xdebug\ -Xrunjdwp:server=y,transport=dt_socket,address=8500,suspend=n
+          - HERITRIX_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8500
+          - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8600
       ports:
         - 8443
         - 8500:8500
+        - 8600:8600
+        - 8090:8090
       hostname: nasharfocus
       command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   nasharsnap:
@@ -172,21 +170,6 @@ services:
             - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-archive-core.jar
             - REPLICA=CS
             - LOCATION=K
-        command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
-  nasvp:
-        build: nasapp
-        hostname: vp
-        links:
-           - mq
-           - ftp
-        environment:
-            - APP_LABEL=ViewerProxyApplication
-            - APP_CLASS=dk.netarkivet.viewerproxy.ViewerProxyApplication
-            - CLASSPATH=/nas/lib/netarchivesuite-monitor-core.jar:/nas/lib/netarchivesuite-harvest-scheduler.jar:/nas/lib/netarchivesuite-archive-core.jar
-            - REPLICA=KB
-            - LOCATION=K
-        ports:
-          - 8878:8078
         command: ["/nas/wait-for-postgres.sh", "database", "--", "/docker-entrypoint.sh"]
   mq:
     image: seges/openmq

@@ -9,6 +9,7 @@ java \
 --add-exports jdk.jconsole/sun.tools.jconsole=ALL-UNNAMED \
 --add-opens java.management/javax.management.openmbean=ALL-UNNAMED  \
 -Xmx1024m \
+{{JAVA_OPTS|default(' ', false)}} \
 -Dsettings.harvester.harvesting.heritrix.javaOpts={{HERITRIX_JAVA_OPTS|default('', false)}} \
 -Ddk.netarkivet.settings.file=/nas/settings.xml \
 -Dlogback.configurationFile=/nas/logback.xml {{APP_CLASS}}
