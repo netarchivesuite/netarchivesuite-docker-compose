@@ -2,9 +2,9 @@
 
 ##### Very Quick Start
 
-`docker-compose -p nas build`
+`docker compose -p nas build`
 
-`docker container rm nas_ftp_1 & docker-compose -p nas up`
+`docker container rm nas-ftp-1 & docker compose -p nas up`
 
 will create a complete dockerised NetarchiveSuite with GUI on http://localhost:8078.
 
